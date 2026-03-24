@@ -1,0 +1,29 @@
+{
+  "name": "aeo-audit-tool-proxy",
+  "version": "1.0.0",
+  "description": "AEO Audit Tool Proxy Server for ngrok deployment",
+  "type": "module",
+  "main": "proxy-server.js",
+  "scripts": {
+    "start": "node proxy-server.js",
+    "dev": "node proxy-server.js",
+    "build-client": "cd client && npm run build",
+    "start-proxy": "npm run build-client && npm start"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "keywords": [
+    "aeo",
+    "audit",
+    "proxy",
+    "ngrok",
+    "ai",
+    "search"
+  ],
+  "author": "1Digitals",
+  "license": "MIT"
+}

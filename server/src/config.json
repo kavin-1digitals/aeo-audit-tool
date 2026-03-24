@@ -1,0 +1,64 @@
+{
+  "ai_crawlers": [
+    "GPTBot",
+    "Google-Extended",
+    "ClaudeBot",
+    "PerplexityBot"
+  ],
+  "search_crawlers": [
+    "Googlebot",
+    "Bingbot"
+  ],
+  "critical_patterns": {
+    "product": ["products"],
+    "category": ["collections", "category"],
+    "search": ["search"]
+  },
+  "sitemap_patterns": ["sitemap.xml", "sitemap_index.xml"],
+  "sitemap_category_patterns": {
+    "product": ["product", "products", "pdp"],
+    "category": ["category", "collection", "collections", "shop"],
+    "content": ["blog", "article", "guide", "post"]
+  },
+  "sitemap_category_counts": {
+    "product": 5,
+    "category": 5,
+    "content": 5
+  },
+  "jsonld_categories": {
+    "homepage": ["Organization","WebSite"],
+    "product": ["Product","BreadcrumbList","Review"],
+    "category": ["BreadcrumbList", "CollectionPage"],
+    "content": ["Article","BreadcrumbList","BlogPosting","FAQPage"]
+  },
+  "jsonld_validation_rules": {
+    "Product": {
+        "required": [
+            "name",
+            "image",
+            "offers.price",
+            "offers.availability"
+        ]
+    },
+    "BreadcrumbList": {
+        "required": ["itemListElement"]
+    },
+    "FAQPage": {
+        "required": ["mainEntity"]
+    },
+    "Article": {
+        "required": ["headline"]
+    },
+    "Organization": {
+        "required": ["name"]
+    },
+    "WebSite": {
+        "required": ["url"]
+    }
+  },
+  "llm": {
+    "openai": "gpt-4o-mini"
+  },
+  "num_prompts": 14,
+  "num_competitors": 8
+}
