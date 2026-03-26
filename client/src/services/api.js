@@ -113,7 +113,11 @@ export const getAuditResults = async (domain = 'https://www.aloyoga.com', brand 
     },
     raw_scorecard: scorecard?.raw_scorecard || { scores: [] },
     path_scorecard: scorecard?.path_scorecard || {},
-    signals: response.signals || null
+    signals: response.signals || null,
+    summary: response.summary || {
+      performance_highlights: [],
+      improvement_areas: []
+    }
   };
   
   console.log('Transformed data for frontend:', transformedData);

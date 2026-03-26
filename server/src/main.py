@@ -16,6 +16,7 @@ from contextlib import asynccontextmanager
 from src.signals import find_signals
 from src.scorecard import create_aeo_scorecard, Score, RawScoreCard, ScoreCard
 from src.signals import Signals
+from src.summary import generate_summary, Summary
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -91,6 +92,7 @@ class AuditResponse(BaseModel):
     message: str
     signals: Optional[Signals] = None
     scorecard: ScoreCard
+    summary: Summary
 
 def create_cache_key(domain: str, brand: Optional[str], industry: Optional[str], geo: Optional[str]) -> str:
     """Create a unique cache key based on audit parameters"""
@@ -159,6 +161,9 @@ async def start_audit(request: AuditRequest):
             
             scorecard = await create_aeo_scorecard(signals, request.brand)
             
+            # Generate summary
+            summary = generate_summary(scorecard)
+            
             result = AuditResponse(
                 task_id=task_id,
                 status="completed",
@@ -168,7 +173,8 @@ async def start_audit(request: AuditRequest):
                 industry=request.industry,
                 geo=request.geo,
                 signals=signals,
-                scorecard=scorecard
+                scorecard=scorecard,
+                summary=summary
             )
             
             # Cache the result
@@ -188,7 +194,17 @@ async def start_audit(request: AuditRequest):
                 industry=request.industry,
                 geo=request.geo,
                 signals=None,
-                scorecard=ScoreCard(scores=[])
+                scorecard=ScoreCard(
+                    raw_scorecard=RawScoreCard(scores=[]),
+                    path_scorecard={},
+                    total_checks=0,
+                    total_score=0.0,
+                    total_percentage=0.0
+                ),
+                summary=Summary(
+                    performance_highlights=[],
+                    improvement_areas=[f"Audit failed: {str(e)}"]
+                )
             )
         
     except Exception as e:

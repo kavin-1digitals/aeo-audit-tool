@@ -1,154 +1,103 @@
-import json
-import logging
-from src.signals.domain_signals.sitemap_signals import SiteMapSignals
-import httpx
-from bs4 import BeautifulSoup
+from typing import Optional, List
 from pydantic import BaseModel
-from typing import List
-from .canonical_signals import CanonicalSignal, find_canonical_signal
-from .jsonld_signals import JsonLdSignal, find_jsonld_signals
+from .url_collector import crawl_site
+from .canonical_signals import find_canonical_signal, CanonicalSignal
+from .jsonld_signals import find_jsonld_signal, JsonLdType
+from src.config import JSONLD_VALIDATION_RULES
+import asyncio
+import os
+import json
+from datetime import datetime
 
-logger = logging.getLogger(__name__)
-
-
-# -------------------------
-# Schema
-# -------------------------
-class CategoryPageSignals(BaseModel):
-    original_url: str
-    final_url: str
+class SiteSignal(BaseModel):
+    url: str
+    depth: int
+    index: int
+    parent_url: Optional[List[str]]
+    status_code: int
+    source: str
+    final_url: Optional[str]
     canonical_signal: CanonicalSignal
-    jsonld_signal: JsonLdSignal
-
-
-class SiteCategoryData(BaseModel):
-    category: str
-    category_pages: List[CategoryPageSignals]
 
 
 class SiteSignals(BaseModel):
-    categories: List[SiteCategoryData]
+    site_signals: List[SiteSignal]
+    jsonld_signals: List[JsonLdType]
 
 
-# -------------------------
-# Fetch page
-# -------------------------
-async def scrap_url(url: str):
-    logger.debug(f"Scraping URL: {url}")
-    
-    async with httpx.AsyncClient(
-        headers={
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-            "Accept-Language": "en-US,en;q=0.5",
-            "Accept-Encoding": "gzip, deflate",
-            "Connection": "keep-alive",
-            "Upgrade-Insecure-Requests": "1",
-        },
-        follow_redirects=True
-    ) as client:
-        try:
-            logger.debug(f"Making HTTP request to: {url}")
-            resp = await client.get(url)
+async def find_site_signals(full_domain: str, crawl_result) -> SiteSignals:
+    if not crawl_result:
+        crawl_result = await crawl_site(full_domain)
 
-            if resp.status_code == 200:
-                logger.debug(f"Successfully fetched {url}, content length: {len(resp.text)}")
-                soup = BeautifulSoup(resp.text, "lxml")
-                return soup, str(resp.url)
-            else:
-                logger.warning(f"Failed to fetch {url}, status: {resp.status_code}")
+    site_signals = []
+    all_jsonld_signals = []
 
-        except httpx.RequestError as e:
-            logger.error(f"Request error for {url}: {e}")
+    # track remaining types
+    remaining_types = set(JSONLD_VALIDATION_RULES.keys())
 
-    return None, None
+    for page in crawl_result.pages:
+        canonical_signal = await find_canonical_signal(
+            page.url,
+            page.response_url,
+            page.content
+        )
 
+        jsonld_signal = find_jsonld_signal(
+            page.url,
+            page.content,
+            list(remaining_types)
+        )
 
-# -------------------------
-# Scrap category
-# -------------------------
-async def scrap_category(category: str, category_urls: list[str]) -> SiteCategoryData:
-    logger.info(f"Scraping category '{category}' with {len(category_urls)} URLs")
-    pages = []
+        # Not removing it for now, as we want to see all the types
+        # # remove validated types
+        # for js in jsonld_signal.types:
+        #     if js.exists and js.is_valid:
+        #         remaining_types.discard(js.type_)
 
-    if not category_urls:
-        logger.warning(f"No URLs provided for category '{category}'")
-        return SiteCategoryData(category=category, category_pages=[])
-
-    for i, url in enumerate(category_urls):
-        logger.info(f"Processing URL {i+1}/{len(category_urls)} for category '{category}': {url}")
-        
-        soup, final_url = await scrap_url(url)
-
-        if not soup:
-            logger.warning(f"Failed to fetch content for URL: {url}")
-            continue
-
-        logger.debug(f"Analyzing signals for {final_url}")
-        canonical_signal = await find_canonical_signal(soup, final_url)
-        jsonld_signal = await find_jsonld_signals(soup, category)
-
-        pages.append(
-            CategoryPageSignals(
-                original_url=url,
-                final_url=final_url,
-                canonical_signal=canonical_signal,
-                jsonld_signal=jsonld_signal
+        site_signals.append(
+            SiteSignal(
+                url=page.url,
+                depth=page.depth,
+                index=page.index,
+                parent_url=page.parent_url,
+                status_code=page.status_code,
+                source=page.source,
+                final_url=page.response_url,
+                canonical_signal=canonical_signal
             )
         )
-        
-        logger.debug(f"Completed analysis for URL: {final_url}")
+        all_jsonld_signals.extend(jsonld_signal.jsonld_signals)
 
-    logger.info(f"Completed scraping category '{category}', successfully processed {len(pages)}/{len(category_urls)} URLs")
-    return SiteCategoryData(
-        category=category,
-        category_pages=pages
+    return SiteSignals(
+        site_signals=site_signals,
+        jsonld_signals=all_jsonld_signals
     )
 
-
-# -------------------------
-# Main aggregation
-# -------------------------
-async def find_site_signals(site_map: SiteMapSignals) -> SiteSignals:
-    logger.info("Starting site-level signals analysis")
-    categories = []
-
-    if not site_map.category_urls:
-        logger.warning("No category URLs found in sitemap, returning empty site signals")
-        return SiteSignals(categories=[])
-
-    logger.info(f"Found {len(site_map.category_urls)} categories to process")
+if __name__ == '__main__':
+    full_domain = 'https://www.aloyoga.com'
+    crawl_file = "crawl_result.json"
     
-    for category_obj in site_map.category_urls:
-        logger.info(f"Processing category: {category_obj.category}")
-        category_data = await scrap_category(
-            category_obj.category,
-            category_obj.urls
-        )
-        categories.append(category_data)
-        logger.info(f"Completed category: {category_obj.category}")
-
-    logger.info(f"Site signals analysis completed, processed {len(categories)} categories")
-    return SiteSignals(categories=categories)
-
-
-# -------------------------
-# CLI test
-# -------------------------
-if __name__ == "__main__":
-    import asyncio
-    import os
-
-    json_path = os.path.join(
-        os.path.dirname(__file__),
-        'sitemap_signals_test.json'
-    )
-
-    with open(json_path, 'r') as f:
-        test_data = json.load(f)
-
-    site_map_signals = SiteMapSignals.model_validate(test_data)
-
-    result = asyncio.run(find_site_signals(site_map_signals))
-
-    print(result.model_dump_json(indent=2))
+    if os.path.exists(crawl_file):
+        print(f"Loading existing crawl result from {crawl_file}")
+        with open(crawl_file, 'r') as f:
+            crawl_data = json.load(f)
+        # Load as CrawlResult, not SiteSignals
+        from .url_collector import CrawlResult, PageData
+        pages = [PageData(**page) for page in crawl_data['pages']]
+        crawl_result = CrawlResult(pages=pages)
+    else:
+        print("Running fresh crawl...")
+        crawl_result = asyncio.run(crawl_site(full_domain))
+        
+        # Save crawl result for future use
+        with open(crawl_file, 'w') as f:
+            json.dump(crawl_result.model_dump(), f, indent=2)
+        print(f"Crawl result saved to {crawl_file}")
+    
+    result = asyncio.run(find_site_signals(full_domain, crawl_result))
+    
+    # Write result to file
+    output_file = "site_signals_result.json"
+    with open(output_file, 'w') as f:
+        f.write(result.model_dump_json(indent=2))
+    print(f"Site signals result saved to {output_file}")

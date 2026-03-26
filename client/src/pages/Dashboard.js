@@ -15,9 +15,10 @@ import ExecutiveSummary from '../components/Dashboard/ExecutiveSummary';
 import SignalTypeChart from '../components/Dashboard/SignalTypeChart';
 import TopIssues from '../components/Dashboard/TopIssues';
 import { ScoreOverview } from '../components/ScoreOverview';
+import { Summary } from '../components/Summary';
 
 const Dashboard = ({ auditData, onViewDetails, onNewAudit }) => {
-  const { audit_metadata, path_scorecard } = auditData;
+  const { audit_metadata, path_scorecard, summary } = auditData;
   
   // Debug: Log the audit data structure
   console.log('=== AUDIT DATA DEBUG ===');
@@ -330,6 +331,9 @@ const Dashboard = ({ auditData, onViewDetails, onNewAudit }) => {
 
       {/* Top Issues */}
       <TopIssues categories={categories} pathScorecard={path_scorecard} />
+
+      {/* Summary Section */}
+      <Summary summary={summary} />
 
       {/* Action Buttons */}
       <div className="flex justify-center space-x-4">

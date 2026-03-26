@@ -14,7 +14,7 @@
     "category": ["collections", "category"],
     "search": ["search"]
   },
-  "sitemap_patterns": ["sitemap.xml", "sitemap_index.xml"],
+  "sitemap_patterns": ["sitemap.xml", "sitemap_index.xml", "siteindex.xml"],
   "sitemap_category_patterns": {
     "product": ["product", "products", "pdp"],
     "category": ["category", "collection", "collections", "shop"],

@@ -22,6 +22,7 @@ JSONLD_VALIDATION_RULES = config['jsonld_validation_rules']
 
 LLM_PROVIDERS = config['llm']
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+SCRAPERAPI_API_KEY = os.getenv('SCRAPERAPI_API_KEY')
 NUM_PROMPTS = config['num_prompts']
 NUM_COMPETITORS = config['num_competitors']
 CITATION_PROMPT_CLUSTERS = config['citation_prompt_clusters']

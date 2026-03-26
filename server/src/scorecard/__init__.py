@@ -57,20 +57,22 @@ async def create_aeo_scorecard(signals: Signals, brand: str = None) -> ScoreCard
     
     # Site signals scoring - handle None cases
     if hasattr(signals, 'site_signals') and signals.site_signals:
-        for category_data in signals.site_signals.categories:
-            for page_signals in category_data.category_pages:
-                if hasattr(page_signals, 'canonical_signal') and page_signals.canonical_signal:
-                    canonical_scorecard = await calculate_canonical_score(page_signals.canonical_signal)
-                    all_scores.extend(canonical_scorecard.scores)
-                
-                if hasattr(page_signals, 'jsonld_signal') and page_signals.jsonld_signal:
-                    jsonld_scorecard = await calculate_jsonld_score(page_signals.jsonld_signal)
-                    all_scores.extend(jsonld_scorecard.scores)
+        # Process each site signal (page)
+        for site_signal in signals.site_signals.site_signals:
+            if hasattr(site_signal, 'canonical_signal') and site_signal.canonical_signal:
+                canonical_scorecard = await calculate_canonical_score(site_signal)
+                all_scores.extend(canonical_scorecard.scores)
+        
+        # Process JSON-LD signals
+        all_jsonld_signals = list(signals.site_signals.jsonld_signals)
+        if all_jsonld_signals:
+            jsonld_scorecard = await calculate_jsonld_score(all_jsonld_signals)
+            all_scores.extend(jsonld_scorecard.scores)
     
     # LLM signals scoring - handle None cases
     if hasattr(signals, 'llm_signals') and signals.llm_signals:
         print("DEBUG: Processing LLM signals...")
-        llm_signals_scorecard = await calculate_llm_signals_score(signals.llm_signals)
+        llm_signals_scorecard = await calculate_llm_signals_score(signals.llm_signals, brand)
         print(f"DEBUG: LLM signals scorecard: {llm_signals_scorecard.dict()}")
         all_scores.extend(llm_signals_scorecard.scores)
         print("DEBUG: LLM signals scores added to all_scores")

@@ -1,0 +1,102 @@
+{
+  "performance_highlights": {
+    "90": {
+      "Domain Signals -> Robots.txt File": "Excellent! Your robots.txt file is perfectly configured ({percentage}% score), ensuring proper search engine and AI crawler access.",
+      "Domain Signals -> LLM.txt File": "Outstanding! Your LLM.txt file is comprehensive ({percentage}% score), providing clear AI guidance.",
+      "Domain Signals -> Sitemap": "Perfect! Your sitemap is well-structured and up-to-date ({percentage}% score), helping search engines discover your content.",
+      "Site Signals -> Structured Data": "Exceptional! Your JSON-LD structured data implementation is comprehensive ({percentage}% score), enhancing AI understanding.",
+      "Site Signals -> Canonical URLs": "Flawless! Your canonical URL setup is perfectly implemented ({percentage}% score), preventing duplicate content issues.",
+      "LLM Signals -> Cluster Presence": "Impressive! Your brand appears in most intent clusters ({percentage}% score), showing strong AI visibility.",
+      "LLM Signals -> Cluster Dominance": "Remarkable! Your brand leads competitors in key clusters ({percentage}% score), demonstrating market leadership.",
+      "LLM Signals -> Brand Discovery": "Outstanding! Your brand is easily discovered in brand searches ({percentage}% score), users find you when searching for brands.",
+      "LLM Signals -> Brand Recommendation": "Excellent! Your brand is frequently recommended in AI responses ({percentage}% score), strong positive recommendations.",
+      "LLM Signals -> Brand Comparison": "Superior! Your brand performs exceptionally in comparisons ({percentage}% score), clearly stands out from competitors.",
+      "LLM Signals -> Pricing & Value": "Perfect! Your brand dominates pricing conversations ({percentage}% score), excellent value perception.",
+      "LLM Signals -> Quality & Durability": "Exceptional! Your brand is recognized for quality ({percentage}% score), strong durability reputation.",
+      "LLM Signals -> Style / Trends": "Outstanding! Your brand leads in style and trends ({percentage}% score), seen as trendy and fashionable.",
+      "LLM Signals -> Fit / Usability": "Excellent! Your brand excels in fit and usability ({percentage}% score), recognized for user comfort."
+    },
+    "80": {
+      "Domain Signals -> Robots.txt File": "Great job! Your robots.txt file is well-configured ({percentage}% score), supporting effective crawling.",
+      "Domain Signals -> LLM.txt File": "Good work! Your LLM.txt file provides solid AI guidance ({percentage}% score), helping AI systems understand your brand.",
+      "Domain Signals -> Sitemap": "Well done! Your sitemap is properly structured ({percentage}% score), aiding content discovery.",
+      "Site Signals -> Structured Data": "Strong performance! Your JSON-LD structured data is well-implemented ({percentage}% score), improving AI comprehension.",
+      "Site Signals -> Canonical URLs": "Good implementation! Your canonical URLs are properly set up ({percentage}% score), managing duplicate content effectively.",
+      "LLM Signals -> Cluster Presence": "Solid presence! Your brand appears in many intent clusters ({percentage}% score), showing good AI visibility.",
+      "LLM Signals -> Cluster Dominance": "Competitive performance! Your brand performs well in key clusters ({percentage}% score), maintaining market presence.",
+      "LLM Signals -> Brand Discovery": "Strong performance! Your brand is frequently discovered ({percentage}% score), good visibility in brand searches.",
+      "LLM Signals -> Brand Recommendation": "Good showing! Your brand gets recommended often ({percentage}% score), positive AI mentions.",
+      "LLM Signals -> Brand Comparison": "Competitive! Your brand performs well in comparisons ({percentage}% score), holds its own against competitors.",
+      "LLM Signals -> Pricing & Value": "Good positioning! Your brand appears in pricing discussions ({percentage}% score), decent value perception.",
+      "LLM Signals -> Quality & Durability": "Solid reputation! Your brand is noted for quality ({percentage}% score), good durability recognition.",
+      "LLM Signals -> Style / Trends": "Trendy! Your brand appears in style conversations ({percentage}% score), seen as fashionable.",
+      "LLM Signals -> Fit / Usability": "User-friendly! Your brand is recognized for fit ({percentage}% score), comfort mentions."
+    },
+    "70": {
+      "Domain Signals -> Robots.txt File": "Good foundation! Your robots.txt file is functional ({percentage}% score), with room for optimization.",
+      "Domain Signals -> LLM.txt File": "Decent start! Your LLM.txt file provides basic AI guidance ({percentage}% score), could be enhanced with more details.",
+      "Domain Signals -> Sitemap": "Functional setup! Your sitemap works ({percentage}% score), but could benefit from improvements.",
+      "Site Signals -> Structured Data": "Moderate implementation! Your JSON-LD structured data covers basics ({percentage}% score), expansion opportunities exist.",
+      "Site Signals -> Canonical URLs": "Basic setup! Your canonical URLs are partially implemented ({percentage}% score), needs refinement.",
+      "LLM Signals -> Cluster Presence": "Partial coverage! Your brand appears in some clusters ({percentage}% score), expansion opportunities available.",
+      "LLM Signals -> Cluster Dominance": "Room for growth! Your brand shows presence in some clusters ({percentage}% score), competitive gaps to address.",
+      "LLM Signals -> Brand Discovery": "Moderate presence! Your brand appears in some discovery queries ({percentage}% score), could improve visibility.",
+      "LLM Signals -> Brand Recommendation": "Some recommendations! Your brand gets occasional mentions ({percentage}% score), room for more positive AI mentions.",
+      "LLM Signals -> Brand Comparison": "Mixed performance! Your brand appears in some comparisons ({percentage}% score), could stand out more.",
+      "LLM Signals -> Pricing & Value": "Limited pricing mentions! Your brand appears in some pricing talks ({percentage}% score), could strengthen value messaging.",
+      "LLM Signals -> Quality & Durability": "Basic quality recognition! Your brand gets some quality mentions ({percentage}% score), could enhance quality content.",
+      "LLM Signals -> Style / Trends": "Occasional style mentions! Your brand appears in some style discussions ({percentage}% score), could boost trend content.",
+      "LLM Signals -> Fit / Usability": "Some fit recognition! Your brand gets occasional comfort mentions ({percentage}% score), could improve fit-focused content."
+    }
+  },
+  "improvement_areas": {
+    "50": {
+      "Domain Signals -> Robots.txt File": "Needs improvement: Your robots.txt file has issues ({percentage}% score). Review and fix blocking directives.",
+      "Domain Signals -> LLM.txt File": "Action required: Your LLM.txt file is incomplete ({percentage}% score). Add comprehensive AI guidance and brand information.",
+      "Domain Signals -> Sitemap": "High priority: Your sitemap needs work ({percentage}% score). Ensure proper XML structure and include all important pages.",
+      "Site Signals -> Structured Data": "Major gaps: Your JSON-LD structured data needs improvement ({percentage}% score). Add essential schema types for your industry.",
+      "Site Signals -> Canonical URLs": "Issues found: Your canonical URL setup needs attention ({percentage}% score). Fix duplicate content problems.",
+      "LLM Signals -> Cluster Presence": "Limited visibility: Your brand appears in few clusters ({percentage}% score). Create targeted content for these intent areas.",
+      "LLM Signals -> Cluster Dominance": "Competitive gap: Your brand is outperformed in some clusters ({percentage}% score). Increase brand mentions and content strategy.",
+      "LLM Signals -> Brand Discovery": "Discovery challenge: Your brand is hard to find in searches ({percentage}% score). Improve brand discovery content.",
+      "LLM Signals -> Brand Recommendation": "Few recommendations: Your brand rarely gets recommended ({percentage}% score). Create more recommendable content.",
+      "LLM Signals -> Brand Comparison": "Comparison weakness: Your brand performs poorly in comparisons ({percentage}% score). Strengthen competitive positioning.",
+      "LLM Signals -> Pricing & Value": "Value perception issue: Your brand rarely appears in pricing talks ({percentage}% score). Improve value messaging.",
+      "LLM Signals -> Quality & Durability": "Quality recognition gap: Your brand lacks quality mentions ({percentage}% score). Highlight quality content.",
+      "LLM Signals -> Style / Trends": "Style invisibility: Your brand missing from style discussions ({percentage}% score). Create trend-focused content.",
+      "LLM Signals -> Fit / Usability": "Fit recognition lacking: Your brand rarely mentioned for comfort ({percentage}% score). Emphasize fit benefits."
+    },
+    "30": {
+      "Domain Signals -> Robots.txt File": "Critical issues: Your robots.txt configuration has problems ({percentage}% score). Immediate remediation needed.",
+      "Domain Signals -> LLM.txt File": "Major gaps: Your LLM.txt file is essentially missing ({percentage}% score). Create comprehensive AI guidance immediately.",
+      "Domain Signals -> Sitemap": "Significant problems: Your sitemap implementation is failing ({percentage}% score). Complete reconstruction required.",
+      "Site Signals -> Structured Data": "Severe deficiency: Your JSON-LD structured data is minimal ({percentage}% score). Implement basic schemas urgently.",
+      "Site Signals -> Canonical URLs": "Critical problems: Your canonical URL setup is broken ({percentage}% score). Address duplicate content issues immediately.",
+      "LLM Signals -> Cluster Presence": "Very limited visibility: Your brand appears in few clusters ({percentage}% score). Comprehensive content strategy needed.",
+      "LLM Signals -> Cluster Dominance": "Market disadvantage: Your brand has minimal presence ({percentage}% score). Complete competitive strategy overhaul required.",
+      "LLM Signals -> Brand Discovery": "Discovery crisis: Your brand is invisible in brand searches ({percentage}% score). Urgent brand discovery strategy needed.",
+      "LLM Signals -> Brand Recommendation": "No recommendations: Your brand never gets recommended ({percentage}% score). Create highly recommendable content immediately.",
+      "LLM Signals -> Brand Comparison": "Comparison failure: Your brand never appears in comparisons ({percentage}% score). Complete competitive repositioning required.",
+      "LLM Signals -> Pricing & Value": "Value invisibility: Your brand absent from pricing discussions ({percentage}% score). Urgent value messaging overhaul.",
+      "LLM Signals -> Quality & Durability": "Quality invisibility: Your brand never mentioned for quality ({percentage}% score). Immediate quality content creation needed.",
+      "LLM Signals -> Style / Trends": "Style irrelevance: Your brand missing from all style talks ({percentage}% score). Urgent trend content strategy.",
+      "LLM Signals -> Fit / Usability": "Fit invisibility: Your brand never mentioned for comfort ({percentage}% score). Critical fit-focused content creation."
+    },
+    "0": {
+      "Domain Signals -> Robots.txt File": "Missing: No robots.txt file detected ({percentage}% score). Create proper robots.txt immediately.",
+      "Domain Signals -> LLM.txt File": "Absent: No LLM.txt file found ({percentage}% score). Implement AI guidance file urgently.",
+      "Domain Signals -> Sitemap": "Non-existent: No sitemap detected ({percentage}% score). Create and submit sitemap immediately.",
+      "Site Signals -> Structured Data": "Zero implementation: No structured data found ({percentage}% score). Add JSON-LD schemas immediately.",
+      "Site Signals -> Canonical URLs": "No canonical setup: Canonical URLs completely missing ({percentage}% score). Implement canonical tags urgently.",
+      "LLM Signals -> Cluster Presence": "No presence: Brand completely invisible in AI responses ({percentage}% score). Fundamental content strategy needed.",
+      "LLM Signals -> Cluster Dominance": "No competitive presence: Brand has zero AI visibility ({percentage}% score). Complete market entry strategy required.",
+      "LLM Signals -> Brand Discovery": "Zero discovery: Your brand never appears in searches ({percentage}% score). Complete brand discovery strategy overhaul.",
+      "LLM Signals -> Brand Recommendation": "Zero recommendations: Your brand never gets AI mentions ({percentage}% score). Fundamental recommendation strategy needed.",
+      "LLM Signals -> Brand Comparison": "Zero comparison presence: Your brand absent from all comparisons ({percentage}% score). Complete competitive positioning required.",
+      "LLM Signals -> Pricing & Value": "Zero value presence: Your brand never in pricing talks ({percentage}% score). Complete value messaging strategy.",
+      "LLM Signals -> Quality & Durability": "Zero quality presence: Your brand never quality-mentioned ({percentage}% score). Complete quality content strategy.",
+      "LLM Signals -> Style / Trends": "Zero style presence: Your brand never in style discussions ({percentage}% score). Complete trend strategy overhaul.",
+      "LLM Signals -> Fit / Usability": "Zero fit presence: Your brand never comfort-mentioned ({percentage}% score). Complete fit-focused content strategy."
+    }
+  }
+}

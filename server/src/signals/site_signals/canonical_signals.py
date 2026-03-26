@@ -19,12 +19,13 @@ def normalize_url(url: str) -> str:
         parsed.path.rstrip("/")
     )
 
-
 async def find_canonical_signal(
-    soup: BeautifulSoup,
-    final_url: str
+    url: str,
+    response_url: str,
+    content: str
 ) -> CanonicalSignal:
 
+    soup = BeautifulSoup(content, "html.parser")
     canonical_tag = soup.find("link", rel="canonical")
 
     if not canonical_tag or not canonical_tag.get("href"):
@@ -38,11 +39,11 @@ async def find_canonical_signal(
     canonical_url = canonical_tag.get("href").strip()
 
     # ✅ handle relative URL
-    canonical_url = urljoin(final_url, canonical_url)
+    canonical_url = urljoin(response_url, canonical_url)
 
     # ✅ normalize both
     normalized_canonical = normalize_url(canonical_url)
-    normalized_final = normalize_url(final_url)
+    normalized_final = normalize_url(response_url)
 
     matches = normalized_canonical == normalized_final
 

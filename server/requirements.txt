@@ -9,3 +9,5 @@ python-dotenv>=1.0.0,<2.0.0
 langchain-openai
 langchain
 langchain-core
+aiohttp
+playwright

@@ -1,6 +1,6 @@
 import json
 from bs4 import BeautifulSoup
-from src.config import JSONLD_CATEGORIES, JSONLD_VALIDATION_RULES
+from src.config import JSONLD_VALIDATION_RULES
 from pydantic import BaseModel
 from typing import List, Dict, Any
 
@@ -9,13 +9,14 @@ from typing import List, Dict, Any
 # Schema
 # -------------------------
 class JsonLdType(BaseModel):
+    url: str
     type_: str
     exists: bool
     is_valid: bool
 
 
-class JsonLdSignal(BaseModel):
-    types: List[JsonLdType]
+class JsonLdSignals(BaseModel):
+    jsonld_signals: List[JsonLdType]
 
 
 # -------------------------
@@ -45,21 +46,16 @@ def extract_jsonld_from_soup(soup: BeautifulSoup) -> List[Dict[str, Any]]:
 
 
 # -------------------------
-# Detect schema types (ONE per type)
+# Detect schema types
 # -------------------------
 def detect_schema_types(json_ld: List[Dict[str, Any]]) -> Dict[str, dict]:
     found = {}
 
     def extract_types(obj):
         t = obj.get("@type")
-
         if not t:
             return []
-
-        if isinstance(t, list):
-            return t
-
-        return [t]
+        return t if isinstance(t, list) else [t]
 
     for item in json_ld:
         if not isinstance(item, dict):
@@ -74,9 +70,7 @@ def detect_schema_types(json_ld: List[Dict[str, Any]]) -> Dict[str, dict]:
             if not isinstance(obj, dict):
                 continue
 
-            types = extract_types(obj)
-
-            for t in types:
+            for t in extract_types(obj):
                 if t not in found:
                     found[t] = obj
 
@@ -103,59 +97,39 @@ def get_nested_value(obj: dict, path: str):
 
 
 # -------------------------
-# Generic validator (CONFIG-DRIVEN)
+# Validator
 # -------------------------
 def validate_jsonld_type(type_: str, obj: dict) -> bool:
     rules = JSONLD_VALIDATION_RULES.get(type_)
-
     if not rules:
-        return False  # or True if you want lenient mode
+        return False
 
     required_fields = rules.get("required", [])
 
-    return all(
-        get_nested_value(obj, field)
-        for field in required_fields
-    )
+    return all(get_nested_value(obj, field) for field in required_fields)
 
 
 # -------------------------
-# Main function
+# MAIN FUNCTION (UPDATED)
 # -------------------------
-async def find_jsonld_signals(
-    soup: BeautifulSoup,
-    category: str
-) -> JsonLdSignal:
+def find_jsonld_signal(
+    full_domain: str,
+    content: str,
+    validation_types: List[str]
+) -> JsonLdSignals:
+
+    soup = BeautifulSoup(content, "html.parser")
 
     jsonld_data = extract_jsonld_from_soup(soup)
-
-    # ✅ detect schemas
     detected = detect_schema_types(jsonld_data)
-
-    expected_types = JSONLD_CATEGORIES.get(category, [])
 
     result = []
 
-    for type_ in expected_types:
+    for type_ in validation_types:
         obj = detected.get(type_)
 
         if obj:
             is_valid = validate_jsonld_type(type_, obj)
+            result.append(JsonLdType(url=full_domain, type_=type_, exists=True, is_valid=is_valid))
 
-            result.append(
-                JsonLdType(
-                    type_=type_,
-                    exists=True,
-                    is_valid=is_valid
-                )
-            )
-        else:
-            result.append(
-                JsonLdType(
-                    type_=type_,
-                    exists=False,
-                    is_valid=False
-                )
-            )
-
-    return JsonLdSignal(types=result)
+    return JsonLdSignals(jsonld_signals=result)

@@ -78,11 +78,10 @@ async def find_domain_signals(full_domain: str) -> DomainSignals:
         logger.error(f"Error fetching sitemap: {sitemap_signal}")
         sitemap_signal = SiteMapSignals(
             sitemap={"exists": False, "status": None, "url": None},
-            category_urls=[],
             last_updated=None
         )
     else:
-        logger.info(f"Sitemap signals fetched successfully. Categories found: {len(sitemap_signal.category_urls)}")
+        logger.info(f"Sitemap signals fetched successfully")
     
     logger.info("Domain signals analysis completed")
     return DomainSignals(

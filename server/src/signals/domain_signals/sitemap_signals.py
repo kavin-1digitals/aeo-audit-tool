@@ -1,9 +1,9 @@
 import logging
-from typing import Optional, List
+from typing import Optional
 import httpx
 from pydantic import BaseModel
 from urllib.parse import urljoin
-from src.config import SITEMAP_PATTERNS, SITEMAP_CATEGORY_PATTERNS, SITEMAP_CATEGORY_COUNTS
+from src.config import SITEMAP_PATTERNS
 from lxml import etree
 from datetime import datetime
 import gzip
@@ -20,14 +20,8 @@ class SiteMapMeta(BaseModel):
     url: Optional[str]
     type_: Optional[str] = None
 
-
-class CategoryUrls(BaseModel):
-    category: str
-    urls: List[str]
-
 class SiteMapSignals(BaseModel):
     sitemap: SiteMapMeta
-    category_urls: List[CategoryUrls]
     last_updated: Optional[datetime] = None
 
 
@@ -77,11 +71,21 @@ async def fetch_sitemap(
                         content = gzip.decompress(resp.content).decode()
                         logger.info(f"Decompressed sitemap size: {len(content)} chars")
 
-                    return content, SiteMapMeta(
-                        exists=True,
-                        status=200,
-                        url=url
-                    )
+                    # ✅ Validate XML before returning
+                    try:
+                        root = etree.fromstring(content.encode())
+                        tag = root.tag.split("}")[-1]
+                        logger.info(f"Detected sitemap type: {tag}")
+                        
+                        return content, SiteMapMeta(
+                            exists=True,
+                            status=200,
+                            url=url,
+                            type_=tag
+                        )
+                    except Exception as e:
+                        logger.warning(f"Invalid XML at {url}: {e}")
+                        continue  # Try next pattern
 
                 else:
                     logger.warning(f"Failed to fetch sitemap from {url}, status: {resp.status_code}")
@@ -107,50 +111,26 @@ async def process_sitemap_content(
 
     logger.info(f"Processing sitemap content for domain: {full_domain}")
     
-    # initialize
-    categorized = {category: [] for category in SITEMAP_CATEGORY_PATTERNS}
+    # Initialize variables
     last_updated = None
     
     # Add homepage by default
-    if full_domain:
-        homepage_url = full_domain.rstrip('/')
-        # Add homepage to "homepage" category
-        categorized["homepage"] = [homepage_url]
-        logger.info(f"Added homepage to category list: {homepage_url}")
+    homepage_url = full_domain.rstrip('/')
+    logger.info(f"Homepage URL: {homepage_url}")
 
     try:
-        logger.info("Parsing sitemap XML...")
+        logger.info("Processing sitemap content...")
         root = etree.fromstring(content.encode())
         tag = root.tag.split("}")[-1]
-        logger.info(f"Detected sitemap type: {tag}")
+        logger.info(f"Processing sitemap type: {tag}")
 
         # -------------------------
-        # Helper: classify URLs
+        # Helper: process URLs
         # -------------------------
         def process_urls(urls: list[str]):
-            logger.info(f"Processing {len(urls)} URLs for categorization...")
-            processed_count = 0
-            
-            for url in urls:
-                u = url.lower()
-
-                for category, patterns in SITEMAP_CATEGORY_PATTERNS.items():
-                    if any(p in u for p in patterns):
-                        if len(categorized[category]) < SITEMAP_CATEGORY_COUNTS.get(category, 5):
-                            categorized[category].append(url)
-                            processed_count += 1
-                        break
-
-                # ✅ early stop when ALL categories filled
-                if all(
-                    len(categorized[c]) >= SITEMAP_CATEGORY_COUNTS.get(c, 5)
-                    for c in categorized
-                ):
-                    logger.info(f"All categories filled, processed {processed_count} URLs")
-                    return True  # stop signal
-
-            logger.info(f"Finished processing URLs, processed {processed_count} URLs")
-            return False
+            logger.info(f"Processing {len(urls)} URLs...")
+            # Just process URLs without categorization
+            return len(urls)
         
         def parse_lastmod(date_str: str):
             try:
@@ -166,7 +146,8 @@ async def process_sitemap_content(
             sitemap.type_ = "urlset"
 
             urls = root.xpath("//*[local-name()='loc']/text()")
-            process_urls(urls[:100])  # Process first 100 URLs only
+            processed_count = process_urls(urls[:100])  # Process first 100 URLs only
+            logger.info(f"Processed {processed_count} URLs from sitemap")
 
             lastmods = root.xpath("//*[local-name()='lastmod']/text()")
             if lastmods:
@@ -210,10 +191,9 @@ async def process_sitemap_content(
                             last_updated = max(parsed) if parsed else None
                                                 
 
-                    # process + early stop
-                    should_stop = process_urls(urls[:100])  # Process first 100 URLs only
-                    if should_stop:
-                        break
+                    # process URLs
+                    processed_count = process_urls(urls[:100])  # Process first 100 URLs only
+                    logger.info(f"Processed {processed_count} URLs from child sitemap")
 
                 except Exception:
                     continue
@@ -221,21 +201,12 @@ async def process_sitemap_content(
         else:
             sitemap.type_ = "unknown"
 
-    except Exception:
+    except Exception as e:
+        logger.error(f"XML parsing error: {e}")
         sitemap.type_ = "invalid"
-
-    # -------------------------
-    # Build response
-    # -------------------------
-    category_urls = [
-        CategoryUrls(category=cat, urls=urls)
-        for cat, urls in categorized.items()
-        if urls
-    ]
 
     return SiteMapSignals(
         sitemap=sitemap,
-        category_urls=category_urls,
         last_updated=last_updated
     )
 
@@ -255,7 +226,7 @@ async def find_sitemap_signals(
 
     if not content:
         logger.warning("No sitemap content found, returning empty signals")
-        return SiteMapSignals(sitemap=sitemap, category_urls=[], last_updated=None)
+        return SiteMapSignals(sitemap=sitemap, last_updated=None)
     
     logger.info("Sitemap content fetched successfully, starting processing...")
     return await process_sitemap_content(content, sitemap, full_domain)
@@ -269,13 +240,11 @@ if __name__ == "__main__":
 
     async def run():
         result = await find_sitemap_signals(
-            "https://www.myntra.com",
-            "https://www.express.com/siteindex.xml"
+            "https://www.express.com",
         )
 
         if result.sitemap:
             print(result.model_dump_json(indent=2))
-            print([cat.category for cat in result.category_urls])
             print(result.last_updated)
         else:
             print("No content fetched")

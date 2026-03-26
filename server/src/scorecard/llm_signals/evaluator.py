@@ -8,12 +8,12 @@ import json
 from src.signals.llm_signals.citation_prompts_evaluator_chain import PromptAnswerClusters
 from src.signals.llm_signals import LlmSignals
 
-async def calculate_llm_signals_score(llm_signals: LlmSignals):
+async def calculate_llm_signals_score(llm_signals: LlmSignals, brand: str):
     """New scoring using PromptAnswerClusters"""
 
     clusters = llm_signals.citation_prompt_answers.root
     competitors = llm_signals.competitors
-    target_brand = llm_signals.competitors[0] if llm_signals.competitors else "Unknown"
+    target_brand = brand
 
     scores = []
 

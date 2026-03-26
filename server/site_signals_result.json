@@ -1,0 +1,874 @@
+{
+  "site_signals": [
+    {
+      "url": "https://www.aloyoga.com",
+      "depth": 0,
+      "index": 1,
+      "parent_url": null,
+      "status_code": 200,
+      "source": "httpx",
+      "final_url": "https://www.aloyoga.com/en-in",
+      "canonical_signal": {
+        "canonical_url": "https://www.aloyoga.com/en-in",
+        "exists": true,
+        "matches_final_url": true,
+        "is_clean": true
+      }
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/alo-gives",
+      "depth": 1,
+      "index": 2,
+      "parent_url": [
+        "https://www.aloyoga.com"
+      ],
+      "status_code": 200,
+      "source": "httpx",
+      "final_url": "https://www.aloyoga.com/en-in/pages/alo-gives",
+      "canonical_signal": {
+        "canonical_url": "https://www.aloyoga.com/en-in/pages/alo-gives",
+        "exists": true,
+        "matches_final_url": true,
+        "is_clean": true
+      }
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/studios",
+      "depth": 1,
+      "index": 3,
+      "parent_url": [
+        "https://www.aloyoga.com"
+      ],
+      "status_code": 200,
+      "source": "httpx",
+      "final_url": "https://www.aloyoga.com/en-in/pages/studios",
+      "canonical_signal": {
+        "canonical_url": "https://www.aloyoga.com/en-in/pages/studios",
+        "exists": true,
+        "matches_final_url": true,
+        "is_clean": true
+      }
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/accolade",
+      "depth": 1,
+      "index": 4,
+      "parent_url": [
+        "https://www.aloyoga.com"
+      ],
+      "status_code": 200,
+      "source": "httpx",
+      "final_url": "https://www.aloyoga.com/en-in/pages/accolade",
+      "canonical_signal": {
+        "canonical_url": "https://www.aloyoga.com/en-in/pages/accolade",
+        "exists": true,
+        "matches_final_url": true,
+        "is_clean": true
+      }
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/returns-support",
+      "depth": 1,
+      "index": 5,
+      "parent_url": [
+        "https://www.aloyoga.com"
+      ],
+      "status_code": 200,
+      "source": "httpx",
+      "final_url": "https://www.aloyoga.com/en-in/pages/returns-support",
+      "canonical_signal": {
+        "canonical_url": "https://www.aloyoga.com/en-in/pages/returns-support",
+        "exists": true,
+        "matches_final_url": true,
+        "is_clean": true
+      }
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/size-chart",
+      "depth": 1,
+      "index": 6,
+      "parent_url": [
+        "https://www.aloyoga.com"
+      ],
+      "status_code": 200,
+      "source": "httpx",
+      "final_url": "https://www.aloyoga.com/en-in/pages/size-chart",
+      "canonical_signal": {
+        "canonical_url": "https://www.aloyoga.com/en-in/pages/size-chart",
+        "exists": true,
+        "matches_final_url": true,
+        "is_clean": true
+      }
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/careers",
+      "depth": 1,
+      "index": 7,
+      "parent_url": [
+        "https://www.aloyoga.com"
+      ],
+      "status_code": 200,
+      "source": "httpx",
+      "final_url": "https://www.aloyoga.com/en-in/pages/careers",
+      "canonical_signal": {
+        "canonical_url": "https://www.aloyoga.com/en-in/pages/careers",
+        "exists": true,
+        "matches_final_url": true,
+        "is_clean": true
+      }
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/proprogram",
+      "depth": 1,
+      "index": 8,
+      "parent_url": [
+        "https://www.aloyoga.com"
+      ],
+      "status_code": 200,
+      "source": "httpx",
+      "final_url": "https://www.aloyoga.com/en-in/pages/proprogram",
+      "canonical_signal": {
+        "canonical_url": "https://www.aloyoga.com/en-in/pages/proprogram",
+        "exists": true,
+        "matches_final_url": true,
+        "is_clean": true
+      }
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/privacy-policy",
+      "depth": 1,
+      "index": 9,
+      "parent_url": [
+        "https://www.aloyoga.com"
+      ],
+      "status_code": 200,
+      "source": "httpx",
+      "final_url": "https://www.aloyoga.com/en-in/pages/privacy-policy",
+      "canonical_signal": {
+        "canonical_url": "https://www.aloyoga.com/en-in/pages/privacy-policy",
+        "exists": true,
+        "matches_final_url": true,
+        "is_clean": true
+      }
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/reviews",
+      "depth": 1,
+      "index": 10,
+      "parent_url": [
+        "https://www.aloyoga.com"
+      ],
+      "status_code": 200,
+      "source": "httpx",
+      "final_url": "https://www.aloyoga.com/en-in/pages/reviews",
+      "canonical_signal": {
+        "canonical_url": "https://www.aloyoga.com/en-in/pages/reviews",
+        "exists": true,
+        "matches_final_url": true,
+        "is_clean": true
+      }
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/outerwear",
+      "depth": 1,
+      "index": 11,
+      "parent_url": [
+        "https://www.aloyoga.com"
+      ],
+      "status_code": 200,
+      "source": "httpx",
+      "final_url": "https://www.aloyoga.com/en-in/pages/outerwear",
+      "canonical_signal": {
+        "canonical_url": "https://www.aloyoga.com/en-in/pages/outerwear",
+        "exists": true,
+        "matches_final_url": true,
+        "is_clean": true
+      }
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/new-to-alo",
+      "depth": 1,
+      "index": 12,
+      "parent_url": [
+        "https://www.aloyoga.com"
+      ],
+      "status_code": 200,
+      "source": "httpx",
+      "final_url": "https://www.aloyoga.com/en-in/pages/new-to-alo",
+      "canonical_signal": {
+        "canonical_url": "https://www.aloyoga.com/en-in/pages/new-to-alo",
+        "exists": true,
+        "matches_final_url": true,
+        "is_clean": true
+      }
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/terms-of-use",
+      "depth": 1,
+      "index": 13,
+      "parent_url": [
+        "https://www.aloyoga.com"
+      ],
+      "status_code": 200,
+      "source": "httpx",
+      "final_url": "https://www.aloyoga.com/en-in/pages/terms-of-use",
+      "canonical_signal": {
+        "canonical_url": "https://www.aloyoga.com/en-in/pages/terms-of-use",
+        "exists": true,
+        "matches_final_url": true,
+        "is_clean": true
+      }
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/track-my-order",
+      "depth": 1,
+      "index": 14,
+      "parent_url": [
+        "https://www.aloyoga.com"
+      ],
+      "status_code": 200,
+      "source": "httpx",
+      "final_url": "https://www.aloyoga.com/en-in/pages/track-my-order",
+      "canonical_signal": {
+        "canonical_url": "https://www.aloyoga.com/en-in/pages/track-my-order",
+        "exists": true,
+        "matches_final_url": true,
+        "is_clean": true
+      }
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/access",
+      "depth": 1,
+      "index": 15,
+      "parent_url": [
+        "https://www.aloyoga.com"
+      ],
+      "status_code": 200,
+      "source": "httpx",
+      "final_url": "https://www.aloyoga.com/en-in/pages/access",
+      "canonical_signal": {
+        "canonical_url": "https://www.aloyoga.com/en-in/pages/access",
+        "exists": true,
+        "matches_final_url": true,
+        "is_clean": true
+      }
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/blogs/alo-blog",
+      "depth": 2,
+      "index": 16,
+      "parent_url": [
+        "https://www.aloyoga.com/en-in/pages/track-my-order"
+      ],
+      "status_code": 200,
+      "source": "httpx",
+      "final_url": "https://www.aloyoga.com/en-in/blogs/alo-blog",
+      "canonical_signal": {
+        "canonical_url": "https://www.aloyoga.com/en-in/blogs/alo-blog",
+        "exists": true,
+        "matches_final_url": true,
+        "is_clean": true
+      }
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/alo-events",
+      "depth": 2,
+      "index": 17,
+      "parent_url": [
+        "https://www.aloyoga.com/en-in/pages/track-my-order"
+      ],
+      "status_code": 200,
+      "source": "httpx",
+      "final_url": "https://www.aloyoga.com/en-in/pages/alo-events",
+      "canonical_signal": {
+        "canonical_url": "https://www.aloyoga.com/en-in/pages/alo-events",
+        "exists": true,
+        "matches_final_url": true,
+        "is_clean": true
+      }
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/orders-and-shipping-support",
+      "depth": 2,
+      "index": 18,
+      "parent_url": [
+        "https://www.aloyoga.com/en-in/pages/terms-of-use"
+      ],
+      "status_code": 200,
+      "source": "httpx",
+      "final_url": "https://www.aloyoga.com/en-in/pages/orders-and-shipping-support",
+      "canonical_signal": {
+        "canonical_url": "https://www.aloyoga.com/en-in/pages/orders-and-shipping-support",
+        "exists": true,
+        "matches_final_url": true,
+        "is_clean": true
+      }
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/help-center",
+      "depth": 2,
+      "index": 19,
+      "parent_url": [
+        "https://www.aloyoga.com/en-in/pages/alo-gives"
+      ],
+      "status_code": 200,
+      "source": "httpx",
+      "final_url": "https://www.aloyoga.com/en-in/pages/help-center",
+      "canonical_signal": {
+        "canonical_url": "https://www.aloyoga.com/en-in/pages/help-center",
+        "exists": true,
+        "matches_final_url": true,
+        "is_clean": true
+      }
+    },
+    {
+      "url": "https://www.aloyoga.com/cart",
+      "depth": 2,
+      "index": 20,
+      "parent_url": [
+        "https://www.aloyoga.com/en-in/pages/alo-gives"
+      ],
+      "status_code": 200,
+      "source": "httpx",
+      "final_url": "https://www.aloyoga.com/en-in/cart",
+      "canonical_signal": {
+        "canonical_url": "https://www.aloyoga.com/en-in/cart",
+        "exists": true,
+        "matches_final_url": true,
+        "is_clean": true
+      }
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/account/addresses",
+      "depth": 2,
+      "index": 21,
+      "parent_url": [
+        "https://www.aloyoga.com/en-in/pages/outerwear"
+      ],
+      "status_code": 200,
+      "source": "httpx",
+      "final_url": "https://www.aloyoga.com/en-in/account/login",
+      "canonical_signal": {
+        "canonical_url": "https://www.aloyoga.com/en-in/account/login",
+        "exists": true,
+        "matches_final_url": true,
+        "is_clean": true
+      }
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/we-are-alo",
+      "depth": 2,
+      "index": 22,
+      "parent_url": [
+        "https://www.aloyoga.com/en-in/pages/new-to-alo"
+      ],
+      "status_code": 200,
+      "source": "httpx",
+      "final_url": "https://www.aloyoga.com/en-in/pages/we-are-alo",
+      "canonical_signal": {
+        "canonical_url": "https://www.aloyoga.com/en-in/pages/we-are-alo",
+        "exists": true,
+        "matches_final_url": true,
+        "is_clean": true
+      }
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/cookie-policy",
+      "depth": 2,
+      "index": 23,
+      "parent_url": [
+        "https://www.aloyoga.com/en-in/pages/privacy-policy"
+      ],
+      "status_code": 200,
+      "source": "httpx",
+      "final_url": "https://www.aloyoga.com/en-in/pages/cookie-policy",
+      "canonical_signal": {
+        "canonical_url": "https://www.aloyoga.com/en-in/pages/cookie-policy",
+        "exists": true,
+        "matches_final_url": true,
+        "is_clean": true
+      }
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/account",
+      "depth": 2,
+      "index": 24,
+      "parent_url": [
+        "https://www.aloyoga.com/en-in/pages/privacy-policy"
+      ],
+      "status_code": 200,
+      "source": "httpx",
+      "final_url": "https://www.aloyoga.com/en-in/account/login",
+      "canonical_signal": {
+        "canonical_url": "https://www.aloyoga.com/en-in/account/login",
+        "exists": true,
+        "matches_final_url": true,
+        "is_clean": true
+      }
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/stores",
+      "depth": 2,
+      "index": 25,
+      "parent_url": [
+        "https://www.aloyoga.com/en-in/pages/privacy-policy"
+      ],
+      "status_code": 200,
+      "source": "httpx",
+      "final_url": "https://www.aloyoga.com/en-in/pages/stores",
+      "canonical_signal": {
+        "canonical_url": "https://www.aloyoga.com/en-in/pages/stores",
+        "exists": true,
+        "matches_final_url": true,
+        "is_clean": true
+      }
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/gift-card-balance",
+      "depth": 2,
+      "index": 26,
+      "parent_url": [
+        "https://www.aloyoga.com/en-in/pages/returns-support"
+      ],
+      "status_code": 200,
+      "source": "httpx",
+      "final_url": "https://www.aloyoga.com/en-in/pages/gift-card-balance",
+      "canonical_signal": {
+        "canonical_url": "https://www.aloyoga.com/en-in/pages/gift-card-balance",
+        "exists": true,
+        "matches_final_url": true,
+        "is_clean": true
+      }
+    },
+    {
+      "url": "https://www.aloyoga.com/pages/privacy-policy",
+      "depth": 2,
+      "index": 27,
+      "parent_url": [
+        "https://www.aloyoga.com/en-in/pages/returns-support"
+      ],
+      "status_code": 200,
+      "source": "httpx",
+      "final_url": "https://www.aloyoga.com/en-in/pages/privacy-policy",
+      "canonical_signal": {
+        "canonical_url": "https://www.aloyoga.com/en-in/pages/privacy-policy",
+        "exists": true,
+        "matches_final_url": true,
+        "is_clean": true
+      }
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/mens-fabrication-guide",
+      "depth": 2,
+      "index": 28,
+      "parent_url": [
+        "https://www.aloyoga.com/en-in/pages/careers"
+      ],
+      "status_code": 200,
+      "source": "httpx",
+      "final_url": "https://www.aloyoga.com/en-in/pages/mens-fabrication-guide",
+      "canonical_signal": {
+        "canonical_url": "https://www.aloyoga.com/en-in/pages/mens-fabrication-guide",
+        "exists": true,
+        "matches_final_url": true,
+        "is_clean": true
+      }
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/vision-board",
+      "depth": 2,
+      "index": 29,
+      "parent_url": [
+        "https://www.aloyoga.com/en-in/pages/careers"
+      ],
+      "status_code": 200,
+      "source": "httpx",
+      "final_url": "https://www.aloyoga.com/en-in/pages/vision-board",
+      "canonical_signal": {
+        "canonical_url": "https://www.aloyoga.com/en-in/pages/vision-board",
+        "exists": true,
+        "matches_final_url": true,
+        "is_clean": true
+      }
+    },
+    {
+      "url": "https://www.aloyoga.com/pages/new-to-alo#for-him",
+      "depth": 2,
+      "index": 30,
+      "parent_url": [
+        "https://www.aloyoga.com/en-in/pages/reviews"
+      ],
+      "status_code": 200,
+      "source": "httpx",
+      "final_url": "https://www.aloyoga.com/en-in/pages/new-to-alo",
+      "canonical_signal": {
+        "canonical_url": "https://www.aloyoga.com/en-in/pages/new-to-alo",
+        "exists": true,
+        "matches_final_url": true,
+        "is_clean": true
+      }
+    }
+  ],
+  "jsonld_signals": [
+    {
+      "url": "https://www.aloyoga.com",
+      "type_": "Organization",
+      "exists": true,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.aloyoga.com",
+      "type_": "WebSite",
+      "exists": true,
+      "is_valid": true
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/alo-gives",
+      "type_": "Organization",
+      "exists": true,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/alo-gives",
+      "type_": "WebSite",
+      "exists": true,
+      "is_valid": true
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/studios",
+      "type_": "Organization",
+      "exists": true,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/studios",
+      "type_": "WebSite",
+      "exists": true,
+      "is_valid": true
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/accolade",
+      "type_": "Organization",
+      "exists": true,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/accolade",
+      "type_": "WebSite",
+      "exists": true,
+      "is_valid": true
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/returns-support",
+      "type_": "Organization",
+      "exists": true,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/returns-support",
+      "type_": "WebSite",
+      "exists": true,
+      "is_valid": true
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/size-chart",
+      "type_": "Organization",
+      "exists": true,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/size-chart",
+      "type_": "WebSite",
+      "exists": true,
+      "is_valid": true
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/careers",
+      "type_": "Organization",
+      "exists": true,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/careers",
+      "type_": "WebSite",
+      "exists": true,
+      "is_valid": true
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/proprogram",
+      "type_": "Organization",
+      "exists": true,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/proprogram",
+      "type_": "WebSite",
+      "exists": true,
+      "is_valid": true
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/privacy-policy",
+      "type_": "Organization",
+      "exists": true,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/privacy-policy",
+      "type_": "WebSite",
+      "exists": true,
+      "is_valid": true
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/reviews",
+      "type_": "Organization",
+      "exists": true,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/reviews",
+      "type_": "WebSite",
+      "exists": true,
+      "is_valid": true
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/outerwear",
+      "type_": "Organization",
+      "exists": true,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/outerwear",
+      "type_": "WebSite",
+      "exists": true,
+      "is_valid": true
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/new-to-alo",
+      "type_": "Organization",
+      "exists": true,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/new-to-alo",
+      "type_": "WebSite",
+      "exists": true,
+      "is_valid": true
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/terms-of-use",
+      "type_": "Organization",
+      "exists": true,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/terms-of-use",
+      "type_": "WebSite",
+      "exists": true,
+      "is_valid": true
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/track-my-order",
+      "type_": "Organization",
+      "exists": true,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/track-my-order",
+      "type_": "WebSite",
+      "exists": true,
+      "is_valid": true
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/access",
+      "type_": "Organization",
+      "exists": true,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/access",
+      "type_": "WebSite",
+      "exists": true,
+      "is_valid": true
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/blogs/alo-blog",
+      "type_": "Organization",
+      "exists": true,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/blogs/alo-blog",
+      "type_": "WebSite",
+      "exists": true,
+      "is_valid": true
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/alo-events",
+      "type_": "Organization",
+      "exists": true,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/alo-events",
+      "type_": "WebSite",
+      "exists": true,
+      "is_valid": true
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/orders-and-shipping-support",
+      "type_": "Organization",
+      "exists": true,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/orders-and-shipping-support",
+      "type_": "WebSite",
+      "exists": true,
+      "is_valid": true
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/help-center",
+      "type_": "Organization",
+      "exists": true,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/help-center",
+      "type_": "WebSite",
+      "exists": true,
+      "is_valid": true
+    },
+    {
+      "url": "https://www.aloyoga.com/cart",
+      "type_": "Organization",
+      "exists": true,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.aloyoga.com/cart",
+      "type_": "WebSite",
+      "exists": true,
+      "is_valid": true
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/account/addresses",
+      "type_": "Organization",
+      "exists": true,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/account/addresses",
+      "type_": "WebSite",
+      "exists": true,
+      "is_valid": true
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/we-are-alo",
+      "type_": "Organization",
+      "exists": true,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/we-are-alo",
+      "type_": "WebSite",
+      "exists": true,
+      "is_valid": true
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/cookie-policy",
+      "type_": "Organization",
+      "exists": true,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/cookie-policy",
+      "type_": "WebSite",
+      "exists": true,
+      "is_valid": true
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/account",
+      "type_": "Organization",
+      "exists": true,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/account",
+      "type_": "WebSite",
+      "exists": true,
+      "is_valid": true
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/stores",
+      "type_": "Organization",
+      "exists": true,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/stores",
+      "type_": "WebSite",
+      "exists": true,
+      "is_valid": true
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/gift-card-balance",
+      "type_": "Organization",
+      "exists": true,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/gift-card-balance",
+      "type_": "WebSite",
+      "exists": true,
+      "is_valid": true
+    },
+    {
+      "url": "https://www.aloyoga.com/pages/privacy-policy",
+      "type_": "Organization",
+      "exists": true,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.aloyoga.com/pages/privacy-policy",
+      "type_": "WebSite",
+      "exists": true,
+      "is_valid": true
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/mens-fabrication-guide",
+      "type_": "Organization",
+      "exists": true,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/mens-fabrication-guide",
+      "type_": "WebSite",
+      "exists": true,
+      "is_valid": true
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/vision-board",
+      "type_": "Organization",
+      "exists": true,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.aloyoga.com/en-in/pages/vision-board",
+      "type_": "WebSite",
+      "exists": true,
+      "is_valid": true
+    },
+    {
+      "url": "https://www.aloyoga.com/pages/new-to-alo#for-him",
+      "type_": "Organization",
+      "exists": true,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.aloyoga.com/pages/new-to-alo#for-him",
+      "type_": "WebSite",
+      "exists": true,
+      "is_valid": true
+    }
+  ]
+}

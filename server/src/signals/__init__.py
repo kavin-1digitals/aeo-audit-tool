@@ -22,29 +22,34 @@ async def find_signals(full_domain: str, brand: Optional[str] = None, industry: 
     """Find all signals for a domain"""
     logger.info(f"Starting signals analysis for domain: {full_domain}")
     
-    # Phase 1: Get domain-level signals (robots.txt, llm.txt, sitemap)
-    logger.info("Phase 1: Fetching domain-level signals (robots.txt, llm.txt, sitemap)")
+    # Start all signal tasks in parallel
+    logger.info("Starting all signal collection tasks in parallel...")
+    
+    # Domain signals task
     domain_signals_task = asyncio.create_task(find_domain_signals(full_domain))
     
-    # Phase 2: Start site signals (depends on domain signals for sitemap)
-    # We'll wait for domain signals first since site signals depends on sitemap
+    # Site signals task
+    site_signals_task = asyncio.create_task(find_site_signals(full_domain, None))
+    
+    # LLM signals task (if brand provided)
+    llm_signals_task = None
+    if brand and industry:
+        logger.info("Starting LLM signals (brand visibility analysis)")
+        llm_signals_task = asyncio.create_task(find_llm_signals(brand, geo))
+    
+    # Wait for all tasks to complete
+    logger.info("Waiting for all signal tasks to complete...")
+    
+    # Get domain signals
     domain_signals = await domain_signals_task
     logger.info(f"Domain signals completed. Sitemap exists: {domain_signals.site_map_signal.sitemap.exists}")
     
-    # Phase 3: Start site signals and LLM signals in parallel (if brand provided)
-    logger.info("Phase 2: Fetching site-level signals (scraping individual pages)")
-    site_signals_task = asyncio.create_task(find_site_signals(domain_signals.site_map_signal))
-    
-    llm_signals_task = None
-    if brand and industry:
-        logger.info("Phase 3: Fetching LLM signals (brand visibility analysis)")
-        llm_signals_task = asyncio.create_task(find_llm_signals(brand, geo))
-    
-    # Wait for site signals to complete
+    # Get site signals
     site_signals = await site_signals_task
-    logger.info(f"Site signals completed. Categories found: {len(site_signals.categories)}")
+    logger.info(f"Site signals completed. Site signals found: {len(site_signals.site_signals)}")
+    logger.info(f"JSON-LD signals found: {len(site_signals.jsonld_signals)}")
     
-    # Wait for LLM signals if started
+    # Get LLM signals if started
     llm_signals = None
     if llm_signals_task:
         try:
