@@ -1,0 +1,6 @@
+https://www.express.com -> page_0_1.html
+https://www.express.com/g/Accessibility -> page_1_2.html
+https://www.express.com/mens-clothing/pants/dress-pants/cat280012?ICID=TN_M_SUITS_DRESSPANTS -> page_1_3.html
+https://www.express.com/mens-clothing/suiting/cat1830016?ICID=TN_M_SUITS_SEPARATES -> page_1_4.html
+https://www.express.com/mens-clothing/whats-hot/neutral-outfits-mens/cat5050420 -> page_1_5.html
+https://www.express.com/womens-clothing/dresses/cat550007?ICID=TN_W_DRESSES_CLOTHING -> page_1_6.html

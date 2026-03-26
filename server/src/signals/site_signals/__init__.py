@@ -74,7 +74,7 @@ async def find_site_signals(full_domain: str, crawl_result) -> SiteSignals:
     )
 
 if __name__ == '__main__':
-    full_domain = 'https://www.aloyoga.com'
+    full_domain = 'https://www.express.com'
     crawl_file = "crawl_result.json"
     
     if os.path.exists(crawl_file):

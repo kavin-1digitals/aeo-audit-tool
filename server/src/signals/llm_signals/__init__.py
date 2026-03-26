@@ -218,5 +218,5 @@ async def find_llm_signals(brand: str, geo: str) -> LlmSignals:
 # -----------------------------
 
 if __name__ == "__main__":
-    result = asyncio.run(find_llm_signals("Alo Yoga", "US"))
+    result = asyncio.run(find_llm_signals("Express", "US"))
     print(result.model_dump_json(indent=2))

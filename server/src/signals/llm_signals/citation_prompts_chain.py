@@ -102,20 +102,39 @@ Generate prompts that:
 - brand listings
 - comparisons
 - recommendations
+- explicit brand name requests
 
 ✅ Feel like:
 - natural human questions
 - real buying intent
+- specific brand discovery queries
+
+✅ Structure:
+- 2-3 lines each (detailed context)
+- explicitly ask for brand lists
+- include specific scenarios
+- mention {geo} for localization
 
 Each prompt MUST:
-- clearly imply brand outputs
+- clearly ask for BRAND NAMES or BRAND LISTS
 - relate to ONE capability surface
 - feel specific (not generic)
+- include context that would naturally lead to brand mentions
 
 ❌ DO NOT:
 - sound like SEO
 - be educational
 - be vague
+- ask generic questions without brand context
+
+✅ EXPLICIT BRAND REQUESTS:
+- "Can you list 3-5 top brands..."
+- "Which 3-5 brands would you recommend..."
+- "What are the 3-5 best brands for..."
+- "Can you name 3-5 brands that..."
+- "Which 3-5 fashion brands offer..."
+- "List 3-5 top brands for..."
+- "Recommend 3-5 brands that..."
 
 ════════════════════════════════════════════════════════════════
 CLUSTER DISTRIBUTION (STRICT)
@@ -139,25 +158,42 @@ STRICT RULES
 ════════════════════════════════════════════════════════════════
 
 - DO NOT mention "{brand}" or any brand names
-- At least 30–50% prompts should include "{geo}"
+- At least 70–90% prompts should include "{geo}"
 - Use VARIED contexts across prompts
 - Avoid repeating same wording
 
 Each prompt MUST include at least one of:
-- "brands"
-- "which"
-- "best"
-- "top"
-- "alternatives"
+- "list 3-5 brands"
+- "which 3-5 brands"
+- "3-5 best brands"
+- "3-5 top brands"
+- "3-5 brand names"
+- "recommend 3-5 brands"
+- "name 3-5 brands"
 
 ════════════════════════════════════════════════════════════════
 GOOD EXAMPLES (STYLE ONLY)
 ════════════════════════════════════════════════════════════════
 
-- "Which running shoe brands are actually worth it?"
-- "What are the best workout clothing brands right now?"
-- "Which sneaker brands are trending in {geo}?"
-- "What are good alternatives to expensive sportswear brands?"
+✅ Brand Discovery (2-3 lines, explicit brand request):
+"Can you list 3-5 top running shoe brands that are popular in {geo} right now? 
+I'm looking for brands that offer both performance and style for daily workouts.
+Which 3-5 brands would you recommend for someone serious about fitness?"
+
+✅ Brand Recommendations (detailed context, brand list):
+"What are the 3-5 best workout clothing brands for intense training sessions in {geo}?
+I need brands that specialize in moisture-wicking fabrics and durable construction.
+Can you name 3-5 brands that professional athletes actually use and trust?"
+
+✅ Brand Comparison (explicit brand comparison):
+"Which 3-5 sneaker brands are currently trending among young adults in {geo}?
+I want to compare brands like Nike, Adidas, and newer emerging brands.
+Can you list 3-5 top brands and explain what makes each brand unique?"
+
+✅ Explicit Brand List Request:
+"List 3-5 top sustainable fashion brands that operate in {geo}.
+I'm interested in brands that use eco-friendly materials and ethical production.
+Which 3-5 brands are leading the sustainable fashion movement right now?"
 
 ════════════════════════════════════════════════════════════════
 OUTPUT FORMAT
@@ -205,8 +241,8 @@ async def safe_invoke(chain, payload, retries=2):
 # -----------------------------
 
 if __name__ == "__main__":
-    brand = "Alo Yoga"
-    geo = "United States"
+    brand = "Express"
+    geo = "US"
 
     result = asyncio.run(safe_invoke(
         citation_prompts_chain,
