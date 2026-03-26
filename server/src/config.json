@@ -60,5 +60,14 @@
     "openai": "gpt-4o-mini"
   },
   "num_prompts": 14,
-  "num_competitors": 8
+  "num_competitors": 8,
+  "citation_prompt_clusters": {
+    "Brand Discovery": 3,
+    "Brand Recommendation": 3,
+    "Brand Comparison": 3,
+    "Pricing & Value": 3,
+    "Quality & Durability": 3,
+    "Style / Trends": 3,
+    "Fit / Usability": 2
+  }
 }

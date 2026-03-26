@@ -8,16 +8,23 @@ import {
   EyeIcon,
   ArrowPathIcon
 } from '@heroicons/react/24/outline';
-import KeyMetrics from '../components/Dashboard/KeyMetrics';
 import BrandMetrics from '../components/Dashboard/BrandMetrics';
 import ProfessionalCharts from '../components/Dashboard/ProfessionalCharts';
 import DomainPanels from '../components/Dashboard/DomainPanels';
 import ExecutiveSummary from '../components/Dashboard/ExecutiveSummary';
 import SignalTypeChart from '../components/Dashboard/SignalTypeChart';
 import TopIssues from '../components/Dashboard/TopIssues';
+import { ScoreOverview } from '../components/ScoreOverview';
 
 const Dashboard = ({ auditData, onViewDetails, onNewAudit }) => {
   const { audit_metadata, path_scorecard } = auditData;
+  
+  // Debug: Log the audit data structure
+  console.log('=== AUDIT DATA DEBUG ===');
+  console.log('audit_metadata:', audit_metadata);
+  console.log('path_scorecard keys:', Object.keys(path_scorecard));
+  console.log('signals exists:', !!auditData.signals);
+  console.log('========================');
 
   // Group scores by main category
   const getCategoryData = () => {
@@ -50,6 +57,37 @@ const Dashboard = ({ auditData, onViewDetails, onNewAudit }) => {
 
   // Get LLM brand analysis metrics
   const getLLMMetrics = () => {
+    // Check if LLM signals data exists in signals object
+    const llmSignals = auditData.signals?.llm_signals;
+    
+    if (!llmSignals) {
+      console.log('No LLM signals found in auditData.signals');
+      return null;
+    }
+    
+    // Use new market_comparison structure
+    if (llmSignals.market_comparison && llmSignals.market_comparison.length > 0) {
+      const mainBrandData = llmSignals.market_comparison.find(item => item.brand === audit_metadata.brand);
+      const allCompetitors = llmSignals.market_comparison.filter(item => item.brand !== audit_metadata.brand);
+      
+      console.log('LLM Market Comparison Data:', llmSignals.market_comparison);
+      console.log('Main Brand SOV:', mainBrandData?.brand_sov || 0);
+      
+      return {
+        brandSOV: mainBrandData?.brand_sov || 0,
+        brandCitations: mainBrandData?.brand_citations || 0,
+        clusterCoverage: mainBrandData?.cluster_coverage || 0,
+        competitors: allCompetitors.map(item => item.brand),
+        competitorSOV: allCompetitors.reduce((acc, item) => {
+          acc[item.brand] = item.brand_sov;
+          return acc;
+        }, {}),
+        competitorCount: allCompetitors.length,
+        market_comparison: llmSignals.market_comparison // ✅ ADD THIS LINE
+      };
+    }
+    
+    // Fallback to old method if new structure not available
     const llmCategory = path_scorecard['LLM Brand Analysis'];
     if (!llmCategory) {
       console.log('No LLM Brand Analysis category found');
@@ -194,6 +232,11 @@ const Dashboard = ({ auditData, onViewDetails, onNewAudit }) => {
 
   const categories = getCategoryData();
   const llmMetrics = getLLMMetrics();
+  console.log('=== LLM METRICS DEBUG ===');
+  console.log('llmMetrics:', llmMetrics);
+  console.log('market_comparison exists:', !!llmMetrics?.market_comparison);
+  console.log('market_comparison length:', llmMetrics?.market_comparison?.length || 0);
+  console.log('==========================');
   
   // Debug: Log the path_scorecard structure
   console.log('Path scorecard keys:', Object.keys(path_scorecard));
@@ -246,29 +289,12 @@ const Dashboard = ({ auditData, onViewDetails, onNewAudit }) => {
         </p>
       </div>
 
-      {/* Key Metrics */}
-      <KeyMetrics 
-        audit_metadata={audit_metadata}
-        criticalIssues={criticalIssues}
-        getScoreColor={getScoreColor}
-        getScoreIcon={getScoreIcon}
-      />
-
-      {/* Brand Performance Metrics */}
-      {(llmMetrics || true) && (
-        <BrandMetrics 
-          llmMetrics={llmMetrics}
-          getScoreColor={getScoreColor}
-        />
-      )}
-
-      {/* Brand vs Competitors Chart */}
-      {(llmMetrics || true) && (
-        <ProfessionalCharts 
-          llmMetrics={llmMetrics}
-          audit_metadata={audit_metadata}
-        />
-      )}
+      {/* Performance Overview */}
+      <ScoreOverview scorecard={{
+        total_score: audit_metadata.total_score || 0,
+        total_checks: audit_metadata.total_checks || 1,
+        score_percentage: audit_metadata.score_percentage || 0
+      }} />
 
       {/* Executive Summary */}
       <ExecutiveSummary 
@@ -278,6 +304,10 @@ const Dashboard = ({ auditData, onViewDetails, onNewAudit }) => {
         critical_issues={criticalIssues}
       />
 
+      {/* Signal Type Performance Chart */}
+      <SignalTypeChart categories={categories} />
+
+
       {/* Signal Category Panels */}
       <DomainPanels 
         categories={categories}
@@ -285,8 +315,18 @@ const Dashboard = ({ auditData, onViewDetails, onNewAudit }) => {
         onViewDetails={onViewDetails}
       />
 
-      {/* Signal Type Performance Chart */}
-      <SignalTypeChart categories={categories} />
+
+      
+
+      {/* Brand vs Competitors Chart */}
+      {llmMetrics && llmMetrics.market_comparison && llmMetrics.market_comparison.length > 0 && (
+        <ProfessionalCharts 
+          llmMetrics={llmMetrics}
+          audit_metadata={audit_metadata}
+        />
+      )}
+
+      
 
       {/* Top Issues */}
       <TopIssues categories={categories} pathScorecard={path_scorecard} />

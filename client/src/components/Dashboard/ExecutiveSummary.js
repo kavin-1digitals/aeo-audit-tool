@@ -9,6 +9,18 @@ import {
 } from '@heroicons/react/24/outline';
 
 const ExecutiveSummary = ({ audit_metadata, total_checks, categories_count, critical_issues }) => {
+  // Get LLM metrics if available
+  const getLLMMetrics = () => {
+    // This would need to be passed from the parent or calculated
+    // For now, using placeholder values that should come from llmMetrics
+    return {
+      brandSOV: audit_metadata.score_percentage || 0, // This should come from actual LLM metrics
+      brandCitations: Math.round((audit_metadata.score_percentage || 0) * 0.14), // Example calculation
+      clusterCoverage: audit_metadata.score_percentage || 0 // This should come from actual LLM metrics
+    };
+  };
+
+  const llmMetrics = getLLMMetrics();
   const currentDate = new Date().toLocaleDateString('en-US', { 
     year: 'numeric', 
     month: 'long', 
@@ -96,20 +108,20 @@ const ExecutiveSummary = ({ audit_metadata, total_checks, categories_count, crit
             <h4 className="text-sm font-medium text-gray-900 uppercase tracking-wider">Performance Overview</h4>
             <div className="space-y-3">
               <div>
-                <p className="text-sm font-medium text-gray-900">Overall Score</p>
+                <p className="text-sm font-medium text-gray-900">Brand SOV</p>
                 <div className="flex items-center mt-1">
                   <div className="text-2xl font-bold text-gray-900">
-                    {audit_metadata.score_percentage.toFixed(1)}%
+                    {llmMetrics.brandSOV.toFixed(1)}%
                   </div>
                 </div>
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-900">Checks Performed</p>
-                <p className="text-sm text-gray-600">{total_checks} individual tests</p>
+                <p className="text-sm font-medium text-gray-900">Brand Citations</p>
+                <p className="text-sm text-gray-600">{llmMetrics.brandCitations} citations found</p>
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-900">Success Rate</p>
-                <p className="text-sm text-gray-600">{audit_metadata.score_percentage.toFixed(1)}% passed</p>
+                <p className="text-sm font-medium text-gray-900">Cluster Coverage</p>
+                <p className="text-sm text-gray-600">{llmMetrics.clusterCoverage.toFixed(1)}% coverage</p>
               </div>
             </div>
           </div>

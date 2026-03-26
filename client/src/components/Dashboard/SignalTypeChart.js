@@ -137,29 +137,6 @@ const SignalTypeChart = ({ categories }) => {
           })}
         </div>
         
-        {/* Summary */}
-        <div className="mt-8 pt-6 border-t border-gray-300">
-          <div className="grid grid-cols-3 gap-4 text-center">
-            <div className="bg-gray-50 rounded-lg p-3">
-              <p className="text-2xl font-bold text-emerald-600">
-                {Object.values(signalTypeData).reduce((sum, data) => sum + data.passed, 0)}
-              </p>
-              <p className="text-xs font-medium text-gray-700 mt-1">Total Passed</p>
-            </div>
-            <div className="bg-gray-50 rounded-lg p-3">
-              <p className="text-2xl font-bold text-rose-600">
-                {Object.values(signalTypeData).reduce((sum, data) => sum + data.failed, 0)}
-              </p>
-              <p className="text-xs font-medium text-gray-700 mt-1">Total Failed</p>
-            </div>
-            <div className="bg-gray-50 rounded-lg p-3">
-              <p className="text-2xl font-bold text-gray-900">
-                {Object.values(signalTypeData).reduce((sum, data) => sum + data.total, 0)}
-              </p>
-              <p className="text-xs font-medium text-gray-700 mt-1">Total Checks</p>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );

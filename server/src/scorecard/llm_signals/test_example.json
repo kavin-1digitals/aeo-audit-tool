@@ -1,0 +1,747 @@
+{
+  "competitors": [
+    "Lululemon",
+    "Athleta",
+    "Beyond Yoga",
+    "Fabletics",
+    "Manduka"
+  ],
+  "citation_prompt_answers": [
+    {
+      "cluster": "Brand Discovery",
+      "prompts": [
+        {
+          "prompt": "What are some popular brands for high-quality yoga apparel in the US?",
+          "answer": "Lululemon and Alo Yoga are two of the most recognized brands for high-quality yoga apparel, known for their stylish designs and premium materials. Athleta also offers a great selection, focusing on both performance and comfort. For a more budget-friendly option, Fabletics provides good quality at a lower price point.",
+          "is_brand_mentioned": true,
+          "competitor_citations": [
+            {
+              "competitor_brand": "Lululemon",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Athleta",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Beyond Yoga",
+              "is_competitor_mentioned": false
+            },
+            {
+              "competitor_brand": "Fabletics",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Manduka",
+              "is_competitor_mentioned": false
+            }
+          ]
+        },
+        {
+          "prompt": "Which brands offer stylish and functional activewear for yoga enthusiasts?",
+          "answer": "Beyond Yoga and Lululemon are celebrated for their stylish yet functional activewear, appealing to both aesthetics and performance. Manduka is another brand that combines style with functionality, particularly in their yoga mats and tops. For those looking for trendy options, Alo Yoga stands out with its fashion-forward designs.",
+          "is_brand_mentioned": true,
+          "competitor_citations": [
+            {
+              "competitor_brand": "Lululemon",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Athleta",
+              "is_competitor_mentioned": false
+            },
+            {
+              "competitor_brand": "Beyond Yoga",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Fabletics",
+              "is_competitor_mentioned": false
+            },
+            {
+              "competitor_brand": "Manduka",
+              "is_competitor_mentioned": true
+            }
+          ]
+        },
+        {
+          "prompt": "What are the best brands for eco-friendly yoga clothing?",
+          "answer": "Patagonia and prAna are leaders in eco-friendly yoga clothing, utilizing sustainable materials and ethical manufacturing practices. Beyond Yoga also offers a range of eco-conscious options, while Girlfriend Collective focuses on recycled materials, making them a great choice for environmentally aware consumers.",
+          "is_brand_mentioned": false,
+          "competitor_citations": [
+            {
+              "competitor_brand": "Lululemon",
+              "is_competitor_mentioned": false
+            },
+            {
+              "competitor_brand": "Athleta",
+              "is_competitor_mentioned": false
+            },
+            {
+              "competitor_brand": "Beyond Yoga",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Fabletics",
+              "is_competitor_mentioned": false
+            },
+            {
+              "competitor_brand": "Manduka",
+              "is_competitor_mentioned": false
+            }
+          ]
+        }
+      ],
+      "is_brand_mentioned": true,
+      "competitor_citations": [
+        {
+          "competitor_brand": "Lululemon",
+          "is_competitor_mentioned": true
+        },
+        {
+          "competitor_brand": "Athleta",
+          "is_competitor_mentioned": true
+        },
+        {
+          "competitor_brand": "Beyond Yoga",
+          "is_competitor_mentioned": true
+        },
+        {
+          "competitor_brand": "Fabletics",
+          "is_competitor_mentioned": true
+        },
+        {
+          "competitor_brand": "Manduka",
+          "is_competitor_mentioned": true
+        }
+      ]
+    },
+    {
+      "cluster": "Brand Recommendation",
+      "prompts": [
+        {
+          "prompt": "Can you recommend some top brands for yoga pants that are comfortable and durable?",
+          "answer": "Lululemon is renowned for its durable and comfortable yoga pants, often featuring high-quality fabrics that withstand wear. Athleta also offers a variety of options that prioritize comfort without sacrificing style. For a more affordable choice, Fabletics provides a good balance of comfort and durability.",
+          "is_brand_mentioned": false,
+          "competitor_citations": [
+            {
+              "competitor_brand": "Lululemon",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Athleta",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Beyond Yoga",
+              "is_competitor_mentioned": false
+            },
+            {
+              "competitor_brand": "Fabletics",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Manduka",
+              "is_competitor_mentioned": false
+            }
+          ]
+        },
+        {
+          "prompt": "Which brands are known for their premium yoga gear in the US?",
+          "answer": "Lululemon and Alo Yoga are synonymous with premium yoga gear, offering high-quality materials and innovative designs. Manduka is well-regarded for its top-tier yoga mats and accessories, while Beyond Yoga provides luxurious fabrics that enhance the overall yoga experience.",
+          "is_brand_mentioned": true,
+          "competitor_citations": [
+            {
+              "competitor_brand": "Lululemon",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Athleta",
+              "is_competitor_mentioned": false
+            },
+            {
+              "competitor_brand": "Beyond Yoga",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Fabletics",
+              "is_competitor_mentioned": false
+            },
+            {
+              "competitor_brand": "Manduka",
+              "is_competitor_mentioned": true
+            }
+          ]
+        },
+        {
+          "prompt": "What are the best brands for yoga tops that combine style and performance?",
+          "answer": "Alo Yoga and Lululemon excel in creating yoga tops that are both stylish and performance-driven, making them favorites among enthusiasts. Beyond Yoga also offers a range of fashionable tops that prioritize comfort and fit. For a more budget-friendly option, Athleta provides stylish designs without compromising on performance.",
+          "is_brand_mentioned": true,
+          "competitor_citations": [
+            {
+              "competitor_brand": "Lululemon",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Athleta",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Beyond Yoga",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Fabletics",
+              "is_competitor_mentioned": false
+            },
+            {
+              "competitor_brand": "Manduka",
+              "is_competitor_mentioned": false
+            }
+          ]
+        }
+      ],
+      "is_brand_mentioned": true,
+      "competitor_citations": [
+        {
+          "competitor_brand": "Lululemon",
+          "is_competitor_mentioned": true
+        },
+        {
+          "competitor_brand": "Athleta",
+          "is_competitor_mentioned": true
+        },
+        {
+          "competitor_brand": "Beyond Yoga",
+          "is_competitor_mentioned": true
+        },
+        {
+          "competitor_brand": "Fabletics",
+          "is_competitor_mentioned": true
+        },
+        {
+          "competitor_brand": "Manduka",
+          "is_competitor_mentioned": true
+        }
+      ]
+    },
+    {
+      "cluster": "Brand Comparison",
+      "prompts": [
+        {
+          "prompt": "How do the top yoga clothing brands compare in terms of price and quality?",
+          "answer": "Lululemon and Alo Yoga are on the higher end of the price spectrum, reflecting their premium quality and innovative designs. Athleta offers a good mid-range option, balancing quality and affordability. Brands like Fabletics provide more budget-friendly choices while still maintaining decent quality, making them accessible to a wider audience.",
+          "is_brand_mentioned": true,
+          "competitor_citations": [
+            {
+              "competitor_brand": "Lululemon",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Athleta",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Beyond Yoga",
+              "is_competitor_mentioned": false
+            },
+            {
+              "competitor_brand": "Fabletics",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Manduka",
+              "is_competitor_mentioned": false
+            }
+          ]
+        },
+        {
+          "prompt": "Which brands offer the best value for yoga leggings?",
+          "answer": "Fabletics is often highlighted for its excellent value, providing stylish and functional leggings at a lower price point. Athleta also offers great value with high-quality leggings that perform well in various activities. For those willing to invest a bit more, Lululemon provides exceptional durability and comfort.",
+          "is_brand_mentioned": false,
+          "competitor_citations": [
+            {
+              "competitor_brand": "Lululemon",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Athleta",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Beyond Yoga",
+              "is_competitor_mentioned": false
+            },
+            {
+              "competitor_brand": "Fabletics",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Manduka",
+              "is_competitor_mentioned": false
+            }
+          ]
+        },
+        {
+          "prompt": "What are the differences between popular yoga apparel brands in the US?",
+          "answer": "Lululemon is known for its premium quality and stylish designs, while Alo Yoga focuses on fashion-forward pieces. Athleta offers a balance of performance and style, catering to a broader audience. Fabletics, on the other hand, is recognized for its affordability and subscription model, making it accessible to many.",
+          "is_brand_mentioned": true,
+          "competitor_citations": [
+            {
+              "competitor_brand": "Lululemon",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Athleta",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Beyond Yoga",
+              "is_competitor_mentioned": false
+            },
+            {
+              "competitor_brand": "Fabletics",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Manduka",
+              "is_competitor_mentioned": false
+            }
+          ]
+        }
+      ],
+      "is_brand_mentioned": true,
+      "competitor_citations": [
+        {
+          "competitor_brand": "Lululemon",
+          "is_competitor_mentioned": true
+        },
+        {
+          "competitor_brand": "Athleta",
+          "is_competitor_mentioned": true
+        },
+        {
+          "competitor_brand": "Beyond Yoga",
+          "is_competitor_mentioned": false
+        },
+        {
+          "competitor_brand": "Fabletics",
+          "is_competitor_mentioned": true
+        },
+        {
+          "competitor_brand": "Manduka",
+          "is_competitor_mentioned": false
+        }
+      ]
+    },
+    {
+      "cluster": "Pricing & Value",
+      "prompts": [
+        {
+          "prompt": "What are the price ranges for the best yoga brands available in the US?",
+          "answer": "Lululemon and Alo Yoga typically range from $70 to $150 for leggings and tops, reflecting their premium positioning. Athleta offers a mid-range price point, usually between $50 and $100. Fabletics provides more budget-friendly options, often under $70, making it a popular choice for those seeking value.",
+          "is_brand_mentioned": true,
+          "competitor_citations": [
+            {
+              "competitor_brand": "Lululemon",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Athleta",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Beyond Yoga",
+              "is_competitor_mentioned": false
+            },
+            {
+              "competitor_brand": "Fabletics",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Manduka",
+              "is_competitor_mentioned": false
+            }
+          ]
+        },
+        {
+          "prompt": "Which brands provide the best value for money when it comes to yoga wear?",
+          "answer": "Fabletics is frequently cited for its value, offering stylish yoga wear at competitive prices, especially with its subscription model. Athleta also provides good value with high-quality products that last. For those looking for premium options, Lululemon, while pricier, offers durability and performance that justify the investment.",
+          "is_brand_mentioned": false,
+          "competitor_citations": [
+            {
+              "competitor_brand": "Lululemon",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Athleta",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Beyond Yoga",
+              "is_competitor_mentioned": false
+            },
+            {
+              "competitor_brand": "Fabletics",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Manduka",
+              "is_competitor_mentioned": false
+            }
+          ]
+        },
+        {
+          "prompt": "How do the prices of premium yoga brands compare to more affordable options?",
+          "answer": "Premium brands like Lululemon and Alo Yoga can range from $70 to $150, reflecting their high-quality materials and craftsmanship. In contrast, more affordable options like Fabletics and Old Navy typically range from $30 to $70, making them accessible while still offering decent quality. The trade-off often lies in durability and performance.",
+          "is_brand_mentioned": true,
+          "competitor_citations": [
+            {
+              "competitor_brand": "Lululemon",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Athleta",
+              "is_competitor_mentioned": false
+            },
+            {
+              "competitor_brand": "Beyond Yoga",
+              "is_competitor_mentioned": false
+            },
+            {
+              "competitor_brand": "Fabletics",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Manduka",
+              "is_competitor_mentioned": false
+            }
+          ]
+        }
+      ],
+      "is_brand_mentioned": true,
+      "competitor_citations": [
+        {
+          "competitor_brand": "Lululemon",
+          "is_competitor_mentioned": true
+        },
+        {
+          "competitor_brand": "Athleta",
+          "is_competitor_mentioned": true
+        },
+        {
+          "competitor_brand": "Beyond Yoga",
+          "is_competitor_mentioned": false
+        },
+        {
+          "competitor_brand": "Fabletics",
+          "is_competitor_mentioned": true
+        },
+        {
+          "competitor_brand": "Manduka",
+          "is_competitor_mentioned": false
+        }
+      ]
+    },
+    {
+      "cluster": "Quality & Durability",
+      "prompts": [
+        {
+          "prompt": "Which brands are known for their durable yoga mats that last long?",
+          "answer": "Manduka is highly regarded for its durable yoga mats, often favored by serious practitioners for their longevity. Liforme also offers high-quality mats that provide excellent grip and support. For a more budget-friendly option, Gaiam provides decent durability at a lower price point, making it accessible for beginners.",
+          "is_brand_mentioned": false,
+          "competitor_citations": [
+            {
+              "competitor_brand": "Lululemon",
+              "is_competitor_mentioned": false
+            },
+            {
+              "competitor_brand": "Athleta",
+              "is_competitor_mentioned": false
+            },
+            {
+              "competitor_brand": "Beyond Yoga",
+              "is_competitor_mentioned": false
+            },
+            {
+              "competitor_brand": "Fabletics",
+              "is_competitor_mentioned": false
+            },
+            {
+              "competitor_brand": "Manduka",
+              "is_competitor_mentioned": true
+            }
+          ]
+        },
+        {
+          "prompt": "What are the best brands for high-quality yoga clothing that withstands wear and tear?",
+          "answer": "Lululemon and Alo Yoga are top choices for high-quality yoga clothing, known for their durability and ability to withstand rigorous use. Athleta also offers robust options that maintain their shape and performance over time. For a more budget-friendly alternative, Fabletics provides reasonably durable pieces that are great for everyday wear.",
+          "is_brand_mentioned": true,
+          "competitor_citations": [
+            {
+              "competitor_brand": "Lululemon",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Athleta",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Beyond Yoga",
+              "is_competitor_mentioned": false
+            },
+            {
+              "competitor_brand": "Fabletics",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Manduka",
+              "is_competitor_mentioned": false
+            }
+          ]
+        },
+        {
+          "prompt": "How do different yoga apparel brands rank in terms of fabric quality?",
+          "answer": "Lululemon is often at the top for fabric quality, using advanced materials that enhance performance and comfort. Alo Yoga follows closely, known for its soft and luxurious fabrics. Athleta also ranks well, offering a variety of high-quality materials, while Fabletics provides good quality for its price point, though it may not match the premium brands.",
+          "is_brand_mentioned": true,
+          "competitor_citations": [
+            {
+              "competitor_brand": "Lululemon",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Athleta",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Beyond Yoga",
+              "is_competitor_mentioned": false
+            },
+            {
+              "competitor_brand": "Fabletics",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Manduka",
+              "is_competitor_mentioned": false
+            }
+          ]
+        }
+      ],
+      "is_brand_mentioned": true,
+      "competitor_citations": [
+        {
+          "competitor_brand": "Lululemon",
+          "is_competitor_mentioned": true
+        },
+        {
+          "competitor_brand": "Athleta",
+          "is_competitor_mentioned": true
+        },
+        {
+          "competitor_brand": "Beyond Yoga",
+          "is_competitor_mentioned": false
+        },
+        {
+          "competitor_brand": "Fabletics",
+          "is_competitor_mentioned": true
+        },
+        {
+          "competitor_brand": "Manduka",
+          "is_competitor_mentioned": true
+        }
+      ]
+    },
+    {
+      "cluster": "Style / Trends",
+      "prompts": [
+        {
+          "prompt": "What are the trending yoga clothing brands in the US right now?",
+          "answer": "Alo Yoga and Lululemon continue to trend due to their stylish designs and high-quality offerings. Beyond Yoga is gaining popularity for its comfortable and chic pieces, while Fabletics remains a favorite for its affordability and trendy styles. These brands are often seen on social media and in yoga studios alike.",
+          "is_brand_mentioned": true,
+          "competitor_citations": [
+            {
+              "competitor_brand": "Lululemon",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Athleta",
+              "is_competitor_mentioned": false
+            },
+            {
+              "competitor_brand": "Beyond Yoga",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Fabletics",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Manduka",
+              "is_competitor_mentioned": false
+            }
+          ]
+        },
+        {
+          "prompt": "Which brands are leading the way in stylish yoga apparel for 2023?",
+          "answer": "Alo Yoga and Lululemon are leading the charge in stylish yoga apparel for 2023, known for their innovative designs and high-quality materials. Beyond Yoga is also making waves with its fashionable yet functional pieces. For those looking for trendy options at a lower price, Fabletics remains a strong contender.",
+          "is_brand_mentioned": true,
+          "competitor_citations": [
+            {
+              "competitor_brand": "Lululemon",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Athleta",
+              "is_competitor_mentioned": false
+            },
+            {
+              "competitor_brand": "Beyond Yoga",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Fabletics",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Manduka",
+              "is_competitor_mentioned": false
+            }
+          ]
+        },
+        {
+          "prompt": "What are the best brands for fashionable yoga outfits?",
+          "answer": "Alo Yoga is often considered the go-to for fashionable yoga outfits, combining style with performance. Lululemon also excels in this area, offering chic designs that appeal to fashion-conscious yogis. Beyond Yoga provides a range of stylish options, while Athleta balances fashion with functionality, making it a versatile choice.",
+          "is_brand_mentioned": true,
+          "competitor_citations": [
+            {
+              "competitor_brand": "Lululemon",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Athleta",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Beyond Yoga",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Fabletics",
+              "is_competitor_mentioned": false
+            },
+            {
+              "competitor_brand": "Manduka",
+              "is_competitor_mentioned": false
+            }
+          ]
+        }
+      ],
+      "is_brand_mentioned": true,
+      "competitor_citations": [
+        {
+          "competitor_brand": "Lululemon",
+          "is_competitor_mentioned": true
+        },
+        {
+          "competitor_brand": "Athleta",
+          "is_competitor_mentioned": true
+        },
+        {
+          "competitor_brand": "Beyond Yoga",
+          "is_competitor_mentioned": true
+        },
+        {
+          "competitor_brand": "Fabletics",
+          "is_competitor_mentioned": true
+        },
+        {
+          "competitor_brand": "Manduka",
+          "is_competitor_mentioned": false
+        }
+      ]
+    },
+    {
+      "cluster": "Fit / Usability",
+      "prompts": [
+        {
+          "prompt": "Which brands offer the best fit for plus-size yoga clothing?",
+          "answer": "Athleta is well-known for its inclusive sizing and offers a variety of stylish plus-size options that cater to different body types. Fabletics also provides a good range of plus-size yoga wear, focusing on comfort and fit. Beyond Yoga is another brand that emphasizes body positivity and offers fashionable options for plus-size individuals.",
+          "is_brand_mentioned": false,
+          "competitor_citations": [
+            {
+              "competitor_brand": "Lululemon",
+              "is_competitor_mentioned": false
+            },
+            {
+              "competitor_brand": "Athleta",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Beyond Yoga",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Fabletics",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Manduka",
+              "is_competitor_mentioned": false
+            }
+          ]
+        },
+        {
+          "prompt": "What are the top brands for yoga wear that is comfortable for all body types?",
+          "answer": "Athleta is a standout for its inclusive sizing and comfortable designs that cater to all body types. Beyond Yoga also focuses on body positivity, offering soft and stretchy fabrics that accommodate various shapes. Fabletics provides a wide range of sizes and styles, ensuring comfort and fit for a diverse audience.",
+          "is_brand_mentioned": false,
+          "competitor_citations": [
+            {
+              "competitor_brand": "Lululemon",
+              "is_competitor_mentioned": false
+            },
+            {
+              "competitor_brand": "Athleta",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Beyond Yoga",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Fabletics",
+              "is_competitor_mentioned": true
+            },
+            {
+              "competitor_brand": "Manduka",
+              "is_competitor_mentioned": false
+            }
+          ]
+        }
+      ],
+      "is_brand_mentioned": false,
+      "competitor_citations": [
+        {
+          "competitor_brand": "Lululemon",
+          "is_competitor_mentioned": false
+        },
+        {
+          "competitor_brand": "Athleta",
+          "is_competitor_mentioned": true
+        },
+        {
+          "competitor_brand": "Beyond Yoga",
+          "is_competitor_mentioned": true
+        },
+        {
+          "competitor_brand": "Fabletics",
+          "is_competitor_mentioned": true
+        },
+        {
+          "competitor_brand": "Manduka",
+          "is_competitor_mentioned": false
+        }
+      ]
+    }
+  ]
+}

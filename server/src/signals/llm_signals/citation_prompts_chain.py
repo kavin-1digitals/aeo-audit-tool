@@ -1,15 +1,15 @@
-from typing import List
+from typing import List, Dict
 from pydantic import BaseModel, RootModel
 
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import PydanticOutputParser
 
-from src.config import LLM_PROVIDERS
+from src.config import LLM_PROVIDERS, CITATION_PROMPT_CLUSTERS
 from src.signals.llm_signals.llm_client import get_llm_client
-
+import asyncio
 
 # -----------------------------
-# Pydantic Models (FIXED for v2)
+# Pydantic Models
 # -----------------------------
 
 class CitationPromptCluster(BaseModel):
@@ -29,81 +29,140 @@ parser = PydanticOutputParser(pydantic_object=CitationPromptClusters)
 
 
 # -----------------------------
-# Prompt Template
+# Helper: Format distribution
+# -----------------------------
+
+def format_distribution(dist: Dict[str, int]) -> str:
+    return "\n".join([f"- {k}: {v} prompts" for k, v in dist.items()])
+
+
+# -----------------------------
+# Prompt Template (UPDATED)
 # -----------------------------
 
 prompt_gen_template = PromptTemplate(
-    input_variables=["brand", "industry", "geo", "num_prompts"],
+    input_variables=["brand", "geo", "cluster_distribution"],
     partial_variables={
         "format_instructions": parser.get_format_instructions()
     },
-    template="""
-You are an expert in Generative Engine Optimization (GEO).
+template="""
+You are a Senior Generative Engine Optimization (GEO) Strategist.
 
-Your task is to generate grouped user prompts that are GUARANTEED to trigger AI models to list, compare, or recommend brands.
+Your job is to generate REALISTIC, HUMAN-LIKE prompts that users would ask AI systems when exploring brands similar to "{brand}".
 
-Context:
-- Brand: {brand}
-- Industry: {industry}
-- Geography: {geo}
+════════════════════════════════════════════════════════════════
+PHASE 1 — UNDERSTAND THE BRAND
+════════════════════════════════════════════════════════════════
 
-Goal:
-- Generate prompts ONLY where AI responses are highly likely to include brand names
-- Group prompts into meaningful "Intent Clusters" for analysis
+Classify "{brand}":
 
-STRICT INSTRUCTIONS:
-- EVERY prompt MUST strongly encourage brand mentions
-- DO NOT include the given brand or any specific brand names in the prompts
-- DO NOT generate generic or educational questions
-- DO NOT generate "how to", "tips", or "factors to consider" type questions
-- Each prompt must clearly imply:
-  - listing brands OR
-  - comparing brands OR
-  - recommending brands
+- Entity Type
+- Category (specific)
+- Price Tier
+- Target Audience
 
-INDUSTRY REQUIREMENT:
-- Prompts MUST explicitly reference the industry using natural phrasing
-  (e.g., "sportswear brands", "athletic clothing brands")
-- Do NOT use generic terms like "products" or "items"
+════════════════════════════════════════════════════════════════
+PHASE 2 — CAPABILITY SURFACES (CRITICAL)
+════════════════════════════════════════════════════════════════
 
-GEOGRAPHY HANDLING:
-- Include "{geo}" explicitly in 30–50% of prompts
-- Keep remaining prompts geography-neutral
-- When used, geography must feel natural (e.g., "in {geo}", "available in {geo}")
+Identify 3–5 MAJOR CAPABILITY SURFACES.
 
-CLUSTERS TO INCLUDE:
-1. Brand Discovery (best/top brands)
-2. Brand Recommendation (which brands should I buy/choose)
-3. Brand Comparison (which brands are better / alternatives)
-4. Pricing & Value (affordable brands / value for money)
-5. Quality & Durability (brands known for quality)
-6. Style & Trends (brands leading in style/trends)
-7. Fit & Sizing (brands known for fit/sizing)
+A capability surface = a key way users interact with or buy from the brand.
 
-REQUIREMENTS:
-- Distribute {num_prompts} prompts across clusters
-- Each cluster must have at least 2 prompts
-- EVERY prompt must contain at least one of:
-  - "brands"
-  - "which brands"
-  - "best"
-  - "top"
-  - "alternatives"
-- Ensure variation in phrasing and structure
-- Avoid vague prompts like "good brands"
+Examples:
+- product types
+- use cases
+- contexts of usage
 
-GOOD EXAMPLES:
-- "What are the best sportswear brands right now?"
-- "Which sportswear brands offer the best value for money?"
+⚠️ RULES:
+- Each surface must be DISTINCT
+- Avoid overlapping surfaces
+- Cover both broad + specific areas if applicable
+- For broad brands → include diverse surfaces
+- For niche brands → stay focused
+
+════════════════════════════════════════════════════════════════
+PHASE 3 — USER INTENT MODELING
+════════════════════════════════════════════════════════════════
+
+Think like a REAL user:
+
+- Users explore options
+- Compare alternatives
+- Ask casually
+- Often imply brands without naming them
+
+════════════════════════════════════════════════════════════════
+PHASE 4 — PROMPT GENERATION
+════════════════════════════════════════════════════════════════
+
+Generate prompts that:
+
+✅ Trigger:
+- brand listings
+- comparisons
+- recommendations
+
+✅ Feel like:
+- natural human questions
+- real buying intent
+
+Each prompt MUST:
+- clearly imply brand outputs
+- relate to ONE capability surface
+- feel specific (not generic)
+
+❌ DO NOT:
+- sound like SEO
+- be educational
+- be vague
+
+════════════════════════════════════════════════════════════════
+CLUSTER DISTRIBUTION (STRICT)
+════════════════════════════════════════════════════════════════
+
+Generate prompts EXACTLY as per this distribution:
+
+{cluster_distribution}
+
+RULES:
+
+- Each cluster must appear EXACTLY ONCE
+- Each cluster must contain EXACTLY the specified number of prompts
+- DO NOT rename clusters
+- DO NOT merge clusters
+- DO NOT create new clusters
+- DO NOT skip any cluster
+
+════════════════════════════════════════════════════════════════
+STRICT RULES
+════════════════════════════════════════════════════════════════
+
+- DO NOT mention "{brand}" or any brand names
+- At least 30–50% prompts should include "{geo}"
+- Use VARIED contexts across prompts
+- Avoid repeating same wording
+
+Each prompt MUST include at least one of:
+- "brands"
+- "which"
+- "best"
+- "top"
+- "alternatives"
+
+════════════════════════════════════════════════════════════════
+GOOD EXAMPLES (STYLE ONLY)
+════════════════════════════════════════════════════════════════
+
+- "Which running shoe brands are actually worth it?"
+- "What are the best workout clothing brands right now?"
+- "Which sneaker brands are trending in {geo}?"
 - "What are good alternatives to expensive sportswear brands?"
-- "Which sportswear brands are popular in {geo}?"
 
-BAD EXAMPLES (DO NOT GENERATE):
-- "What should I look for when buying sportswear?"
-- "How to choose good athletic clothing?"
-- "What factors matter when buying sportswear?"
+════════════════════════════════════════════════════════════════
+OUTPUT FORMAT
+════════════════════════════════════════════════════════════════
 
-Output format:
 {format_instructions}
 """
 )
@@ -124,13 +183,18 @@ citation_prompts_chain = prompt_gen_template | llm | parser
 
 
 # -----------------------------
-# Optional: Safe Invoke (retry)
+# Safe Invoke (UPDATED)
 # -----------------------------
 
-def safe_invoke(chain, payload, retries=2):
+async def safe_invoke(chain, payload, retries=2):
     for attempt in range(retries):
         try:
-            return chain.invoke(payload)
+            payload_with_clusters = {
+                **payload, 
+                "cluster_distribution": format_distribution(CITATION_PROMPT_CLUSTERS)
+            }
+            result = await chain.ainvoke(payload_with_clusters)
+            return result
         except Exception as e:
             if attempt == retries - 1:
                 raise e
@@ -141,14 +205,14 @@ def safe_invoke(chain, payload, retries=2):
 # -----------------------------
 
 if __name__ == "__main__":
-    result = safe_invoke(citation_prompts_chain, {
-        "brand": "Nike",
-        "industry": "Sportswear",
-        "geo": "United States",
-        "num_prompts": 20
-    })
+    brand = "Alo Yoga"
+    geo = "United States"
 
-    # Pretty print
+    result = asyncio.run(safe_invoke(
+        citation_prompts_chain,
+        {"brand": brand, "geo": geo}
+    ))
+
     for cluster in result.root:
         print(f"\n=== {cluster.cluster} ===")
         for prompt in cluster.prompts:

@@ -13,7 +13,32 @@ export const ScoreOverview = ({ scorecard }) => {
     );
   }
 
-  const { total_score, max_score, percentage, grade, level } = scorecard;
+  // Map audit_metadata properties to expected scorecard structure
+  const total_score = scorecard.total_score || 0;
+  const max_score = scorecard.total_checks || 1;
+  const percentage = scorecard.score_percentage || 0;
+  
+  // Calculate grade based on percentage
+  const getGrade = (percentage) => {
+    if (percentage >= 90) return 'A';
+    if (percentage >= 80) return 'B';
+    if (percentage >= 70) return 'C';
+    if (percentage >= 60) return 'D';
+    return 'F';
+  };
+  
+  const grade = getGrade(percentage);
+  
+  // Calculate level based on percentage
+  const getLevel = (percentage) => {
+    if (percentage >= 90) return 'excellent';
+    if (percentage >= 80) return 'good';
+    if (percentage >= 70) return 'fair';
+    if (percentage >= 60) return 'poor';
+    return 'critical';
+  };
+  
+  const level = getLevel(percentage);
 
   const getScoreLevelClass = (level) => {
     const classes = {
@@ -99,36 +124,44 @@ export const ScoreOverview = ({ scorecard }) => {
         {/* Score Details */}
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <span className="text-gray-600">Total Score</span>
+            <span className="text-gray-600 font-medium">Total Passed Checks</span>
+            <span className="text-2xl font-bold text-green-600">
+              {Math.round(safeScore)}
+            </span>
+          </div>
+          
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600 font-medium">Total Failed Checks</span>
+            <span className="text-2xl font-bold text-red-600">
+              {Math.round(safeMaxScore - safeScore)}
+            </span>
+          </div>
+          
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600 font-medium">Total Checks Performed</span>
             <span className="text-2xl font-bold text-gray-900">
-              {Math.round(safeScore)}/{Math.round(safeMaxScore)}
-            </span>
-          </div>
-          
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600">Grade</span>
-            <span 
-              className="text-xl font-bold px-3 py-1 rounded-full"
-              style={{ 
-                backgroundColor: `${getGradeColor(grade || 'F')}20`,
-                color: getGradeColor(grade || 'F')
-              }}
-            >
-              {grade || 'F'}
-            </span>
-          </div>
-          
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600">Performance Level</span>
-            <span className={`score-badge ${getScoreLevelClass(level || 'critical')}`}>
-              {level ? level.charAt(0).toUpperCase() + level.slice(1) : 'Unknown'}
+              {Math.round(safeMaxScore)}
             </span>
           </div>
           
           <div className="pt-4 border-t border-gray-200">
-            <p className="text-gray-700 font-medium">
-              {getLevelDescription(level || 'critical')}
-            </p>
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600 font-medium">Performance Level</span>
+              <span 
+                className="text-lg font-bold px-3 py-1 rounded-full"
+                style={{ 
+                  backgroundColor: `${getGradeColor(grade || 'F')}20`,
+                  color: getGradeColor(grade || 'F')
+                }}
+              >
+                {level ? level.charAt(0).toUpperCase() + level.slice(1) : 'Unknown'}
+              </span>
+            </div>
+            <div className="mt-2 text-right">
+              <p className="text-gray-700 font-medium text-sm">
+                {getLevelDescription(level || 'critical')}
+              </p>
+            </div>
           </div>
         </div>
       </div>

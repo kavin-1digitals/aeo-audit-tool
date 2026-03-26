@@ -70,7 +70,7 @@ async def create_aeo_scorecard(signals: Signals, brand: str = None) -> ScoreCard
     # LLM signals scoring - handle None cases
     if hasattr(signals, 'llm_signals') and signals.llm_signals:
         print("DEBUG: Processing LLM signals...")
-        llm_signals_scorecard = await calculate_llm_signals_score(signals.llm_signals, brand)
+        llm_signals_scorecard = await calculate_llm_signals_score(signals.llm_signals)
         print(f"DEBUG: LLM signals scorecard: {llm_signals_scorecard.dict()}")
         all_scores.extend(llm_signals_scorecard.scores)
         print("DEBUG: LLM signals scores added to all_scores")

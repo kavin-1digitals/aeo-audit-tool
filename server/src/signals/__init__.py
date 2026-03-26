@@ -38,7 +38,7 @@ async def find_signals(full_domain: str, brand: Optional[str] = None, industry: 
     llm_signals_task = None
     if brand and industry:
         logger.info("Phase 3: Fetching LLM signals (brand visibility analysis)")
-        llm_signals_task = asyncio.create_task(find_llm_signals(full_domain, brand, industry, geo))
+        llm_signals_task = asyncio.create_task(find_llm_signals(brand, geo))
     
     # Wait for site signals to complete
     site_signals = await site_signals_task
@@ -49,7 +49,7 @@ async def find_signals(full_domain: str, brand: Optional[str] = None, industry: 
     if llm_signals_task:
         try:
             llm_signals = await llm_signals_task
-            logger.info(f"LLM signals completed. Brand SOV: {llm_signals.evaluation_results['sov'].get(brand, 0)}%")
+            logger.info(f"LLM signals completed. Competitors found: {len(llm_signals.competitors)}")
         except Exception as e:
             logger.error(f"Error in LLM signals analysis: {e}")
             llm_signals = None
