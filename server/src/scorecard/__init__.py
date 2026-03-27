@@ -55,19 +55,40 @@ async def create_aeo_scorecard(signals: Signals, brand: str = None) -> ScoreCard
         sitemap_scorecard = await calculate_sitemap_score(signals.domain_signals.site_map_signal)
         all_scores.extend(sitemap_scorecard.scores)
     
-    # Site signals scoring - handle None cases
+    # Site signals scoring - handle None cases and is_scrapable check
     if hasattr(signals, 'site_signals') and signals.site_signals:
-        # Process each site signal (page)
-        for site_signal in signals.site_signals.site_signals:
-            if hasattr(site_signal, 'canonical_signal') and site_signal.canonical_signal:
-                canonical_scorecard = await calculate_canonical_score(site_signal)
-                all_scores.extend(canonical_scorecard.scores)
-        
-        # Process JSON-LD signals
-        all_jsonld_signals = list(signals.site_signals.jsonld_signals)
-        if all_jsonld_signals:
-            jsonld_scorecard = await calculate_jsonld_score(all_jsonld_signals)
-            all_scores.extend(jsonld_scorecard.scores)
+        # Check if site is scrapable first
+        if hasattr(signals.site_signals, 'is_scrapable') and signals.site_signals.is_scrapable:
+            # Site is scrapable - give +1 score and process signals
+            all_scores.append(Score(
+                value=1.0, 
+                signal_name='site_scrapable', 
+                signal_path=['Site Signals', 'Scrapability'], 
+                remediation_plan=None, 
+                success_state='Website is successfully scrapable and accessible for content analysis.'
+            ))
+            
+            # Process each site signal (page)
+            for site_signal in signals.site_signals.site_signals:
+                if hasattr(site_signal, 'canonical_signal') and site_signal.canonical_signal:
+                    canonical_scorecard = await calculate_canonical_score(site_signal)
+                    all_scores.extend(canonical_scorecard.scores)
+            
+            # Process JSON-LD signals
+            all_jsonld_signals = list(signals.site_signals.jsonld_signals)
+            if all_jsonld_signals:
+                jsonld_scorecard = await calculate_jsonld_score(all_jsonld_signals)
+                all_scores.extend(jsonld_scorecard.scores)
+                
+        else:
+            # Site is not scrapable - give -1 score and skip processing
+            all_scores.append(Score(
+                value=-1.0, 
+                signal_name='site_scrapable', 
+                signal_path=['Site Signals', 'Scrapability'], 
+                remediation_plan='Website could not be scraped properly. Check for: 1) Server blocking/access issues, 2) JavaScript rendering problems, 3) Rate limiting, 4) Invalid HTML structure. Consider implementing server-side rendering or fixing accessibility issues.', 
+                success_state=None
+            ))
     
     # LLM signals scoring - handle None cases
     

@@ -125,7 +125,9 @@ export const LoadingSpinner = () => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const progressPercentage = Math.min(98, Math.round((timeElapsed / 50) * 100)); // Simulate ~50s for 100%
+  // Calculate percentage based on completed analysis steps
+  const completedSteps = steps.filter(step => step.status === 'completed').length;
+  const progressPercentage = !isLoading && completedSteps === analysisSteps.length ? 100 : Math.min(95, Math.round((completedSteps / analysisSteps.length) * 100));
 
   return (
     <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-md flex items-center justify-center z-50 p-4">

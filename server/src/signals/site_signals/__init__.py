@@ -21,54 +21,92 @@ class SiteSignal(BaseModel):
 
 
 class SiteSignals(BaseModel):
-    site_signals: List[SiteSignal]
-    jsonld_signals: List[JsonLdType]
+    is_scrapable: bool
+    site_signals: List[SiteSignal] = []
+    jsonld_signals: List[JsonLdType] = []
 
 
 async def find_site_signals(full_domain: str, crawl_result) -> SiteSignals:
+    # ---------------------------
+    # Step 1: Ensure crawl exists
+    # ---------------------------
     if not crawl_result:
         crawl_result = await crawl_site(full_domain)
 
+    # ---------------------------
+    # Step 2: Validate crawl result
+    # ---------------------------
+    if not crawl_result or not crawl_result.pages:
+        return SiteSignals(
+            is_scrapable=False,
+            site_signals=[],
+            jsonld_signals=[]
+        )
+
+    # ---------------------------
+    # Step 3: Filter valid pages
+    # ---------------------------
+    valid_pages = [
+        page for page in crawl_result.pages
+        if page.content and page.status_code == 200
+    ]
+
+    if not valid_pages:
+        return SiteSignals(
+            is_scrapable=False,
+            site_signals=[],
+            jsonld_signals=[]
+        )
+
+    # ---------------------------
+    # Step 4: Process signals
+    # ---------------------------
     site_signals = []
     all_jsonld_signals = []
 
-    # track remaining types
     remaining_types = set(JSONLD_VALIDATION_RULES.keys())
 
-    for page in crawl_result.pages:
-        canonical_signal = await find_canonical_signal(
-            page.url,
-            page.response_url,
-            page.content
-        )
-
-        jsonld_signal = find_jsonld_signal(
-            page.url,
-            page.content,
-            list(remaining_types)
-        )
-
-        # Not removing it for now, as we want to see all the types
-        # # remove validated types
-        # for js in jsonld_signal.types:
-        #     if js.exists and js.is_valid:
-        #         remaining_types.discard(js.type_)
-
-        site_signals.append(
-            SiteSignal(
-                url=page.url,
-                depth=page.depth,
-                index=page.index,
-                parent_url=page.parent_url,
-                status_code=page.status_code,
-                source=page.source,
-                final_url=page.response_url,
-                canonical_signal=canonical_signal
+    for page in valid_pages:
+        try:
+            canonical_signal = await find_canonical_signal(
+                page.url,
+                page.response_url,
+                page.content
             )
-        )
-        all_jsonld_signals.extend(jsonld_signal.jsonld_signals)
+
+            jsonld_signal = find_jsonld_signal(
+                page.url,
+                page.content,
+                list(remaining_types)
+            )
+
+            site_signals.append(
+                SiteSignal(
+                    url=page.url,
+                    depth=page.depth,
+                    index=page.index,
+                    parent_url=page.parent_url,
+                    status_code=page.status_code,
+                    source=page.source,
+                    final_url=page.response_url,
+                    canonical_signal=canonical_signal
+                )
+            )
+
+            all_jsonld_signals.extend(jsonld_signal.jsonld_signals)
+
+        except Exception as e:
+            # Prevent one bad page from killing everything
+            print(f"Error processing page {page.url}: {e}")
+            continue
+
+    # ---------------------------
+    # Step 5: Final scrapable decision
+    # ---------------------------
+    is_scrapable = len(site_signals) > 0
 
     return SiteSignals(
+        is_scrapable=is_scrapable,
         site_signals=site_signals,
         jsonld_signals=all_jsonld_signals
     )
