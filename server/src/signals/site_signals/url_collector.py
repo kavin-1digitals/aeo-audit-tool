@@ -211,34 +211,42 @@ async def crawl_site(url: str) -> CrawlResult:
         random.shuffle(links)
 
         logger.info(f"JS mode: {len(links)} links found, fetching up to {JS_ADDITIONAL_PAGES} more pages...")
-
+        
+        sem = asyncio.Semaphore(5)  # Limit to 5 concurrent ScraperAPI calls
+        
+        tasks = []
         for link in links:
-            if global_index > JS_MAX_TOTAL_PAGES:
+            if global_index >= JS_MAX_TOTAL_PAGES:
                 break
 
             norm = normalize_url(link)
             if norm in visited:
                 continue
 
-            html, status, source, response_url = fetch_scraperapi(link)
-
-            if not html:
-                continue
-
-            visited.add(norm)
-            response_url = normalize_url(response_url or link)
-
-            pages.append(PageData(
-                url=link,
-                response_url=response_url,
-                content=html,
-                depth=1,
-                index=global_index,
-                parent_url=[url],
-                status_code=status,
-                source=source
-            ))
+            task = asyncio.create_task(fetch_scraperapi(link))
+            tasks.append(task)
             global_index += 1
+
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+        
+        for i, (task, html, status, source, response_url) in enumerate(zip(links, results)):
+            if html:
+                norm = normalize_url(response_url or link)
+                if norm not in visited:
+                    visited.add(norm)
+
+                    pages.append(PageData(
+                        url=link,
+                        response_url=normalize_url(response_url or link),
+                        content=html,
+                        depth=1,
+                        index=global_index,
+                        parent_url=[url],
+                        status_code=status,
+                        source=source
+                    ))
+            else:
+                logger.warning(f"ScraperAPI failed for {link}: status={status}")
 
         logger.info(f"JS mode complete: {len(pages)}/{JS_MAX_TOTAL_PAGES} pages collected")
         return CrawlResult(pages=pages)
