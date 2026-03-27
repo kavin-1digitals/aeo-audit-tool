@@ -32,13 +32,13 @@ async def create_aeo_scorecard(signals: Signals, brand: str = None) -> ScoreCard
     
     # Domain signals scoring - always process since DomainSignals always includes these signals
     print(f"DEBUG: signals.domain_signals keys: {dir(signals.domain_signals)}")
-    print(f"DEBUG: llm_txt_signal exists: {hasattr(signals.domain_signals, 'llm_txt_signal')}")
-    print(f"DEBUG: llm_txt_signal value: {getattr(signals.domain_signals, 'llm_txt_signal', 'NOT_FOUND')}")
+    print(f"DEBUG: llms_txt_signal exists: {hasattr(signals.domain_signals, 'llms_txt_signal')}")
+    print(f"DEBUG: llms_txt_signal value: {getattr(signals.domain_signals, 'llms_txt_signal', 'NOT_FOUND')}")
     
     # LLM.txt signals - always process since DomainSignals always includes it (even if file doesn't exist)
-    if hasattr(signals.domain_signals, 'llm_txt_signal'):
+    if hasattr(signals.domain_signals, 'llms_txt_signal'):
         print("DEBUG: Processing LLM.txt signals...")
-        llms_txt_scorecard = await calculate_llms_txt_score(signals.domain_signals.llm_txt_signal)
+        llms_txt_scorecard = await calculate_llms_txt_score(signals.domain_signals.llms_txt_signal)
         print(f"DEBUG: LLM.txt scorecard: {llms_txt_scorecard.dict()}")
         all_scores.extend(llms_txt_scorecard.scores)
         print("DEBUG: LLM.txt scores added to all_scores")
@@ -70,6 +70,7 @@ async def create_aeo_scorecard(signals: Signals, brand: str = None) -> ScoreCard
             all_scores.extend(jsonld_scorecard.scores)
     
     # LLM signals scoring - handle None cases
+    
     if hasattr(signals, 'llm_signals') and signals.llm_signals:
         print("DEBUG: Processing LLM signals...")
         llm_signals_scorecard = await calculate_llm_signals_score(signals.llm_signals, brand)

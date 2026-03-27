@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 
 // Configuration
 const PORT = process.env.PORT || 3001;
-const BACKEND_TARGET = process.env.BACKEND_URL || "http://localhost:8000";
+const BACKEND_TARGET = process.env.BACKEND_URL || "http://localhost:3003";
 const APP_CONTEXT = "/aeo-audit-tool";
 const FRONTEND_DIR = path.join(__dirname, "../client/build");
 

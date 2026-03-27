@@ -1,7 +1,7 @@
 
 import logging
 from .robots_txt_signals import RobotsTxtSignals, find_robots_txt_signals
-from .llms_txt_signals import LlmsTxtSignals, find_llm_txt_signals
+from .llms_txt_signals import LlmsTxtSignals, find_llm_txt_signals, LlmsTxtMeta, EnrichmentSignals
 from .sitemap_signals import SiteMapSignals, find_sitemap_signals
 from pydantic import BaseModel
 import asyncio
@@ -54,10 +54,22 @@ async def find_domain_signals(full_domain: str) -> DomainSignals:
     if isinstance(llms_txt_signal, Exception):
         logger.error(f"Error fetching llm.txt: {llms_txt_signal}")
         llms_txt_signal = LlmsTxtSignals(
-            llm_txts={"exists": False, "status": None}
+            llm_txts=LlmsTxtMeta(
+                exists=False,
+                is_valid=False,
+                enriched=EnrichmentSignals(),
+                status=None
+            )
         )
     else:
         logger.info("LLM.txt signals fetched successfully")
+    
+    # Debug: Check the llms_txt_signal structure
+    logger.info(f"DEBUG: llms_txt_signal type: {type(llms_txt_signal)}")
+    logger.info(f"DEBUG: llms_txt_signal dict: {llms_txt_signal.dict() if hasattr(llms_txt_signal, 'dict') else 'NO_DICT_METHOD'}")
+    logger.info(f"DEBUG: hasattr(llms_txt_signal, 'llm_txts'): {hasattr(llms_txt_signal, 'llm_txts')}")
+    if hasattr(llms_txt_signal, 'llm_txts'):
+        logger.info(f"DEBUG: llms_txts value: {llms_txt_signal.llm_txts}")
     
     # Extract sitemap URL from robots.txt signal
     sitemap_url = None
