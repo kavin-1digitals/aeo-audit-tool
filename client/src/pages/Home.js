@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 import { useAudit } from '../contexts/AuditContext';
 import { ExclamationTriangleIcon, SparklesIcon, ChartBarIcon } from '@heroicons/react/24/outline';
-import { getAuditResults } from '../services/api';
+import { LoadingSpinner } from '../components/LoadingSpinner';
 import AeoReportPage from './AeoReportPage';
 
 export const Home = () => {
-  const { error, clearError } = useAudit();
+  const { error, isLoading, clearError, startAudit } = useAudit();
   const [domain, setDomain] = useState('https://www.aloyoga.com');
   const [brand, setBrand] = useState('Alo Yoga');
   const [industry, setIndustry] = useState('Sportswear');
   const [geo, setGeo] = useState('United States');
   const [auditData, setAuditData] = useState(null);
-  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,24 +20,16 @@ export const Home = () => {
     }
 
     try {
-      setLoading(true);
       clearError();
       console.log(`Starting AEO audit for ${domain.trim()} with brand ${brand.trim()}...`);
       
-      const data = await getAuditResults(domain.trim(), brand.trim(), industry.trim(), geo.trim());
+      const data = await startAudit(domain.trim(), brand.trim(), industry.trim(), geo.trim());
       console.log('Raw API response:', data);
-      console.log('Audit metadata:', data.audit_metadata);
-      console.log('Path scorecard keys:', Object.keys(data.path_scorecard || {}));
-      console.log('Raw scores count:', data.raw_scorecard?.scores?.length || 0);
       
       setAuditData(data);
       console.log('Audit data set in state:', data);
     } catch (err) {
       console.error('Audit failed:', err.message);
-      console.error('Full error:', err);
-      clearError();
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -58,15 +49,8 @@ export const Home = () => {
   }
 
   // Show loading state
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Running AEO audit...</p>
-        </div>
-      </div>
-    );
+  if (isLoading) {
+    return <LoadingSpinner />;
   }
 
   // Show the audit form
@@ -177,10 +161,10 @@ export const Home = () => {
 
                 <button
                   type="submit"
-                  disabled={!domain.trim() || !brand.trim() || !industry.trim() || loading}
+                  disabled={!domain.trim() || !brand.trim() || !industry.trim() || isLoading}
                   className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-4 px-6 rounded-xl hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg"
                 >
-                  {loading ? (
+                  {isLoading ? (
                     <span className="flex items-center justify-center">
                       <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>

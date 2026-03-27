@@ -3,7 +3,7 @@ import axios from 'axios';
 // Create axios instance with base URL
 const api = axios.create({
   baseURL: '/aeo-audit-tool/api',  // Match proxy server configuration
-  timeout: 120000, // Increased timeout to 2 minutes for LLM processing
+  timeout: 600000, // Increased timeout to 10 minutes for LLM processing
   headers: {
     'Content-Type': 'application/json',
   },

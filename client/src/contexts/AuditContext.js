@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useCallback } from 'react';
-import { auditApi } from '../services/api';
+import { auditApi, getAuditResults } from '../services/api';
 
 // Initial state
 const initialState = {
@@ -63,20 +63,15 @@ export const AuditProvider = ({ children }) => {
     dispatch({ type: AUDIT_ACTIONS.CLEAR_ERROR });
   }, []);
 
-  // Start audit - simple synchronous call
-  const startAudit = useCallback(async (domain, includeRawSignals = false) => {
+  // Start audit - more comprehensive call
+  const startAudit = useCallback(async (domain, brand, industry, geo) => {
     try {
       dispatch({ type: AUDIT_ACTIONS.START_AUDIT });
       
-      const response = await auditApi.startAudit(domain, includeRawSignals);
+      const response = await getAuditResults(domain, brand, industry, geo);
       
-      if (response.status === 'completed') {
-        dispatch({ type: AUDIT_ACTIONS.AUDIT_SUCCESS, payload: response });
-        return response;
-      } else {
-        dispatch({ type: AUDIT_ACTIONS.AUDIT_ERROR, payload: response.error || 'Audit failed' });
-        throw new Error(response.error || 'Audit failed');
-      }
+      dispatch({ type: AUDIT_ACTIONS.AUDIT_SUCCESS, payload: response });
+      return response;
     } catch (error) {
       dispatch({ type: AUDIT_ACTIONS.AUDIT_ERROR, payload: error.message });
       throw error;
