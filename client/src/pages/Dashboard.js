@@ -303,6 +303,7 @@ const Dashboard = ({ auditData, onViewDetails, onNewAudit }) => {
         total_checks={audit_metadata.total_checks}
         categories_count={Object.keys(categories).length}
         critical_issues={criticalIssues}
+        llmMetrics={llmMetrics}
       />
 
       {/* Signal Type Performance Chart */}
