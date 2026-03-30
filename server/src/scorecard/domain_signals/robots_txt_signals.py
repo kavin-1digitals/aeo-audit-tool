@@ -52,3 +52,4 @@ async def calculate_robots_txt_score(robots_txt_signal: RobotsTxtSignals):
         pass
     
     return RawScoreCard(scores=scores)
+    

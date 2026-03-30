@@ -90,8 +90,18 @@ async def _fetch_llm_txt_from_domain(domain: str) -> LlmsTxtMeta:
     """Internal function to fetch llms.txt from a specific domain"""
     llm_txt_url = urljoin(domain, "/llms.txt")
 
+    # Use fake browser headers to avoid blocking
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
+        "Accept": "text/plain,text/html,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Cache-Control": "no-cache",
+        "Pragma": "no-cache"
+    }
+
     try:
-        async with httpx.AsyncClient(timeout=10, follow_redirects=True) as client:
+        async with httpx.AsyncClient(timeout=10, follow_redirects=True, headers=headers) as client:
             resp = await client.get(llm_txt_url)
 
         if resp.status_code == 200:
@@ -152,7 +162,7 @@ if __name__ == "__main__":
     import json
 
     result = asyncio.run(
-        find_llm_txt_signals("https://express.com")
+        find_llm_txt_signals("https://www.myntra.com")
     )
 
     print(json.dumps(result.dict(), indent=2))

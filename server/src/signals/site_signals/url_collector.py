@@ -78,8 +78,12 @@ def is_javascript_heavy(soup: BeautifulSoup) -> bool:
 # FETCHERS
 # ---------------------------
 HEADERS = {
-    "User-Agent": f"{BOT_NAME}/{BOT_VERSION} ({BOT_INFO_URL})",
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
     "Accept-Language": "en-US,en;q=0.9",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Cache-Control": "no-cache",
+    "Pragma": "no-cache"
 }
 
 
@@ -307,7 +311,8 @@ async def crawl_site(url: str) -> CrawlResult:
 import os
 
 async def main():
-    url = "https://www.sensai-cosmetics.com/gb/en/"
+    # url = "https://www.sensai-cosmetics.com/gb/en/"
+    url = "https://www.myntra.com/"
 
     result = await crawl_site(url)
 
