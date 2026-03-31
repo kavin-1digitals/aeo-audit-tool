@@ -310,7 +310,7 @@ const DetailedReport = ({ auditData, onBack, selectedCategory = 'all' }) => {
                   Score
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Information
+                  Success State or Remediation
                 </th>
               </tr>
             </thead>

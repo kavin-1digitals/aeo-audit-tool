@@ -91,6 +91,7 @@ class AuditResponse(BaseModel):
     signals: Optional[Signals] = None
     scorecard: ScoreCard
     summary: Summary
+    quick_remediations: Optional[Dict[str, Any]] = None
 
 def create_cache_key(domain: str, brand: Optional[str], geo: Optional[str]) -> str:
     """Create a unique cache key based on audit parameters"""
@@ -157,6 +158,10 @@ async def start_audit(request: AuditRequest):
             
             scorecard = await create_aeo_scorecard(signals, request.brand)
             
+            # Generate quick remediations
+            from src.services.quick_remediations_service import generate_quick_remediations
+            quick_remediations = generate_quick_remediations(scorecard.model_dump())
+            
             # Generate summary
             summary = generate_summary(scorecard)
             
@@ -169,11 +174,12 @@ async def start_audit(request: AuditRequest):
                 geo=request.geo,
                 signals=signals,
                 scorecard=scorecard,
-                summary=summary
+                summary=summary,
+                quick_remediations=quick_remediations.model_dump() if quick_remediations else None
             )
             
             # Cache the result
-            audit_cache.set(cache_key, result.dict())
+            audit_cache.set(cache_key, result.model_dump())
             
             return result
             

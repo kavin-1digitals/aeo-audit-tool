@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Optional, Tuple
 from pydantic import BaseModel, RootModel
 
 from langchain_core.prompts import PromptTemplate
@@ -6,7 +6,16 @@ from langchain_core.output_parsers import PydanticOutputParser
 
 from src.config import LLM_PROVIDERS, CITATION_PROMPT_CLUSTERS
 from src.signals.llm_signals.llm_client import get_llm_client
+
+# 🔥 IMPORT PREVIOUS CHAIN
+from src.signals.llm_signals.brain_analysis_chain import (
+    brand_analysis_chain,
+    safe_invoke as analysis_safe_invoke,
+    BrandAnalysis
+)
+
 import asyncio
+
 
 # -----------------------------
 # Pydantic Models
@@ -29,7 +38,7 @@ parser = PydanticOutputParser(pydantic_object=CitationPromptClusters)
 
 
 # -----------------------------
-# Helper: Format distribution
+# Helper
 # -----------------------------
 
 def format_distribution(dist: Dict[str, int]) -> str:
@@ -37,168 +46,87 @@ def format_distribution(dist: Dict[str, int]) -> str:
 
 
 # -----------------------------
-# Prompt Template (UPDATED)
+# Prompt Template (UPDATED → USE PROFILE)
 # -----------------------------
 
 prompt_gen_template = PromptTemplate(
-    input_variables=["brand", "geo", "cluster_distribution"],
+    input_variables=["profile", "geo", "cluster_distribution"],
     partial_variables={
         "format_instructions": parser.get_format_instructions()
     },
-template="""
+    template="""
 You are a Senior Generative Engine Optimization (GEO) Strategist.
 
-Your job is to generate REALISTIC, HUMAN-LIKE prompts that users would ask AI systems when exploring brands similar to "{brand}".
+You are given a VERIFIED brand profile.
 
 ════════════════════════════════════════════════════════════════
-PHASE 1 — UNDERSTAND THE BRAND
+BRAND PROFILE (GROUND TRUTH)
 ════════════════════════════════════════════════════════════════
+{profile}
 
-Classify "{brand}":
-
-- Entity Type
-- Category (specific)
-- Price Tier
-- Target Audience
+⚠️ STRICT:
+- DO NOT reinterpret or change domain
+- USE ONLY this data
 
 ════════════════════════════════════════════════════════════════
-PHASE 2 — CAPABILITY SURFACES (CRITICAL)
+OBJECTIVE
 ════════════════════════════════════════════════════════════════
-
-Identify 3–5 MAJOR CAPABILITY SURFACES.
-
-A capability surface = a key way users interact with or buy from the brand.
-
-Examples:
-- product types
-- use cases
-- contexts of usage
-
-⚠️ RULES:
-- Each surface must be DISTINCT
-- Avoid overlapping surfaces
-- Cover both broad + specific areas if applicable
-- For broad brands → include diverse surfaces
-- For niche brands → stay focused
+Generate realistic user prompts that real people would actually type into ChatGPT, Claude, or Google. 
+These prompts must force AI systems to return MULTIPLE BRAND NAMES (3-5) so we can measure visibility and citations.
 
 ════════════════════════════════════════════════════════════════
-PHASE 3 — USER INTENT MODELING
+PROMPT REQUIREMENTS
 ════════════════════════════════════════════════════════════════
-
-Think like a REAL user:
-
-- Users explore options
-- Compare alternatives
-- Ask casually
-- Often imply brands without naming them
-
-════════════════════════════════════════════════════════════════
-PHASE 4 — PROMPT GENERATION
-════════════════════════════════════════════════════════════════
-
-Generate prompts that:
-
-✅ Trigger:
-- brand listings
-- comparisons
-- recommendations
-- explicit brand name requests
-
-✅ Feel like:
-- natural human questions
-- real buying intent
-- specific brand discovery queries
-
-✅ Structure:
-- 2-3 lines each (detailed context)
-- explicitly ask for brand lists
-- include specific scenarios
-- mention {geo} for localization
-
 Each prompt MUST:
-- clearly ask for BRAND NAMES or BRAND LISTS
-- relate to ONE capability surface
-- feel specific (not generic)
-- include context that would naturally lead to brand mentions
+- explicitly ask for exactly **3-5 brands** (never "some" or "a few")
+- use natural human starters like:
+  - "Which 3-5 brands..."
+  - "What are the top 3-5 brands..."
+  - "Can you recommend 3-5 brands..."
+  - "List 3-5 brands that..."
+  - "I'm looking for 3-5 brands..."
+  - "Help me find 3-5 brands..."
 
-❌ DO NOT:
-- sound like SEO
-- be educational
-- be vague
-- ask generic questions without brand context
+- stay strictly within the domain of the profile
+- refer only to brands (not platforms, stores, or websites)
 
-✅ EXPLICIT BRAND REQUESTS:
-- "Can you list 3-5 top brands..."
-- "Which 3-5 brands would you recommend..."
-- "What are the 3-5 best brands for..."
-- "Can you name 3-5 brands that..."
-- "Which 3-5 fashion brands offer..."
-- "List 3-5 top brands for..."
-- "Recommend 3-5 brands that..."
+Each prompt SHOULD:
+- sound like a real person casually asking (conversational tone, contractions, personal motivation)
+- be 1–2 natural sentences max (not forced "line 1 + line 2")
+- weave in realistic user intent (style, performance, price, durability, comfort, trends, etc.) as a personal reason, NOT as a meta explanation
+- feel like a human shopping or researching thought ("for my hot yoga classes", "that actually last", "without spending a fortune", "that look cute too")
+
+🌍 GEO USAGE:
+- Include "{geo}" naturally in ~70% of prompts (e.g. "in the US", "available in the US", "popular in the US")
 
 ════════════════════════════════════════════════════════════════
-CLUSTER DISTRIBUTION (STRICT)
+GOOD HUMAN EXAMPLES (copy this natural style)
 ════════════════════════════════════════════════════════════════
+✅ Good:
+Which 3-5 brands make premium yoga apparel in the US? I need stuff that actually holds up in hot yoga classes.
 
-Generate prompts EXACTLY as per this distribution:
+✅ Good:
+Can you recommend 3-5 stylish yoga clothing brands in the US? I'm tired of leggings that pill after two washes.
 
+✅ Good:
+What are the top 3-5 yoga brands available in the US right now? Looking for ones that are comfy for long flows but still look good.
+
+❌ Bad (avoid these patterns):
+Which 3-5 brands offer premium yoga apparel in the US? This will help identify top players in the market.
+List 3-5 brands known for their yoga clothing in the US. I'm looking for popular options.
+
+════════════════════════════════════════════════════════════════
+CLUSTER DISTRIBUTION
+════════════════════════════════════════════════════════════════
 {cluster_distribution}
 
-RULES:
-
-- Each cluster must appear EXACTLY ONCE
-- Each cluster must contain EXACTLY the specified number of prompts
-- DO NOT rename clusters
-- DO NOT merge clusters
-- DO NOT create new clusters
-- DO NOT skip any cluster
-
-════════════════════════════════════════════════════════════════
-STRICT RULES
-════════════════════════════════════════════════════════════════
-
-- DO NOT mention "{brand}" or any brand names
-- At least 70–90% prompts should include "{geo}"
-- Use VARIED contexts across prompts
-- Avoid repeating same wording
-
-Each prompt MUST include at least one of:
-- "list 3-5 brands"
-- "which 3-5 brands"
-- "3-5 best brands"
-- "3-5 top brands"
-- "3-5 brand names"
-- "recommend 3-5 brands"
-- "name 3-5 brands"
-
-════════════════════════════════════════════════════════════════
-GOOD EXAMPLES (STYLE ONLY)
-════════════════════════════════════════════════════════════════
-
-✅ Brand Discovery (2-3 lines, explicit brand request):
-"Can you list 3-5 top running shoe brands that are popular in {geo} right now? 
-I'm looking for brands that offer both performance and style for daily workouts.
-Which 3-5 brands would you recommend for someone serious about fitness?"
-
-✅ Brand Recommendations (detailed context, brand list):
-"What are the 3-5 best workout clothing brands for intense training sessions in {geo}?
-I need brands that specialize in moisture-wicking fabrics and durable construction.
-Can you name 3-5 brands that professional athletes actually use and trust?"
-
-✅ Brand Comparison (explicit brand comparison):
-"Which 3-5 sneaker brands are currently trending among young adults in {geo}?
-I want to compare brands like Nike, Adidas, and newer emerging brands.
-Can you list 3-5 top brands and explain what makes each brand unique?"
-
-✅ Explicit Brand List Request:
-"List 3-5 top sustainable fashion brands that operate in {geo}.
-I'm interested in brands that use eco-friendly materials and ethical production.
-Which 3-5 brands are leading the sustainable fashion movement right now?"
+Rules:
+- Generate exactly the number of prompts shown for each cluster
+- Do not skip or rename any cluster
 
 ════════════════════════════════════════════════════════════════
 OUTPUT FORMAT
 ════════════════════════════════════════════════════════════════
-
 {format_instructions}
 """
 )
@@ -219,18 +147,37 @@ citation_prompts_chain = prompt_gen_template | llm | parser
 
 
 # -----------------------------
-# Safe Invoke (UPDATED)
+# Safe Invoke (FULL ORCHESTRATION)
 # -----------------------------
 
-async def safe_invoke(chain, payload, retries=2):
+async def safe_invoke(
+    brand: str,
+    geo: str,
+    retries: int = 2
+) -> Tuple[BrandAnalysis, Optional[CitationPromptClusters]]:
+    
+    # 🔥 STEP 1: GET BRAND ANALYSIS
+    analysis: BrandAnalysis = await analysis_safe_invoke(
+        brand_analysis_chain,
+        {"brand": brand, "geo": geo}
+    )
+
+    # 🔥 STEP 2: CONFIDENCE GATE
+    if analysis.brand_confidence < 0.5 or analysis.profile is None:
+        return analysis, None
+
+    # 🔥 STEP 3: GENERATE PROMPTS
     for attempt in range(retries):
         try:
-            payload_with_clusters = {
-                **payload, 
+            payload = {
+                "profile": analysis.profile.model_dump_json(indent=2),
+                "geo": geo,
                 "cluster_distribution": format_distribution(CITATION_PROMPT_CLUSTERS)
             }
-            result = await chain.ainvoke(payload_with_clusters)
-            return result
+
+            result = await citation_prompts_chain.ainvoke(payload)
+            return analysis, result
+
         except Exception as e:
             if attempt == retries - 1:
                 raise e
@@ -241,15 +188,21 @@ async def safe_invoke(chain, payload, retries=2):
 # -----------------------------
 
 if __name__ == "__main__":
-    brand = "Express"
+    brand = "Alo Yoga"
     geo = "US"
 
-    result = asyncio.run(safe_invoke(
-        citation_prompts_chain,
-        {"brand": brand, "geo": geo}
-    ))
+    analysis, prompts = asyncio.run(
+        safe_invoke(brand, geo)
+    )
 
-    for cluster in result.root:
-        print(f"\n=== {cluster.cluster} ===")
-        for prompt in cluster.prompts:
-            print(f"- {prompt}")
+    print("\n=== BRAND ANALYSIS ===")
+    print(analysis.model_dump_json(indent=2))
+
+    if prompts:
+        print("\n=== PROMPTS ===")
+        for cluster in prompts.root:
+            print(f"\n=== {cluster.cluster} ===")
+            for prompt in cluster.prompts:
+                print(f"- {prompt}")
+    else:
+        print("\nNo prompts generated due to low confidence.")

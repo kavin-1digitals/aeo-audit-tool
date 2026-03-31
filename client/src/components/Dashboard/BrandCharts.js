@@ -1,6 +1,44 @@
 import React from 'react';
+import { 
+  ExclamationTriangleIcon,
+  InformationCircleIcon 
+} from '@heroicons/react/24/outline';
 
-const BrandCharts = ({ llmMetrics, audit_metadata }) => {
+const BrandCharts = ({ llmMetrics, audit_metadata, llmSignals }) => {
+  // Handle low confidence case
+  if (llmSignals?.low_confidence_reasoning) {
+    return (
+      <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Brand vs Competitors - Share of Voice</h3>
+        
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-6 text-center">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-amber-100 rounded-full mb-4">
+            <ExclamationTriangleIcon className="h-8 w-8 text-amber-600" />
+          </div>
+          
+          <h4 className="text-lg font-semibold text-amber-800 mb-2">Limited Brand Analysis Available</h4>
+          <p className="text-sm text-amber-700 mb-4 max-w-md mx-auto">
+            {llmSignals.low_confidence_reasoning}
+          </p>
+          
+          <div className="bg-white rounded-lg p-4 border border-amber-200 text-left max-w-sm mx-auto">
+            <div className="flex items-start space-x-2">
+              <InformationCircleIcon className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-medium text-amber-800 mb-1">What this means:</p>
+                <ul className="text-xs text-amber-700 space-y-1">
+                  <li>• Insufficient brand data for competitive analysis</li>
+                  <li>• AI models have limited awareness of the brand</li>
+                  <li>• Market share calculations cannot be performed</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
       <h3 className="text-lg font-semibold text-gray-900 mb-4">Brand vs Competitors - Share of Voice</h3>

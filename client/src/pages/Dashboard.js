@@ -11,7 +11,9 @@ import {
 import SignalTypeChart from '../components/Dashboard/SignalTypeChart';
 import ExecutiveSummary from '../components/Dashboard/ExecutiveSummary';
 import ProfessionalCharts from '../components/Dashboard/ProfessionalCharts';
+import ScorecardsSection from '../components/Dashboard/ScorecardsSection';
 import LLMAnalysisSection from '../components/Dashboard/LLMAnalysisSection';
+import QuickRemediationsSection from '../components/Dashboard/QuickRemediationsSection';
 import DomainPanels from '../components/Dashboard/DomainPanels';
 import TopIssues from '../components/Dashboard/TopIssues';
 import { Summary } from '../components/Summary';
@@ -19,13 +21,6 @@ import { ScoreOverview } from '../components/ScoreOverview';
 
 const Dashboard = ({ auditData, onViewDetails, onNewAudit }) => {
   const { audit_metadata, path_scorecard, summary } = auditData;
-  
-  // Debug: Log the audit data structure
-  console.log('=== AUDIT DATA DEBUG ===');
-  console.log('audit_metadata:', audit_metadata);
-  console.log('path_scorecard keys:', Object.keys(path_scorecard));
-  console.log('signals exists:', !!auditData.signals);
-  console.log('========================');
 
   // Group scores by main category
   const getCategoryData = () => {
@@ -56,10 +51,15 @@ const Dashboard = ({ auditData, onViewDetails, onNewAudit }) => {
     return categories;
   };
 
+  // Get LLM signals data
+  const getLLMSignals = () => {
+    return auditData.signals?.llm_signals || null;
+  };
+
   // Get LLM brand analysis metrics
   const getLLMMetrics = () => {
     // Check if LLM signals data exists in signals object
-    const llmSignals = auditData.signals?.llm_signals;
+    const llmSignals = getLLMSignals();
     
     if (!llmSignals) {
       console.log('No LLM signals found in auditData.signals');
@@ -234,12 +234,15 @@ const Dashboard = ({ auditData, onViewDetails, onNewAudit }) => {
 
   const categories = getCategoryData();
   const llmMetrics = getLLMMetrics();
+  const llmSignals = getLLMSignals();
   console.log('=== LLM METRICS DEBUG ===');
   console.log('llmMetrics:', llmMetrics);
+  console.log('llmSignals:', llmSignals);
   console.log('market_comparison exists:', !!llmMetrics?.market_comparison);
   console.log('market_comparison length:', llmMetrics?.market_comparison?.length || 0);
   console.log('citation_prompt_answers exists:', !!llmMetrics?.citation_prompt_answers);
   console.log('citation_prompt_answers clusters:', llmMetrics?.citation_prompt_answers?.clusters?.length || 0);
+  console.log('low_confidence_reasoning:', llmSignals?.low_confidence_reasoning);
   console.log('==========================');
   
   // Debug: Log the path_scorecard structure
@@ -293,6 +296,17 @@ const Dashboard = ({ auditData, onViewDetails, onNewAudit }) => {
         </p>
       </div>
 
+      {/* Scorecards Section */}
+      {llmSignals && (
+        <ScorecardsSection 
+          auditData={auditData}
+          llmMetrics={llmMetrics}
+          llmSignals={llmSignals}
+          audit_metadata={audit_metadata}
+        />
+      )}
+
+
       {/* Performance Overview */}
       <ScoreOverview scorecard={{
         total_score: audit_metadata.total_score || 0,
@@ -309,6 +323,24 @@ const Dashboard = ({ auditData, onViewDetails, onNewAudit }) => {
         llmMetrics={llmMetrics}
       />
 
+      {/* Brand vs Competitors Chart */}
+      {llmSignals && (
+        <ProfessionalCharts 
+          llmMetrics={llmMetrics}
+          audit_metadata={audit_metadata}
+          llmSignals={llmSignals}
+          auditData={auditData}
+        />
+      )}
+
+      {/* LLM Signal Analysis */}
+      {llmSignals && (
+        <LLMAnalysisSection 
+          llmSignals={llmSignals}
+          audit_metadata={audit_metadata}
+        />
+      )}
+
       {/* Signal Type Performance Chart */}
       <SignalTypeChart categories={categories} />
 
@@ -320,22 +352,10 @@ const Dashboard = ({ auditData, onViewDetails, onNewAudit }) => {
         onViewDetails={onViewDetails}
       />
 
-
-      
-
-      {/* Brand vs Competitors Chart */}
-      {llmMetrics && llmMetrics.market_comparison && llmMetrics.market_comparison.length > 0 && (
-        <ProfessionalCharts 
-          llmMetrics={llmMetrics}
-          audit_metadata={audit_metadata}
-        />
-      )}
-
-      {/* LLM Signal Analysis */}
-      {llmMetrics && llmMetrics.citation_prompt_answers && Array.isArray(llmMetrics.citation_prompt_answers) && llmMetrics.citation_prompt_answers.length > 0 && (
-        <LLMAnalysisSection 
-          llmSignals={llmMetrics}
-          audit_metadata={audit_metadata}
+      {/* Quick Remediations Section */}
+      {auditData?.quick_remediations && (
+        <QuickRemediationsSection 
+          quickRemediations={auditData.quick_remediations}
         />
       )}
 

@@ -112,6 +112,7 @@ export const getAuditResults = async (domain = 'https://www.aloyoga.com', brand 
     raw_scorecard: scorecard?.raw_scorecard || { scores: [] },
     path_scorecard: scorecard?.path_scorecard || {},
     signals: response.signals || null,
+    quick_remediations: response.quick_remediations || null,
     summary: response.summary || {
       performance_highlights: [],
       improvement_areas: []
@@ -119,9 +120,7 @@ export const getAuditResults = async (domain = 'https://www.aloyoga.com', brand 
   };
   
   console.log('Transformed data for frontend:', transformedData);
-  console.log('Final path_scorecard keys:', Object.keys(transformedData.path_scorecard));
-  console.log('Final raw_scorecard scores:', transformedData.raw_scorecard.scores?.length || 0);
-  console.log('Final audit_metadata:', transformedData.audit_metadata);
+  console.log('Final quick_remediations:', transformedData.quick_remediations);
   
   return transformedData;
 };

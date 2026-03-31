@@ -1,0 +1,50 @@
+{
+  "difficulty_rules": {
+    "Domain Signals": {
+      "default": "Easy",
+      "threshold": {
+        "medium": 3
+      }
+    },
+    "Site Signals": {
+      "default": "Medium", 
+      "threshold": {
+        "medium": 2,
+        "hard": 4
+      }
+    },
+    "LLM Signals": {
+      "default": "Medium"
+    }
+  },
+  "impact_rules": {
+    "high_threshold": {
+      "improvement_percentage": 15,
+      "signals_count": 3
+    },
+    "medium_threshold": {
+      "improvement_percentage": 8,
+      "signals_count": 2
+    }
+  },
+  "category_priorities": {
+    "Quick Fix": {
+      "difficulty": ["Easy"],
+      "impact": ["High", "Medium"],
+      "description": "Target {signals_count} easy fixes with high impact for immediate improvement"
+    },
+    "Secondary Fix": {
+      "difficulty": ["Medium"],
+      "impact": ["High", "Medium", "Low"],
+      "description": "Address {signals_count} medium-complexity issues for significant gains"
+    },
+    "Complete Fix": {
+      "difficulty": ["Hard"],
+      "impact": ["Complete"],
+      "description": "Fix all remaining {signals_count} signals for near-perfect score"
+    }
+  },
+  "target_scores": {
+    "maximum": 98.0
+  }
+}
