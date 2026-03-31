@@ -78,7 +78,6 @@ app.add_middleware(
 class AuditRequest(BaseModel):
     domain: HttpUrl
     brand: str
-    industry: str
     geo: Optional[str] = "Not Specified"
 
 
@@ -86,7 +85,6 @@ class AuditResponse(BaseModel):
     task_id: str
     domain: str
     brand: str
-    industry: str
     geo: Optional[str] = "Not Specified"
     status: str
     message: str
@@ -94,13 +92,11 @@ class AuditResponse(BaseModel):
     scorecard: ScoreCard
     summary: Summary
 
-def create_cache_key(domain: str, brand: Optional[str], industry: Optional[str], geo: Optional[str]) -> str:
+def create_cache_key(domain: str, brand: Optional[str], geo: Optional[str]) -> str:
     """Create a unique cache key based on audit parameters"""
     key_parts = [domain.lower()]
     if brand:
         key_parts.append(brand.lower())
-    if industry:
-        key_parts.append(industry.lower())
     if geo:
         key_parts.append(geo.lower())
     return "|".join(key_parts)
@@ -136,7 +132,7 @@ async def start_audit(request: AuditRequest):
         logger.info(f"Starting audit task {task_id} for domain {domain_str}")
         
         # Create cache key
-        cache_key = create_cache_key(domain_str, request.brand, request.industry, request.geo)
+        cache_key = create_cache_key(domain_str, request.brand, request.geo)
         
         # Check cache first
         cached_result = audit_cache.get(cache_key)
@@ -147,16 +143,16 @@ async def start_audit(request: AuditRequest):
         try:
             # Process audit synchronously
             logger.info(f"Fetching signals for {domain_str}")
-            if request.brand and request.industry:
+            if request.brand:
                 logger.info(f"Running LLM signals analysis for brand: {request.brand}")
                 try:
-                    signals = await find_signals(domain_str, request.brand, request.industry, request.geo)
+                    signals = await find_signals(domain_str, request.brand, request.geo)
                     logger.info("LLM signals analysis completed successfully")
                 except Exception as llm_error:
                     logger.warning(f"LLM signals failed, falling back to basic signals: {str(llm_error)}")
                     signals = await find_signals(domain_str)
             else:
-                logger.info("Skipping LLM signals - no brand/industry provided")
+                logger.info("Skipping LLM signals - no brand provided")
                 signals = await find_signals(domain_str)
             
             scorecard = await create_aeo_scorecard(signals, request.brand)
@@ -170,7 +166,6 @@ async def start_audit(request: AuditRequest):
                 message="Audit completed successfully",
                 domain=domain_str,
                 brand=request.brand,
-                industry=request.industry,
                 geo=request.geo,
                 signals=signals,
                 scorecard=scorecard,
@@ -191,7 +186,6 @@ async def start_audit(request: AuditRequest):
                 message=f"Audit failed: {str(e)}",
                 domain=domain_str,
                 brand=request.brand,
-                industry=request.industry,
                 geo=request.geo,
                 signals=None,
                 scorecard=ScoreCard(

@@ -30,29 +30,29 @@ def generate_summary(scorecard: ScoreCard) -> Summary:
         if percentage >= 90:
             messages = summary_messages['performance_highlights']['90']
             if path in messages:
-                performance_highlights.append(messages[path].format(percentage=round(percentage, 1)))
+                performance_highlights.append(messages[path])
         elif percentage >= 80:
             messages = summary_messages['performance_highlights']['80']
             if path in messages:
-                performance_highlights.append(messages[path].format(percentage=round(percentage, 1)))
+                performance_highlights.append(messages[path])
         elif percentage >= 70:
             messages = summary_messages['performance_highlights']['70']
             if path in messages:
-                performance_highlights.append(messages[path].format(percentage=round(percentage, 1)))
+                performance_highlights.append(messages[path])
         
         # Improvement areas (below 70%)
         elif percentage >= 50:
             messages = summary_messages['improvement_areas']['50']
             if path in messages:
-                improvement_areas.append(messages[path].format(percentage=round(percentage, 1)))
+                improvement_areas.append(messages[path])
         elif percentage >= 30:
             messages = summary_messages['improvement_areas']['30']
             if path in messages:
-                improvement_areas.append(messages[path].format(percentage=round(percentage, 1)))
+                improvement_areas.append(messages[path])
         else:
             messages = summary_messages['improvement_areas']['0']
             if path in messages:
-                improvement_areas.append(messages[path].format(percentage=round(percentage, 1)))
+                improvement_areas.append(messages[path])
     
     return Summary(
         performance_highlights=performance_highlights,

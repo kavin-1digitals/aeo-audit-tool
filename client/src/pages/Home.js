@@ -8,14 +8,13 @@ export const Home = () => {
   const { error, isLoading, clearError, startAudit } = useAudit();
   const [domain, setDomain] = useState('https://www.aloyoga.com');
   const [brand, setBrand] = useState('Alo Yoga');
-  const [industry, setIndustry] = useState('Sportswear');
   const [geo, setGeo] = useState('United States');
   const [auditData, setAuditData] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!domain.trim() || !brand.trim() || !industry.trim()) {
+    if (!domain.trim() || !brand.trim()) {
       return;
     }
 
@@ -23,7 +22,7 @@ export const Home = () => {
       clearError();
       console.log(`Starting AEO audit for ${domain.trim()} with brand ${brand.trim()}...`);
       
-      const data = await startAudit(domain.trim(), brand.trim(), industry.trim(), geo.trim());
+      const data = await startAudit(domain.trim(), brand.trim(), geo.trim());
       console.log('Raw API response:', data);
       
       setAuditData(data);
@@ -37,7 +36,6 @@ export const Home = () => {
     setAuditData(null);
     setDomain('https://www.aloyoga.com');
     setBrand('Alo Yoga');
-    setIndustry('Sportswear');
     setGeo('United States');
     clearError();
   };
@@ -113,36 +111,19 @@ export const Home = () => {
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="brand" className="block text-sm font-semibold text-gray-900 mb-2">
-                      Brand Name
-                    </label>
-                    <input
-                      type="text"
-                      id="brand"
-                      value={brand}
-                      onChange={(e) => setBrand(e.target.value)}
-                      placeholder="e.g., Alo Yoga"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="industry" className="block text-sm font-semibold text-gray-900 mb-2">
-                      Industry
-                    </label>
-                    <input
-                      type="text"
-                      id="industry"
-                      value={industry}
-                      onChange={(e) => setIndustry(e.target.value)}
-                      placeholder="e.g., Sportswear"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500"
-                      required
-                    />
-                  </div>
+                <div>
+                  <label htmlFor="brand" className="block text-sm font-semibold text-gray-900 mb-2">
+                    Brand Name
+                  </label>
+                  <input
+                    type="text"
+                    id="brand"
+                    value={brand}
+                    onChange={(e) => setBrand(e.target.value)}
+                    placeholder="e.g., Alo Yoga"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500"
+                    required
+                  />
                 </div>
 
                 <div>
@@ -161,7 +142,7 @@ export const Home = () => {
 
                 <button
                   type="submit"
-                  disabled={!domain.trim() || !brand.trim() || !industry.trim() || isLoading}
+                  disabled={!domain.trim() || !brand.trim() || isLoading}
                   className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-4 px-6 rounded-xl hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg"
                 >
                   {isLoading ? (

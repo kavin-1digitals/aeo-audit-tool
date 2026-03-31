@@ -8,14 +8,14 @@ import {
   EyeIcon,
   ArrowPathIcon
 } from '@heroicons/react/24/outline';
-import BrandMetrics from '../components/Dashboard/BrandMetrics';
-import ProfessionalCharts from '../components/Dashboard/ProfessionalCharts';
-import DomainPanels from '../components/Dashboard/DomainPanels';
-import ExecutiveSummary from '../components/Dashboard/ExecutiveSummary';
 import SignalTypeChart from '../components/Dashboard/SignalTypeChart';
+import ExecutiveSummary from '../components/Dashboard/ExecutiveSummary';
+import ProfessionalCharts from '../components/Dashboard/ProfessionalCharts';
+import LLMAnalysisSection from '../components/Dashboard/LLMAnalysisSection';
+import DomainPanels from '../components/Dashboard/DomainPanels';
 import TopIssues from '../components/Dashboard/TopIssues';
-import { ScoreOverview } from '../components/ScoreOverview';
 import { Summary } from '../components/Summary';
+import { ScoreOverview } from '../components/ScoreOverview';
 
 const Dashboard = ({ auditData, onViewDetails, onNewAudit }) => {
   const { audit_metadata, path_scorecard, summary } = auditData;
@@ -84,7 +84,8 @@ const Dashboard = ({ auditData, onViewDetails, onNewAudit }) => {
           return acc;
         }, {}),
         competitorCount: allCompetitors.length,
-        market_comparison: llmSignals.market_comparison // ✅ ADD THIS LINE
+        market_comparison: llmSignals.market_comparison,
+        citation_prompt_answers: llmSignals.citation_prompt_answers // ✅ FIXED: Added citation_prompt_answers
       };
     }
     
@@ -237,6 +238,8 @@ const Dashboard = ({ auditData, onViewDetails, onNewAudit }) => {
   console.log('llmMetrics:', llmMetrics);
   console.log('market_comparison exists:', !!llmMetrics?.market_comparison);
   console.log('market_comparison length:', llmMetrics?.market_comparison?.length || 0);
+  console.log('citation_prompt_answers exists:', !!llmMetrics?.citation_prompt_answers);
+  console.log('citation_prompt_answers clusters:', llmMetrics?.citation_prompt_answers?.clusters?.length || 0);
   console.log('==========================');
   
   // Debug: Log the path_scorecard structure
@@ -328,7 +331,13 @@ const Dashboard = ({ auditData, onViewDetails, onNewAudit }) => {
         />
       )}
 
-      
+      {/* LLM Signal Analysis */}
+      {llmMetrics && llmMetrics.citation_prompt_answers && Array.isArray(llmMetrics.citation_prompt_answers) && llmMetrics.citation_prompt_answers.length > 0 && (
+        <LLMAnalysisSection 
+          llmSignals={llmMetrics}
+          audit_metadata={audit_metadata}
+        />
+      )}
 
       {/* Top Issues */}
       <TopIssues categories={categories} pathScorecard={path_scorecard} />

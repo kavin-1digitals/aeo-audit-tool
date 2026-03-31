@@ -64,11 +64,11 @@ export const AuditProvider = ({ children }) => {
   }, []);
 
   // Start audit - more comprehensive call
-  const startAudit = useCallback(async (domain, brand, industry, geo) => {
+  const startAudit = useCallback(async (domain, brand, geo) => {
     try {
       dispatch({ type: AUDIT_ACTIONS.START_AUDIT });
       
-      const response = await getAuditResults(domain, brand, industry, geo);
+      const response = await getAuditResults(domain, brand, geo);
       
       dispatch({ type: AUDIT_ACTIONS.AUDIT_SUCCESS, payload: response });
       return response;

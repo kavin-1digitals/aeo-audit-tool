@@ -18,7 +18,7 @@ class Signals(BaseModel):
     site_signals: SiteSignals
     llm_signals: Optional[LlmSignals] = None
 
-async def find_signals(full_domain: str, brand: Optional[str] = None, industry: Optional[str] = None, geo: Optional[str] = "United States") -> Signals:
+async def find_signals(full_domain: str, brand: Optional[str] = None, geo: Optional[str] = "United States") -> Signals:
     """Find all signals for a domain"""
     logger.info(f"Starting signals analysis for domain: {full_domain}")
     
@@ -33,7 +33,7 @@ async def find_signals(full_domain: str, brand: Optional[str] = None, industry: 
     
     # LLM signals task (if brand provided)
     llm_signals_task = None
-    if brand and industry:
+    if brand:
         logger.info("Starting LLM signals (brand visibility analysis)")
         llm_signals_task = asyncio.create_task(find_llm_signals(brand, geo))
     
@@ -75,7 +75,6 @@ if __name__ == "__main__":
         check = await find_signals(
             full_domain="https://www.aloyoga.com",
             brand="Alo Yoga",
-            industry="Sportswear",
             geo="United States"
         )
         print(check.model_dump())

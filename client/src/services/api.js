@@ -80,12 +80,11 @@ export const auditApi = {
 };
 
 // New API method for getting comprehensive audit results
-export const getAuditResults = async (domain = 'https://www.aloyoga.com', brand = 'Alo Yoga', industry = 'Sportswear', geo = 'United States') => {
-  console.log('Calling API with domain:', domain, 'brand:', brand, 'industry:', industry, 'geo:', geo);
+export const getAuditResults = async (domain = 'https://www.aloyoga.com', brand = 'Alo Yoga', geo = 'United States') => {
+  console.log('Calling API with domain:', domain, 'brand:', brand, 'geo:', geo);
   const response = await api.post('/audit', {
     domain: domain,
     brand: brand,
-    industry: industry,
     geo: geo
   });
   
@@ -103,7 +102,6 @@ export const getAuditResults = async (domain = 'https://www.aloyoga.com', brand 
     audit_metadata: {
       domain: response.domain || domain,
       brand: response.brand || brand,
-      industry: response.industry || industry,
       geo: response.geo || geo,
       timestamp: response.timestamp || new Date().toISOString(),
       version: '1.0.0',
