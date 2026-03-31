@@ -102,7 +102,7 @@ export const getAuditResults = async (domain = 'https://www.aloyoga.com', brand 
     audit_metadata: {
       domain: response.domain || domain,
       brand: response.brand || brand,
-      geo: response.geo || geo,
+      location: response.geo || geo,
       timestamp: response.timestamp || new Date().toISOString(),
       version: '1.0.0',
       total_checks: scorecard?.total_checks || 0,

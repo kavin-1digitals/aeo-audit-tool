@@ -14,6 +14,7 @@ import ProfessionalCharts from '../components/Dashboard/ProfessionalCharts';
 import ScorecardsSection from '../components/Dashboard/ScorecardsSection';
 import LLMAnalysisSection from '../components/Dashboard/LLMAnalysisSection';
 import QuickRemediationsSection from '../components/Dashboard/QuickRemediationsSection';
+import PDFReportGenerator from '../components/Dashboard/PDFReportGenerator';
 import DomainPanels from '../components/Dashboard/DomainPanels';
 import TopIssues from '../components/Dashboard/TopIssues';
 import { Summary } from '../components/Summary';
@@ -292,7 +293,7 @@ const Dashboard = ({ auditData, onViewDetails, onNewAudit }) => {
           AEO Audit Dashboard
         </h1>
         <p className="text-gray-600">
-          {audit_metadata.domain} - {audit_metadata.brand} ({audit_metadata.industry})
+          {audit_metadata.domain} - {audit_metadata.brand} ({audit_metadata.location})
         </p>
       </div>
 
@@ -308,65 +309,82 @@ const Dashboard = ({ auditData, onViewDetails, onNewAudit }) => {
 
 
       {/* Performance Overview */}
-      <ScoreOverview scorecard={{
-        total_score: audit_metadata.total_score || 0,
-        total_checks: audit_metadata.total_checks || 1,
-        score_percentage: audit_metadata.score_percentage || 0
-      }} />
+      <div id="performance-overview">
+        <ScoreOverview scorecard={{
+          total_score: audit_metadata.total_score || 0,
+          total_checks: audit_metadata.total_checks || 1,
+          score_percentage: audit_metadata.score_percentage || 0
+        }} />
+      </div>
 
       {/* Executive Summary */}
-      <ExecutiveSummary 
-        audit_metadata={audit_metadata}
-        total_checks={audit_metadata.total_checks}
-        categories_count={Object.keys(categories).length}
-        critical_issues={criticalIssues}
-        llmMetrics={llmMetrics}
-      />
+      <div id="executive-summary">
+        <ExecutiveSummary 
+          audit_metadata={audit_metadata}
+          total_checks={audit_metadata.total_checks}
+          categories_count={Object.keys(categories).length}
+          critical_issues={criticalIssues}
+          llmMetrics={llmMetrics}
+        />
+      </div>
 
       {/* Brand vs Competitors Chart */}
       {llmSignals && (
-        <ProfessionalCharts 
-          llmMetrics={llmMetrics}
-          audit_metadata={audit_metadata}
-          llmSignals={llmSignals}
-          auditData={auditData}
-        />
+        <div id="professional-charts">
+          <ProfessionalCharts 
+            llmMetrics={llmMetrics}
+            audit_metadata={audit_metadata}
+            llmSignals={llmSignals}
+            auditData={auditData}
+          />
+        </div>
       )}
 
       {/* LLM Signal Analysis */}
       {llmSignals && (
-        <LLMAnalysisSection 
-          llmSignals={llmSignals}
-          audit_metadata={audit_metadata}
-        />
+        <div id="llm-analysis">
+          <LLMAnalysisSection 
+            llmSignals={llmSignals}
+            audit_metadata={audit_metadata}
+          />
+        </div>
       )}
 
       {/* Signal Type Performance Chart */}
-      <SignalTypeChart categories={categories} />
-
+      <div id="signal-type-chart">
+        <SignalTypeChart categories={categories} />
+      </div>
 
       {/* Signal Category Panels */}
-      <DomainPanels 
-        categories={categories}
-        calculateCategoryMetrics={calculateCategoryMetrics}
-        onViewDetails={onViewDetails}
-      />
+      <div id="domain-panels">
+        <DomainPanels 
+          categories={categories}
+          calculateCategoryMetrics={calculateCategoryMetrics}
+          onViewDetails={onViewDetails}
+        />
+      </div>
 
       {/* Quick Remediations Section */}
       {auditData?.quick_remediations && (
-        <QuickRemediationsSection 
-          quickRemediations={auditData.quick_remediations}
-        />
+        <div id="quick-remediations">
+          <QuickRemediationsSection 
+            quickRemediations={auditData.quick_remediations}
+          />
+        </div>
       )}
 
       {/* Top Issues */}
-      <TopIssues categories={categories} pathScorecard={path_scorecard} />
+      <div id="top-issues">
+        <TopIssues categories={categories} pathScorecard={path_scorecard} />
+      </div>
 
       {/* Summary Section */}
-      <Summary summary={summary} />
+      <div id="summary-section">
+        <Summary summary={summary} />
+      </div>
 
       {/* Action Buttons */}
-      <div className="flex justify-center space-x-4">
+      <div className="flex justify-center space-x-4 mb-8">
         <button
           onClick={onNewAudit}
           className="flex items-center space-x-2 px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
@@ -383,6 +401,15 @@ const Dashboard = ({ auditData, onViewDetails, onNewAudit }) => {
           <span>View Detailed Report</span>
         </button>
       </div>
+
+      {/* PDF Report Generator */}
+      <PDFReportGenerator 
+        auditData={auditData}
+        onGeneratePDF={(fileName) => {
+          console.log('PDF generated:', fileName);
+          // You could add a success notification here
+        }}
+      />
     </div>
   );
 };

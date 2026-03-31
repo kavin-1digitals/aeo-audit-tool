@@ -263,7 +263,7 @@ const QuickRemediationsSection = ({ quickRemediations }) => {
 
       {/* Summary */}
       <div className="text-center mt-8 text-sm text-gray-600">
-        Following all {plans.length} phases will optimize your technical SEO and AI visibility
+        Following all {plans.length} phases will optimize your technical GEO and AI visibility
       </div>
     </div>
   );

@@ -59,7 +59,7 @@ export const LoadingSpinner = () => {
     // Advance general steps
     const stepInterval = setInterval(() => {
       setCurrentStep(prev => (prev < progressSteps.length - 1 ? prev + 1 : prev));
-    }, 13000); // Change every 13 seconds instead of 6
+    }, 15000); // Change every 15 seconds
 
     // Tip cycler with fade effect
     const tipInterval = setInterval(() => {
@@ -75,8 +75,11 @@ export const LoadingSpinner = () => {
       setTimeElapsed(prev => prev + 1);
     }, 1000);
 
-    // Simulate analysis steps
-    const stepProgressInterval = setInterval(() => {
+    // Simulate analysis steps with special timing for final step
+    let stepDelay = 15000; // 15 seconds for first 4 steps
+    let stepProgressInterval;
+    
+    const stepProgressFunction = () => {
       setSteps(prev => {
         const next = [...prev];
         const pendingIndex = next.findIndex(s => s.status === 'pending');
@@ -86,6 +89,10 @@ export const LoadingSpinner = () => {
           // Don't auto-complete the last step (Score Calculation)
           if (analyzingIndex < next.length - 1) {
             next[analyzingIndex].status = 'completed';
+            stepDelay = 15000; // Reset to 15 seconds for next step
+          } else {
+            // This is the final step (Score Calculation) - extend to 6 minutes
+            stepDelay = 360000; // 6 minutes in milliseconds (360,000ms)
           }
         }
         
@@ -95,7 +102,13 @@ export const LoadingSpinner = () => {
         
         return next;
       });
-    }, 13000); // Step progression every 13 seconds
+      
+      // Clear and reset interval with new delay
+      clearInterval(stepProgressInterval);
+      stepProgressInterval = setInterval(stepProgressFunction, stepDelay);
+    };
+    
+    stepProgressInterval = setInterval(stepProgressFunction, stepDelay);
 
     return () => {
       clearInterval(stepInterval);
@@ -182,7 +195,7 @@ export const LoadingSpinner = () => {
                 <div className="h-10 w-[1px] bg-slate-200"></div>
                 <div className="flex flex-col items-end">
                   <span className="text-xs uppercase tracking-wider text-slate-400 font-bold">Est. Total</span>
-                  <span className="text-lg font-mono font-bold text-slate-700">~01:45</span>
+                  <span className="text-lg font-mono font-bold text-slate-700">~06:15</span>
                 </div>
               </div>
 

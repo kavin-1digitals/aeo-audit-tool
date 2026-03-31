@@ -68,11 +68,27 @@ export const AuditProvider = ({ children }) => {
     try {
       dispatch({ type: AUDIT_ACTIONS.START_AUDIT });
       
-      const response = await getAuditResults(domain, brand, geo);
+      // Add timeout wrapper to catch any unexpected timeouts
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => {
+          reject(new Error('Request timeout - server may be unavailable'));
+        }, 600000); // 10 minute timeout
+      });
+      
+      const response = await Promise.race([
+        getAuditResults(domain, brand, geo),
+        timeoutPromise
+      ]);
       
       dispatch({ type: AUDIT_ACTIONS.AUDIT_SUCCESS, payload: response });
       return response;
     } catch (error) {
+      console.error('Audit Error Details:', {
+        message: error.message,
+        code: error.code,
+        response: error.response?.data,
+        request: error.request
+      });
       dispatch({ type: AUDIT_ACTIONS.AUDIT_ERROR, payload: error.message });
       throw error;
     }

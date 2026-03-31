@@ -3,7 +3,6 @@ import {
   CalendarIcon,
   GlobeAltIcon,
   BuildingOfficeIcon,
-  TagIcon,
   CheckCircleIcon,
   ExclamationTriangleIcon
 } from '@heroicons/react/24/outline';
@@ -70,13 +69,6 @@ const ExecutiveSummary = ({ audit_metadata, total_checks, categories_count, crit
                 <div>
                   <p className="text-sm font-medium text-gray-900">Brand</p>
                   <p className="text-sm text-gray-600">{audit_metadata.brand}</p>
-                </div>
-              </div>
-              <div className="flex items-start">
-                <TagIcon className="h-5 w-5 text-gray-400 mt-0.5 mr-3 flex-shrink-0" />
-                <div>
-                  <p className="text-sm font-medium text-gray-900">Industry</p>
-                  <p className="text-sm text-gray-600">{audit_metadata.industry}</p>
                 </div>
               </div>
             </div>
