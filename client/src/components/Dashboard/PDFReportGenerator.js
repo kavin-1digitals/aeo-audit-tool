@@ -162,13 +162,21 @@ const PrintableScorecards = ({ auditData, llmMetrics, llmSignals, audit_metadata
     return { score: coverage, clusters: coveredClusters, total: totalClusters };
   };
 
+  // Calculate total analyzes done from scorecard (same as ScorecardsSection)
+  const getTotalAnalyzesDone = () => {
+    const scorecard = auditData?.scorecard || auditData?.signals?.scorecard || auditData?.signals?.aeo_scorecard;
+    const maxPossibleScore = scorecard?.max_possible_score || 0;
+    return maxPossibleScore;
+  };
+
+  const totalAnalyzesDone = getTotalAnalyzesDone();
   const visibility = getAIPromptVisibility();
-  const techScore = getTechnicalReadiness();
+  const techScore = totalAnalyzesDone; // Use max_possible_score instead of technical readiness
   const compScore = getCompetitorCitationScore();
   const clusterScore = getClustersCovered();
 
   const primaryMetrics = [
-    { label: 'Technical Readiness', value: `${techScore.toFixed(0)}%`, num: techScore, color: '#3b82f6', desc: `Domain optimization + Site signals accessibility score` },
+    { label: 'Total Analyzes Done', value: `${techScore.toFixed(0)}%`, num: techScore, color: '#3b82f6', desc: `Maximum possible score from weighted category analysis across all AEO signals` },
     { label: 'AI Prompt Visibility', value: `${visibility.score.toFixed(1)}%`, num: visibility.score, color: '#8b5cf6', desc: `Brand mentioned in ${visibility.citations} of ${visibility.prompts} AI prompts` },
     { label: 'Competitor Citation Score', value: `${compScore.score.toFixed(1)}%`, num: compScore.score, color: '#ef4444', desc: `Performance relative to top competing mentions in AI responses` },
     { label: 'Clusters Covered', value: `${clusterScore.score.toFixed(1)}%`, num: clusterScore.score, color: '#06b6d4', desc: `Brand presence across ${clusterScore.clusters} of ${clusterScore.total} user intent clusters` }
@@ -460,9 +468,10 @@ const PrintableAuditSummary = ({ summary, isUngated = true }) => {
   );
 };
 
-const PrintableScoreOverview = ({ audit_metadata }) => {
-  const percentage = audit_metadata.score_percentage || 0;
-  const totalChecks = audit_metadata.total_checks || 0;
+const PrintableScoreOverview = ({ audit_metadata, scorecard }) => {
+  // Use the new percentage from scorecard (weighted percentage) with fallback to total_percentage
+  const percentage = scorecard?.percentage || audit_metadata?.percentage || audit_metadata?.score_percentage || 0;
+  const totalChecks = audit_metadata?.total_checks || 0;
   const passedChecks = Math.round((percentage / 100) * totalChecks);
   const failedChecks = totalChecks - passedChecks;
 
@@ -619,12 +628,13 @@ const PrintableExecutiveSummary = ({ audit_metadata, categories_count, critical_
 
   const getHealthStatus = (score) => {
     if (score >= 90) return { status: 'Excellent', color: 'text-green-600 bg-green-100' };
-    if (score >= 75) return { status: 'Good', color: 'text-blue-600 bg-blue-100' };
-    if (score >= 60) return { status: 'Fair', color: 'text-yellow-600 bg-yellow-100' };
-    return { status: 'Poor', color: 'text-red-600 bg-red-100' };
+    if (score >= 80) return { status: 'Good', color: 'text-blue-600 bg-blue-100' };
+    if (score >= 70) return { status: 'Fair', color: 'text-yellow-600 bg-yellow-100' };
+    if (score >= 60) return { status: 'Poor', color: 'text-orange-600 bg-orange-100' };
+    return { status: 'Critical', color: 'text-red-600 bg-red-100' };
   };
 
-  const healthStatus = getHealthStatus(audit_metadata.score_percentage || 0);
+  const healthStatus = getHealthStatus(audit_metadata?.percentage || audit_metadata?.score_percentage || 0);
 
   return (
     <div className="bg-white border border-gray-200 rounded-xl overflow-hidden mb-8 shadow-sm">
@@ -1271,7 +1281,7 @@ const PDFReportGenerator = ({ auditData, onGeneratePDF }) => {
       pdf.text(`Region: ${auditData.audit_metadata?.location || 'Global'}`, margin, 127);
       pdf.text(`Audit Date: ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`, margin, 134);
 
-      const scoreValue = auditData.audit_metadata?.score_percentage || 0;
+      const scoreValue = auditData.scorecard?.percentage || auditData.audit_metadata?.percentage || auditData.audit_metadata?.score_percentage || 0;
       pdf.setFillColor(scoreValue >= 90 ? 34 : scoreValue >= 75 ? 37 : 239, scoreValue >= 90 ? 197 : scoreValue >= 75 ? 99 : 68, scoreValue >= 90 ? 94 : scoreValue >= 75 ? 235 : 68);
       pdf.roundedRect(margin, 155, 50, 30, 3, 3, 'F');
 
@@ -1346,7 +1356,7 @@ const PDFReportGenerator = ({ auditData, onGeneratePDF }) => {
           />
         </div>
         <div id="pdf-score-overview" className="p-8 bg-white">
-          <PrintableScoreOverview audit_metadata={auditData.audit_metadata} />
+          <PrintableScoreOverview audit_metadata={auditData.audit_metadata} scorecard={auditData.scorecard} />
         </div>
         <div id="pdf-scorecards" className="p-8 bg-white">
           <PrintableScorecards

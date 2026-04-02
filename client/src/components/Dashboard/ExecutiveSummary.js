@@ -113,12 +113,13 @@ const ExecutiveSummary = ({ audit_metadata, total_checks, categories_count, crit
 
   const getHealthStatus = (score) => {
     if (score >= 90) return { status: 'Excellent', color: 'text-green-600 bg-green-100' };
-    if (score >= 75) return { status: 'Good', color: 'text-blue-600 bg-blue-100' };
-    if (score >= 60) return { status: 'Fair', color: 'text-yellow-600 bg-yellow-100' };
-    return { status: 'Poor', color: 'text-red-600 bg-red-100' };
+    if (score >= 80) return { status: 'Good', color: 'text-blue-600 bg-blue-100' };
+    if (score >= 70) return { status: 'Fair', color: 'text-yellow-600 bg-yellow-100' };
+    if (score >= 60) return { status: 'Poor', color: 'text-orange-600 bg-orange-100' };
+    return { status: 'Critical', color: 'text-red-600 bg-red-100' };
   };
 
-  const healthStatus = getHealthStatus(audit_metadata.score_percentage);
+  const healthStatus = getHealthStatus(audit_metadata?.percentage || audit_metadata?.score_percentage || 0);
 
   return (
     <div className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">

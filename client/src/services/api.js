@@ -108,10 +108,12 @@ export const getAuditResults = async (domain = 'https://www.aloyoga.com', brand 
       version: '1.0.0',
       total_checks: scorecard?.total_checks || 0,
       total_score: scorecard?.total_score || 0,
-      score_percentage: scorecard?.total_percentage || 0
+      score_percentage: scorecard?.total_percentage || 0,
+      percentage: scorecard?.percentage || 0
     },
     raw_scorecard: scorecard?.raw_scorecard || { scores: [] },
     path_scorecard: scorecard?.path_scorecard || {},
+    scorecard: scorecard || null, // ✅ Add the actual scorecard object with max_possible_score
     signals: response.signals || null,
     quick_remediations: response.quick_remediations || null,
     summary: response.summary || {

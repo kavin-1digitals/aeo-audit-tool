@@ -8,32 +8,27 @@ const ScorecardsSection = ({ auditData, llmMetrics, llmSignals, audit_metadata }
   // Note: isScrapable is available for future use if needed
   // const isScrapable = auditData?.site_signals?.is_scrapable || false;
   
-  // Calculate scorecards data
-  const getTechnicalReadiness = () => {
-    // Get domain and site signals from path_scorecard
-    const pathScorecard = auditData?.path_scorecard || {};
+  // Calculate total analyzes done from scorecard
+  const getTotalAnalyzesDone = () => {
+    // Debug: Check the actual data structure
+    console.log('ScorecardsSection Debug - auditData:', auditData);
+    console.log('ScorecardsSection Debug - auditData.scorecard:', auditData?.scorecard);
+    console.log('ScorecardsSection Debug - auditData.signals.scorecard:', auditData?.signals?.scorecard);
+    console.log('ScorecardsSection Debug - auditData.signals.aeo_scorecard:', auditData?.signals?.aeo_scorecard);
     
-    // Find domain and site signal categories
-    const domainSignals = Object.values(pathScorecard).filter(item => 
-      item.signal_path && item.signal_path[0] === 'Domain Signals'
-    );
-    const siteSignals = Object.values(pathScorecard).filter(item => 
-      item.signal_path && item.signal_path[0] === 'Site Signals'
-    );
+    // Try multiple paths to find the scorecard - now including direct auditData.scorecard
+    const scorecard = auditData?.scorecard || auditData?.signals?.scorecard || auditData?.signals?.aeo_scorecard;
+    console.log('ScorecardsSection Debug - extracted scorecard:', scorecard);
     
-    // Get all technical scores from domain and site
-    const allTechnicalScores = [
-      ...(domainSignals.flatMap(item => item.scores || [])),
-      ...(siteSignals.flatMap(item => item.scores || []))
-    ];
+    if (scorecard) {
+      console.log('ScorecardsSection Debug - scorecard keys:', Object.keys(scorecard));
+      console.log('ScorecardsSection Debug - max_possible_score:', scorecard?.max_possible_score);
+      console.log('ScorecardsSection Debug - total_weighted_score:', scorecard?.total_weighted_score);
+    }
     
-    if (allTechnicalScores.length === 0) return { score: 0, count: 0 };
+    const maxPossibleScore = scorecard?.max_possible_score || 0;
     
-    // Count positive scores (value > 0, exclude -1 for non-scrapable sites)
-    const positiveScores = allTechnicalScores.filter(score => score.value > 0).length;
-    const readinessScore = (positiveScores / allTechnicalScores.length) * 100;
-    
-    return { score: readinessScore, count: allTechnicalScores.length };
+    return { score: maxPossibleScore, count: maxPossibleScore };
   };
 
   const getAIPromptVisibility = () => {
@@ -183,7 +178,7 @@ const ScorecardsSection = ({ auditData, llmMetrics, llmSignals, audit_metadata }
     return { score: competitorsCount, count: competitorsCount };
   };
 
-  const technicalReadiness = getTechnicalReadiness();
+  const totalAnalyzesDone = getTotalAnalyzesDone();
   const aiPromptVisibility = getAIPromptVisibility();
   const competitorCitationScore = getCompetitorCitationScore();
   const pagesAnalyzed = getPagesAnalyzed();
@@ -194,11 +189,13 @@ const ScorecardsSection = ({ auditData, llmMetrics, llmSignals, audit_metadata }
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
       
-      {/* Technical Readiness */}
+      {/* Total Analyzes Done */}
       <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
-        <h3 className="text-sm font-medium text-gray-600 mb-2">Technical Readiness</h3>
+        <h3 className="text-sm font-medium text-gray-600 mb-2">Total Analyzes Done</h3>
         <div className="flex items-center justify-between mb-3">
-          <div className="text-3xl font-bold text-gray-900">{technicalReadiness.score.toFixed(0)}%</div>
+          <div className="text-3xl font-bold text-blue-600">
+            {totalAnalyzesDone.score}%
+          </div>
           <div className="relative w-16 h-16">
             <svg className="transform -rotate-90 w-16 h-16">
               <circle
@@ -216,13 +213,13 @@ const ScorecardsSection = ({ auditData, llmMetrics, llmSignals, audit_metadata }
                 fill="none"
                 stroke="#3b82f6"
                 strokeWidth="6"
-                strokeDasharray={`${technicalReadiness.score * 1.76} 176`}
+                strokeDasharray={`${totalAnalyzesDone.score * 1.76} 176`}
                 strokeLinecap="round"
               />
             </svg>
           </div>
         </div>
-        <p className="text-xs text-gray-600">Domain optimization (llms.txt, robots.txt, sitemap) + Site signals (canonical, JSON-LD, scrapability) blended score across {technicalReadiness.count} technical checks</p>
+        <p className="text-xs text-gray-600">Maximum possible score from weighted category analysis across all AEO signals</p>
       </div>
 
       {/* AI Prompt Visibility */}

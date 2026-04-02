@@ -313,7 +313,8 @@ const Dashboard = ({ auditData, onViewDetails, onNewAudit }) => {
         <ScoreOverview scorecard={{
           total_score: audit_metadata.total_score || 0,
           total_checks: audit_metadata.total_checks || 1,
-          score_percentage: audit_metadata.score_percentage || 0
+          total_percentage: audit_metadata.score_percentage || 0,
+          percentage: audit_metadata.percentage || 0
         }} />
       </div>
 

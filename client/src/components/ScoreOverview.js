@@ -16,7 +16,7 @@ export const ScoreOverview = ({ scorecard }) => {
   // Map audit_metadata properties to expected scorecard structure
   const total_score = scorecard.total_score || 0;
   const max_score = scorecard.total_checks || 1;
-  const percentage = scorecard.score_percentage || 0;
+  const percentage = scorecard.percentage || scorecard.total_percentage || 0;
   
   // Calculate grade based on percentage
   const getGrade = (percentage) => {
