@@ -1,5 +1,6 @@
 
 import logging
+from typing import Optional
 from .robots_txt_signals import RobotsTxtSignals, find_robots_txt_signals
 from .llms_txt_signals import LlmsTxtSignals, find_llm_txt_signals, LlmsTxtMeta, EnrichmentSignals
 from .sitemap_signals import SiteMapSignals, find_sitemap_signals
@@ -13,7 +14,7 @@ class DomainSignals(BaseModel):
     llms_txt_signal: LlmsTxtSignals
     site_map_signal: SiteMapSignals
 
-async def find_domain_signals(full_domain: str) -> DomainSignals:
+async def find_domain_signals(full_domain: str, site_type: Optional[str] = None) -> DomainSignals:
     """
     Aggregate all domain-level signals for a given domain.
     
@@ -28,7 +29,7 @@ async def find_domain_signals(full_domain: str) -> DomainSignals:
     
     # First, fetch robots.txt and llm.txt signals in parallel
     logger.info("Fetching robots.txt and llm.txt signals in parallel...")
-    robots_txt_task = find_robots_txt_signals(full_domain)
+    robots_txt_task = find_robots_txt_signals(full_domain, site_type or "ecommerce")
     llms_txt_task = find_llm_txt_signals(full_domain)
     
     # Wait for robots.txt and llm.txt to complete
@@ -46,7 +47,10 @@ async def find_domain_signals(full_domain: str) -> DomainSignals:
             robots={"exists": False, "status": None},
             sitemaps={"exists": False, "urls": []},
             ai_crawlers=None,
-            search_crawlers=None
+            search_crawlers=None,
+            status=False,
+            issue_found="robots.txt file is inaccessible",
+            cause_of_issue="Failed to fetch robots.txt due to internal server error, retry after some time"
         )
     else:
         logger.info("Robots.txt signals fetched successfully")
@@ -59,7 +63,10 @@ async def find_domain_signals(full_domain: str) -> DomainSignals:
                 is_valid=False,
                 enriched=EnrichmentSignals(),
                 status=None
-            )
+            ),
+            status=False,
+            issue_found="llms.txt file is inaccessible",
+            cause_of_issue="Failed to fetch llms.txt due to internal server error, retry after some time"
         )
     else:
         logger.info("LLM.txt signals fetched successfully")

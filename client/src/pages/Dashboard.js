@@ -52,9 +52,12 @@ const Dashboard = ({ auditData, onViewDetails, onNewAudit }) => {
     return categories;
   };
 
-  // Get LLM signals data
+  // Get LLM signals data - return the full wrapper for LLMAnalysisSection
   const getLLMSignals = () => {
-    return auditData.signals?.llm_signals || null;
+    const llmSignals = auditData.signals?.llm_signals;
+    console.log('getLLMSignals - raw llm_signals:', llmSignals);
+    // Return the full wrapper (LlmSignals object) for components that need it
+    return llmSignals || null;
   };
 
   // Get LLM brand analysis metrics
@@ -62,31 +65,33 @@ const Dashboard = ({ auditData, onViewDetails, onNewAudit }) => {
     // Check if LLM signals data exists in signals object
     const llmSignals = getLLMSignals();
     
-    if (!llmSignals) {
+    if (!llmSignals || !llmSignals.signals) {
       console.log('No LLM signals found in auditData.signals');
       return null;
     }
+
+    const llmSignalData = llmSignals.signals; // Access the nested LlmSignal data
     
     // Use new market_comparison structure
-    if (llmSignals.market_comparison && llmSignals.market_comparison.length > 0) {
-      const mainBrandData = llmSignals.market_comparison.find(item => item.brand === audit_metadata.brand);
-      const allCompetitors = llmSignals.market_comparison.filter(item => item.brand !== audit_metadata.brand);
+    if (llmSignalData.market_comparison_combined && llmSignalData.market_comparison_combined.length > 0) {
+      const mainBrandData = llmSignalData.market_comparison_combined.find(item => item.entity === audit_metadata.brand);
+      const allCompetitors = llmSignalData.market_comparison_combined.filter(item => item.entity !== audit_metadata.brand);
       
-      console.log('LLM Market Comparison Data:', llmSignals.market_comparison);
-      console.log('Main Brand SOV:', mainBrandData?.brand_sov || 0);
+      console.log('LLM Market Comparison Data:', llmSignalData.market_comparison_combined);
+      console.log('Main Brand SOV:', mainBrandData?.sov || 0);
       
       return {
-        brandSOV: mainBrandData?.brand_sov || 0,
-        brandCitations: mainBrandData?.brand_citations || 0,
+        brandSOV: mainBrandData?.sov || 0,
+        brandCitations: mainBrandData?.citations || 0,
         clusterCoverage: mainBrandData?.cluster_coverage || 0,
-        competitors: allCompetitors.map(item => item.brand),
+        competitors: allCompetitors.map(item => item.entity),
         competitorSOV: allCompetitors.reduce((acc, item) => {
-          acc[item.brand] = item.brand_sov;
+          acc[item.entity] = item.sov;
           return acc;
         }, {}),
         competitorCount: allCompetitors.length,
-        market_comparison: llmSignals.market_comparison,
-        citation_prompt_answers: llmSignals.citation_prompt_answers // ✅ FIXED: Added citation_prompt_answers
+        market_comparison: llmSignalData.market_comparison_combined,
+        citation_prompt_answers: llmSignalData.citation_prompt_answers // ✅ FIXED: Direct array access (no .root needed)
       };
     }
     
@@ -236,19 +241,14 @@ const Dashboard = ({ auditData, onViewDetails, onNewAudit }) => {
   const categories = getCategoryData();
   const llmMetrics = getLLMMetrics();
   const llmSignals = getLLMSignals();
-  console.log('=== LLM METRICS DEBUG ===');
-  console.log('llmMetrics:', llmMetrics);
-  console.log('llmSignals:', llmSignals);
-  console.log('market_comparison exists:', !!llmMetrics?.market_comparison);
-  console.log('market_comparison length:', llmMetrics?.market_comparison?.length || 0);
-  console.log('citation_prompt_answers exists:', !!llmMetrics?.citation_prompt_answers);
-  console.log('citation_prompt_answers clusters:', llmMetrics?.citation_prompt_answers?.clusters?.length || 0);
-  console.log('low_confidence_reasoning:', llmSignals?.low_confidence_reasoning);
-  console.log('==========================');
+  const llmSignalsWrapper = auditData.signals?.llm_signals; // Keep the wrapper for status checks
   
-  // Debug: Log the path_scorecard structure
-  console.log('Path scorecard keys:', Object.keys(path_scorecard));
-  console.log('LLM Metrics result:', llmMetrics);
+  console.log('=== Dashboard LLM Data Debug ===');
+  console.log('auditData.signals?.llm_signals:', auditData.signals?.llm_signals);
+  console.log('llmSignals (from getLLMSignals):', llmSignals);
+  console.log('llmMetrics:', llmMetrics);
+  console.log('audit_metadata:', audit_metadata);
+  console.log('=== End Dashboard Debug ===');
 
   // Calculate critical issues (failed scores with negative values)
   const criticalIssues = Object.values(path_scorecard)
@@ -325,6 +325,8 @@ const Dashboard = ({ auditData, onViewDetails, onNewAudit }) => {
           categories_count={Object.keys(categories).length}
           critical_issues={criticalIssues}
           llmMetrics={llmMetrics}
+          llmSignals={llmSignals}
+          auditData={auditData}
         />
       </div>
 
@@ -361,6 +363,7 @@ const Dashboard = ({ auditData, onViewDetails, onNewAudit }) => {
           categories={categories}
           calculateCategoryMetrics={calculateCategoryMetrics}
           onViewDetails={onViewDetails}
+          problemCard={auditData.problemcard}
         />
       </div>
 

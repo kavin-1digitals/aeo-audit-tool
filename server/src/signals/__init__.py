@@ -12,71 +12,108 @@ from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
 
+
 class Signals(BaseModel):
     full_domain: str
     domain_signals: DomainSignals
     site_signals: SiteSignals
     llm_signals: Optional[LlmSignals] = None
 
-async def find_signals(full_domain: str, brand: Optional[str] = None, geo: Optional[str] = "United States") -> Signals:
-    """Find all signals for a domain"""
+
+async def find_signals(
+    full_domain: str,
+    brand: Optional[str] = None,
+    geo: Optional[str] = "United States",
+    site_type: Optional[str] = None
+) -> Signals:
+
     logger.info(f"Starting signals analysis for domain: {full_domain}")
-    
-    # Start all signal tasks in parallel
     logger.info("Starting all signal collection tasks in parallel...")
-    
-    # Domain signals task
-    domain_signals_task = asyncio.create_task(find_domain_signals(full_domain))
-    
-    # Site signals task
-    site_signals_task = asyncio.create_task(find_site_signals(full_domain, None))
-    
-    # LLM signals task (if brand provided)
-    llm_signals_task = None
+
+    # -----------------------------
+    # Create tasks
+    # -----------------------------
+    domain_task = asyncio.create_task(find_domain_signals(full_domain, site_type))
+    site_task = asyncio.create_task(find_site_signals(full_domain, site_type, None))
+
+    tasks = [domain_task, site_task]
+
+    # Optional LLM task
     if brand:
         logger.info("Starting LLM signals (brand visibility analysis)")
-        llm_signals_task = asyncio.create_task(find_llm_signals(brand, geo))
-    
-    # Wait for all tasks to complete
-    logger.info("Waiting for all signal tasks to complete...")
-    
-    # Get domain signals
-    domain_signals = await domain_signals_task
-    logger.info(f"Domain signals completed. Sitemap exists: {domain_signals.site_map_signal.sitemap.exists}")
-    
-    # Get site signals
-    site_signals = await site_signals_task
-    logger.info(f"Site signals completed. Site signals found: {len(site_signals.site_signals)}")
-    logger.info(f"JSON-LD signals found: {len(site_signals.jsonld_signals)}")
-    
-    # Get LLM signals if started
+        llm_task = asyncio.create_task(find_llm_signals(brand, geo))
+        tasks.append(llm_task)
+    else:
+        llm_task = None
+
+    # -----------------------------
+    # Run ALL in parallel
+    # -----------------------------
+    logger.info("Awaiting all tasks concurrently...")
+
+    results = await asyncio.gather(*tasks, return_exceptions=True)
+
+    # -----------------------------
+    # Extract results safely
+    # -----------------------------
+    domain_signals = results[0]
+    site_signals = results[1]
+
+    logger.info(
+        f"Domain signals completed. Sitemap exists: "
+        f"{getattr(domain_signals.site_map_signal.sitemap, 'exists', 'unknown')}"
+    )
+
+    logger.info(
+        f"Site signals completed. Site signals found: {len(site_signals.site_signals)}"
+    )
+    logger.info(
+        f"JSON-LD signals found: {len(site_signals.jsonld_signals)}"
+    )
+
+    # -----------------------------
+    # Handle LLM signals
+    # -----------------------------
     llm_signals = None
-    if llm_signals_task:
-        try:
-            llm_signals = await llm_signals_task
-            logger.info(f"LLM signals completed. Competitors found: {len(llm_signals.competitors)}")
-        except Exception as e:
-            logger.error(f"Error in LLM signals analysis: {e}")
-            llm_signals = None
-    
+
+    if brand:
+        llm_result = results[2]
+
+        if isinstance(llm_result, Exception):
+            logger.error(f"Error in LLM signals analysis: {llm_result}")
+            llm_signals = LlmSignals(
+                status=False,
+                issue_found="LLM Signal is not available",
+                cause_of_issue="Internal Error: Try again later"
+            )
+        else:
+            llm_signals = llm_result
+            logger.info(
+                f"LLM signals completed. Competitors found: "
+                f"{len(llm_signals.signals.competitors) if llm_signals.signals else 0}"
+            )
+
     logger.info("All signals analysis completed successfully")
+
     return Signals(
-        full_domain=full_domain, 
-        domain_signals=domain_signals, 
+        full_domain=full_domain,
+        domain_signals=domain_signals,
         site_signals=site_signals,
         llm_signals=llm_signals
     )
 
+
+# -----------------------------
+# Run
+# -----------------------------
 if __name__ == "__main__":
-    import asyncio
-    
+
     async def test_signals():
-        # Test with LLM signals
-        check = await find_signals(
+        result = await find_signals(
             full_domain="https://www.aloyoga.com",
             brand="Alo Yoga",
             geo="United States"
         )
-        print(check.model_dump())
-    
+        print(result.model_dump())
+
     asyncio.run(test_signals())

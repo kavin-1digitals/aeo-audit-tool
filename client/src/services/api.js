@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create axios instance with base URL
 const api = axios.create({
-  baseURL: '/aeo-audit-tool/api',  // Match proxy server configuration
+  baseURL: process.env.REACT_APP_API_URL || '/aeo-audit-tool/api',
   timeout: 600000, // Increased timeout to 10 minutes for LLM processing
   headers: {
     'Content-Type': 'application/json',
@@ -80,12 +80,13 @@ export const auditApi = {
 };
 
 // New API method for getting comprehensive audit results
-export const getAuditResults = async (domain = 'https://www.aloyoga.com', brand = 'Alo Yoga', geo = 'United States') => {
-  console.log('Calling API with domain:', domain, 'brand:', brand, 'geo:', geo);
+export const getAuditResults = async (domain = 'https://www.aloyoga.com', brand = 'Alo Yoga', geo = 'United States', siteType = 'ecommerce') => {
+  console.log('Calling API with domain:', domain, 'brand:', brand, 'geo:', geo, 'siteType:', siteType);
   const response = await api.post('/audit', {
     domain: domain,
     brand: brand,
-    geo: geo
+    geo: geo,
+    site_type: siteType.toLowerCase() // Pass site type to backend
   });
   
   console.log('Raw backend response:', response);
@@ -116,7 +117,8 @@ export const getAuditResults = async (domain = 'https://www.aloyoga.com', brand 
     summary: response.summary || {
       performance_highlights: [],
       improvement_areas: []
-    }
+    },
+    problemcard: response.problemcard || null
   };
   
   console.log('Transformed data for frontend:', transformedData);

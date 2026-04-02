@@ -1,7 +1,16 @@
 from src.signals.domain_signals.llms_txt_signals import LlmsTxtSignals
-from src.scorecard import Score, RawScoreCard
+from src.scorecard import Score, RawScoreCard, ProblemCard, Problem
 
 async def calculate_llms_txt_score(llms_txt_signal: LlmsTxtSignals):
+    if not llms_txt_signal.status:
+        return RawScoreCard(scores=[]), ProblemCard(problems=[Problem(
+            signal_names=['llms_txt_exists', 'llms_txt_valid','llms_txt_enriched'],
+            signal_path=['Domain Signals', 'LLMs.txt'],
+            issue_found=llms_txt_signal.issue_found,
+            cause_of_issue=llms_txt_signal.cause_of_issue
+        )])
+
+
     scores = []
     llms_signal = llms_txt_signal.llm_txts
 
@@ -90,4 +99,4 @@ async def calculate_llms_txt_score(llms_txt_signal: LlmsTxtSignals):
             )
         )
 
-    return RawScoreCard(scores=scores)
+    return RawScoreCard(scores=scores), ProblemCard(problems=[])

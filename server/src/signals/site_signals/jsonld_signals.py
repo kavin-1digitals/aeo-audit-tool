@@ -48,7 +48,7 @@ def extract_jsonld_from_soup(soup: BeautifulSoup) -> List[Dict[str, Any]]:
 # -------------------------
 # Detect schema types
 # -------------------------
-def detect_schema_types(json_ld: List[Dict[str, Any]]) -> Dict[str, dict]:
+def detect_schema_types(json_ld: List[Dict[str, Any]]) -> Dict[str, List[dict]]:
     found = {}
 
     def extract_types(obj):
@@ -72,7 +72,9 @@ def detect_schema_types(json_ld: List[Dict[str, Any]]) -> Dict[str, dict]:
 
             for t in extract_types(obj):
                 if t not in found:
-                    found[t] = obj
+                    found[t] = []
+
+                found[t].append(obj)  # 🔥 store ALL instances
 
     return found
 
@@ -99,14 +101,30 @@ def get_nested_value(obj: dict, path: str):
 # -------------------------
 # Validator
 # -------------------------
-def validate_jsonld_type(type_: str, obj: dict) -> bool:
+def validate_jsonld_type(type_: str, objects: List[dict]) -> bool:
     rules = JSONLD_VALIDATION_RULES.get(type_)
+
+    # ✅ FIX: if no rules → treat as valid
     if not rules:
-        return False
+        return True
 
     required_fields = rules.get("required", [])
 
-    return all(get_nested_value(obj, field) for field in required_fields)
+    # ✅ Validate ANY valid instance (not just first)
+    for obj in objects:
+        is_valid = True
+
+        for field in required_fields:
+            value = get_nested_value(obj, field)
+
+            if value is None or value == "":
+                is_valid = False
+                break
+
+        if is_valid:
+            return True
+
+    return False
 
 
 # -------------------------
@@ -126,10 +144,28 @@ def find_jsonld_signal(
     result = []
 
     for type_ in validation_types:
-        obj = detected.get(type_)
+        objects = detected.get(type_)
 
-        if obj:
-            is_valid = validate_jsonld_type(type_, obj)
-            result.append(JsonLdType(url=full_domain, type_=type_, exists=True, is_valid=is_valid))
+        if objects:
+            is_valid = validate_jsonld_type(type_, objects)
+
+            result.append(
+                JsonLdType(
+                    url=full_domain,
+                    type_=type_,
+                    exists=True,
+                    is_valid=is_valid
+                )
+            )
+        else:
+            # 🔥 CRITICAL FIX: track missing schemas
+            result.append(
+                JsonLdType(
+                    url=full_domain,
+                    type_=type_,
+                    exists=False,
+                    is_valid=False
+                )
+            )
 
     return JsonLdSignals(jsonld_signals=result)

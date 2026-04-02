@@ -23,6 +23,9 @@ class SiteMapMeta(BaseModel):
 class SiteMapSignals(BaseModel):
     sitemap: SiteMapMeta
     last_updated: Optional[datetime] = None
+    # status: bool
+    # issue_found: Optional[str] = None
+    # cause_of_issue: Optional[str] = None
 
 
 # -------------------------

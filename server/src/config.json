@@ -10,9 +10,31 @@
     "Bingbot"
   ],
   "critical_patterns": {
-    "product": ["products"],
-    "category": ["collections", "category"],
-    "search": ["search"]
+    "ecommerce": {
+      "product": ["product", "products", "p"],
+      "category": ["category", "collections", "c"],
+      "search": ["search", "query"]
+    },
+
+    "hospital": {
+      "service": ["treatment", "procedure", "services"],
+      "doctor": ["doctor", "physician", "consultant"],
+      "search": ["search"]
+    },
+
+    "saas": {
+      "product": ["product", "features", "platform"],
+      "pricing": ["pricing", "plans"],
+      "docs": ["docs", "documentation", "api"],
+      "blog": ["blog"]
+    },
+
+    "media": {
+      "article": ["news", "article", "story"],
+      "category": ["category", "topics"],
+      "search": ["search"],
+      "archive": ["archive"]
+    }
   },
   "sitemap_patterns": ["sitemap.xml", "sitemap_index.xml", "siteindex.xml"],
   "sitemap_category_patterns": {
@@ -26,34 +48,189 @@
     "content": 5
   },
   "jsonld_categories": {
-    "homepage": ["Organization","WebSite"],
-    "product": ["Product","BreadcrumbList","Review"],
-    "category": ["BreadcrumbList", "CollectionPage"],
-    "content": ["Article","BreadcrumbList","BlogPosting","FAQPage"]
+    "ecommerce": [
+      "Organization",
+      "WebSite",
+      "Product",
+      "Offer",
+      "AggregateRating",
+      "Review",
+      "BreadcrumbList",
+      "ItemList",
+      "FAQPage",
+      "Article"
+    ],
+
+    "hospital": [
+      "Hospital",
+      "Organization",
+      "WebSite",
+      "Physician",
+      "MedicalProcedure",
+      "MedicalClinic",
+      "Service",
+      "MedicalWebPage",
+      "HealthArticle",
+      "FAQPage",
+      "Article"
+    ],
+
+    "saas": [
+      "Organization",
+      "WebSite",
+      "SoftwareApplication",
+      "Offer",
+      "AggregateRating",
+      "Review",
+      "FAQPage",
+      "Article",
+      "TechArticle"
+    ],
+
+    "media": [
+      "Organization",
+      "WebSite",
+      "NewsArticle",
+      "Article",
+      "BlogPosting",
+      "ItemList"
+    ]
   },
   "jsonld_validation_rules": {
     "Product": {
-        "required": [
-            "name",
-            "image",
-            "offers.price",
-            "offers.availability"
-        ]
+      "required": [
+        "name",
+        "image",
+        "offers.price",
+        "offers.availability"
+      ]
     },
+
+    "Offer": {
+      "required": [
+        "price",
+        "priceCurrency",
+        "availability"
+      ]
+    },
+
+    "AggregateRating": {
+      "required": [
+        "ratingValue",
+        "reviewCount"
+      ]
+    },
+
+    "Review": {
+      "required": [
+        "reviewRating.ratingValue"
+      ]
+    },
+
     "BreadcrumbList": {
-        "required": ["itemListElement"]
+      "required": [
+        "itemListElement"
+      ]
     },
+
+    "ItemList": {
+      "required": [
+        "itemListElement"
+      ]
+    },
+
     "FAQPage": {
-        "required": ["mainEntity"]
+      "required": [
+        "mainEntity"
+      ]
     },
+
     "Article": {
-        "required": ["headline"]
+      "required": [
+        "headline"
+      ]
     },
+
+    "NewsArticle": {
+      "required": [
+        "headline",
+        "datePublished"
+      ]
+    },
+
+    "BlogPosting": {
+      "required": [
+        "headline"
+      ]
+    },
+
+    "TechArticle": {
+      "required": [
+        "headline"
+      ]
+    },
+
+    "HealthArticle": {
+      "required": [
+        "headline"
+      ]
+    },
+
+    "MedicalWebPage": {
+      "required": [
+        "name"
+      ]
+    },
+
     "Organization": {
-        "required": ["name"]
+      "required": [
+        "name"
+      ]
     },
+
     "WebSite": {
-        "required": ["url"]
+      "required": [
+        "url"
+      ]
+    },
+
+    "Hospital": {
+      "required": [
+        "name",
+        "address"
+      ]
+    },
+
+    "Physician": {
+      "required": [
+        "name"
+      ]
+    },
+
+    "MedicalProcedure": {
+      "required": [
+        "name"
+      ]
+    },
+
+    "MedicalClinic": {
+      "required": [
+        "name",
+        "address"
+      ]
+    },
+
+    "Service": {
+      "required": [
+        "name"
+      ]
+    },
+
+    "SoftwareApplication": {
+      "required": [
+        "name",
+        "applicationCategory"
+      ]
     }
   },
   "llm": {

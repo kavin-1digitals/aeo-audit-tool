@@ -1,28 +1,17 @@
-import logging
-import asyncio
-from typing import Dict, Any, List, Optional
-from pydantic import BaseModel
-
 from .citation_prompts_chain import safe_invoke as async_generate_citation_prompts
-from .competitors_chain import competitors_chain, safe_invoke as async_find_competitors
-from .citation_prompts_evaluator_chain import (
-    citation_prompts_evaluator_chain,
-    safe_invoke as async_evaluate_citation_prompts,
-    PromptAnswerClusters
+from .citation_prompts_evaluator_chain import safe_invoke as async_evaluate_citation_prompts
+from .entity_analysis_chain import EntityAnalysis
+from .citation_prompts_evaluator_chain import PromptAnswerClusters
+from pydantic import BaseModel
+from typing import Optional, List
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s"
 )
-from .evaluator import evaluate
-from .brain_analysis_chain import BrandAnalysis
-from src.config import LLM_PROVIDERS, NUM_PROMPTS, NUM_COMPETITORS
 
 logger = logging.getLogger(__name__)
-
-
-# -----------------------------
-# Patch: Add `.clusters` alias (FIX)
-# -----------------------------
-# This avoids changing rest of your code
-if not hasattr(PromptAnswerClusters, "clusters"):
-    PromptAnswerClusters.clusters = property(lambda self: self.root)
 
 
 # -----------------------------
@@ -30,225 +19,282 @@ if not hasattr(PromptAnswerClusters, "clusters"):
 # -----------------------------
 
 class MarketComparison(BaseModel):
-    brand: str
-    brand_sov: float
-    brand_citations: int
+    entity: str
+    sov: float
+    citations: int
     cluster_coverage: float
 
 
+class LlmSignal(BaseModel):
+    entity_analysis: EntityAnalysis
+    competitors: List[str]
+    citation_prompt_answers: PromptAnswerClusters
+
+    market_comparison_web: List[MarketComparison]
+    market_comparison_llm: List[MarketComparison]
+    market_comparison_combined: List[MarketComparison]
+
+
 class LlmSignals(BaseModel):
-    competitors: list[str]
-    brand_analysis: BrandAnalysis
-    citation_prompt_answers: Optional[PromptAnswerClusters] = None
-    market_comparison: List[MarketComparison]
-    low_confidence_reasoning: Optional[str] = None
+    signals: Optional[LlmSignal] = None
+    status: bool = False
+    issue_found: Optional[str] = None
+    cause_of_issue: Optional[str] = None
+
+
+# -----------------------------
+# Helpers
+# -----------------------------
+
+def normalize_prompt_clusters(data):
+    if isinstance(data, PromptAnswerClusters):
+        return data
+
+    if isinstance(data, tuple) and len(data) == 2 and data[0] == "root":
+        return PromptAnswerClusters(root=data[1])
+
+    if isinstance(data, dict):
+        return PromptAnswerClusters.model_validate(data)
+
+    if isinstance(data, list):
+        return PromptAnswerClusters(root=data)
+
+    raise ValueError(f"Invalid citation_prompt_answers format: {type(data)}")
+
+
+def has_valid_competitors(entity_analysis):
+    return (
+        entity_analysis
+        and entity_analysis.profile
+        and entity_analysis.profile.top_competitors
+        and entity_analysis.profile.top_competitors.values
+    )
+
+
+def has_valid_prompts(citation_prompts_result):
+    return (
+        citation_prompts_result
+        and citation_prompts_result.root
+        and len(citation_prompts_result.root) > 0
+        and citation_prompts_result.root[0].prompts
+    )
 
 
 # -----------------------------
 # Main Function
 # -----------------------------
 
-async def find_llm_signals(brand: str, geo: str) -> LlmSignals:
-    """Find all LLM signals for a brand"""
-    logger.info(f"Starting LLM signals analysis for brand: {brand}")
+async def find_llm_signals(entity: str, geo: str) -> LlmSignals:
 
-    # -----------------------------
-    # Phase 1: Generate citation prompts and find competitors
-    # -----------------------------
-    logger.info("Phase 1: Generating citation prompts and finding competitors")
+    logger.info(f"Starting LLM signals analysis for entity: {entity}")
 
-    # Get brand analysis and citation prompts
-    brand_analysis, clusters_result = await async_generate_citation_prompts(
-        brand, geo
+    entity_analysis, citation_prompts_result = await async_generate_citation_prompts(
+        entity, geo
     )
 
-    # Find competitors in parallel
-    competitors_task = asyncio.create_task(
-        async_find_competitors(competitors_chain, {
-            "brand": brand,
-            "geo": geo,
-        })
-    )
-
-    competitors_result = await competitors_task
-    if isinstance(competitors_result, Exception):
-        logger.error(f"Error finding competitors: {competitors_result}")
-        raise competitors_result
-
-    competitors_list = competitors_result.competitors
-
-    # -----------------------------
-    # Check if prompts were generated
-    # -----------------------------
-    if clusters_result is None:
-        logger.warning("No citation prompts generated due to low confidence")
-        
-        # Create empty market comparison with just the brand
-        market_comparison = [
-            MarketComparison(
-                brand=brand,
-                brand_sov=0.0,
-                brand_citations=0,
-                cluster_coverage=0.0
-            )
-        ]
-        
+    if not has_valid_competitors(entity_analysis) or not has_valid_prompts(citation_prompts_result):
         return LlmSignals(
-            competitors=list(competitors_list),
-            brand_analysis=brand_analysis,
-            citation_prompt_answers=None,
-            market_comparison=market_comparison,
-            low_confidence_reasoning=f"Low confidence score ({brand_analysis.brand_confidence:.2f}) - insufficient brand information for prompt generation"
+            status=False,
+            issue_found="LLM Signal is not available",
+            cause_of_issue="Internal Error: Try again later"
         )
 
-    logger.info(
-        f"Generated {len(clusters_result.root)} prompt clusters "
-        f"and found {len(competitors_list)} competitors"
+    competitors = entity_analysis.profile.top_competitors.values
+
+    citation_prompt_answers_raw = await async_evaluate_citation_prompts(
+        citation_prompts_result.root,
+        entity,
+        competitors
     )
 
-    # -----------------------------
-    # Phase 2: Evaluate prompts (only if prompts exist)
-    # -----------------------------
-    logger.info("Phase 2: Evaluating citation prompts")
+    if citation_prompt_answers_raw is None:
+        return LlmSignals(
+            status=False,
+            issue_found="LLM Signal is not available",
+            cause_of_issue="Internal Error: Try again later"
+        )
 
-    citation_prompt_answers = None
-    if clusters_result:
-        citation_prompts_evaluator_task = asyncio.create_task(
-            async_evaluate_citation_prompts(
-                citation_prompts_evaluator_chain,
-                clusters_result.root,
-                brand,
-                competitors_list
+    citation_prompt_answers = normalize_prompt_clusters(citation_prompt_answers_raw)
+
+    logger.info("Evaluation complete")
+
+    # -----------------------------
+    # Phase 3: Market Analysis (FIXED + OPTIMIZED)
+    # -----------------------------
+
+    # Deduplicate entities safely
+    all_entities = list(dict.fromkeys([entity] + list(competitors)))
+
+    web_citations = {}
+    llm_citations = {}
+    combined_citations = {}
+
+    total_web = 0
+    total_llm = 0
+    total_combined = 0
+
+    for cluster in citation_prompt_answers.root:
+        for prompt in cluster.prompts:
+
+            # -----------------------------
+            # ENTITY FLAGS
+            # -----------------------------
+            entity_web_flag = prompt.web_entity_mentioned
+            entity_llm_flag = prompt.llm_entity_mentioned
+            entity_combined_flag = entity_web_flag or entity_llm_flag
+
+            if entity_web_flag:
+                web_citations[entity] = web_citations.get(entity, 0) + 1
+                total_web += 1
+
+            if entity_llm_flag:
+                llm_citations[entity] = llm_citations.get(entity, 0) + 1
+                total_llm += 1
+
+            if entity_combined_flag:
+                combined_citations[entity] = combined_citations.get(entity, 0) + 1
+                total_combined += 1
+
+            # -----------------------------
+            # PRECOMPUTE COMPETITOR SETS (PERFORMANCE FIX)
+            # -----------------------------
+            web_comp_set = {
+                c.competitor_entity
+                for c in prompt.competitor_citations_web
+                if c.is_competitor_mentioned
+            }
+
+            llm_comp_set = {
+                c.competitor_entity
+                for c in prompt.competitor_citations_llm
+                if c.is_competitor_mentioned
+            }
+
+            # -----------------------------
+            # COMPETITORS
+            # -----------------------------
+            for comp in competitors:
+
+                comp_web_flag = comp in web_comp_set
+                comp_llm_flag = comp in llm_comp_set
+                comp_combined_flag = comp_web_flag or comp_llm_flag
+
+                if comp_web_flag:
+                    web_citations[comp] = web_citations.get(comp, 0) + 1
+                    total_web += 1
+
+                if comp_llm_flag:
+                    llm_citations[comp] = llm_citations.get(comp, 0) + 1
+                    total_llm += 1
+
+                if comp_combined_flag:
+                    combined_citations[comp] = combined_citations.get(comp, 0) + 1
+                    total_combined += 1
+
+    # -----------------------------
+    # Safety logs
+    # -----------------------------
+    if total_combined == 0:
+        logger.warning("No combined mentions found — SOV may be meaningless")
+
+    # -----------------------------
+    # Coverage Helper (optimized)
+    # -----------------------------
+    def compute_coverage(entity_name, mode, main_entity):
+        covered = 0
+        total_clusters = len(citation_prompt_answers.root)
+
+        for cluster in citation_prompt_answers.root:
+            for p in cluster.prompts:
+
+                if entity_name == main_entity:
+                    if (
+                        (mode == "web" and p.web_entity_mentioned)
+                        or (mode == "llm" and p.llm_entity_mentioned)
+                        or (mode == "combined" and (p.web_entity_mentioned or p.llm_entity_mentioned))
+                    ):
+                        covered += 1
+                        break
+
+                else:
+                    combined_set = {
+                        c.competitor_entity
+                        for c in (
+                            p.competitor_citations_web if mode == "web"
+                            else p.competitor_citations_llm if mode == "llm"
+                            else (p.competitor_citations_web + p.competitor_citations_llm)
+                        )
+                        if c.is_competitor_mentioned
+                    }
+
+                    if entity_name in combined_set:
+                        covered += 1
+                        break
+
+        return (covered / total_clusters * 100) if total_clusters > 0 else 0
+
+    # -----------------------------
+    # Build Market Comparisons
+    # -----------------------------
+    market_comparison_web = []
+    market_comparison_llm = []
+    market_comparison_combined = []
+
+    for e in all_entities:
+
+        web_count = web_citations.get(e, 0)
+        llm_count = llm_citations.get(e, 0)
+        combined_count = combined_citations.get(e, 0)
+
+        web_sov = (web_count / total_web * 100) if total_web > 0 else 0
+        llm_sov = (llm_count / total_llm * 100) if total_llm > 0 else 0
+        combined_sov = (combined_count / total_combined * 100) if total_combined > 0 else 0
+
+        market_comparison_web.append(
+            MarketComparison(
+                entity=e,
+                sov=round(web_sov, 1),
+                citations=web_count,
+                cluster_coverage=round(compute_coverage(e, "web", entity), 1)
             )
         )
 
-        citation_prompt_answers = await citation_prompts_evaluator_task
-
-        if isinstance(citation_prompt_answers, Exception):
-            logger.error(f"Error evaluating citation prompts: {citation_prompt_answers}")
-            raise citation_prompt_answers
-
-    # -----------------------------
-    # Phase 3: Market metrics (only if citation answers exist)
-    # -----------------------------
-    market_comparison = []
-    
-    if citation_prompt_answers:
-        logger.info("Phase 3: Calculating market comparison metrics")
-
-        all_brands = [brand] + list(competitors_list)
-
-        brand_citations = {}
-        total_citations = 0
-
-        # -----------------------------
-        # Citation counting
-        # -----------------------------
-        for cluster in citation_prompt_answers.clusters:
-            for prompt_answer in cluster.prompts:
-
-                # Main brand
-                if prompt_answer.is_brand_mentioned:
-                    brand_citations[brand] = brand_citations.get(brand, 0) + 1
-                    total_citations += 1
-
-                # Competitors
-                for competitor_citation in prompt_answer.competitor_citations:
-                    if competitor_citation.is_competitor_mentioned:
-                        comp_name = competitor_citation.competitor_brand
-                        brand_citations[comp_name] = brand_citations.get(comp_name, 0) + 1
-                        total_citations += 1
-
-        # -----------------------------
-        # SOV Calculation
-        # -----------------------------
-        brand_sov = {}
-
-        for comp in all_brands:
-            citations = brand_citations.get(comp, 0)
-            sov = (citations / total_citations * 100) if total_citations > 0 else 0
-            brand_sov[comp] = round(sov, 1)
-
-        # -----------------------------
-        # Cluster Coverage (per brand)
-        # -----------------------------
-        total_clusters = len(citation_prompt_answers.clusters)
-
-        cluster_coverage_map = {}
-
-        for b in all_brands:
-            covered_clusters = 0
-
-            for cluster in citation_prompt_answers.clusters:
-                if any(
-                    (
-                        (b == brand and p.is_brand_mentioned) or
-                        (b != brand and any(
-                            c.competitor_brand == b and c.is_competitor_mentioned
-                            for c in p.competitor_citations
-                        ))
-                    )
-                    for p in cluster.prompts
-                ):
-                    covered_clusters += 1
-
-            coverage = (
-                (covered_clusters / total_clusters * 100)
-                if total_clusters > 0 else 0
+        market_comparison_llm.append(
+            MarketComparison(
+                entity=e,
+                sov=round(llm_sov, 1),
+                citations=llm_count,
+                cluster_coverage=round(compute_coverage(e, "llm", entity), 1)
             )
+        )
 
-            cluster_coverage_map[b] = round(coverage, 1)
-
-
-        # -----------------------------
-        # Final Market Comparison (ALL BRANDS)
-        # -----------------------------
-        for b in all_brands:
-            market_comparison.append(
-                MarketComparison(
-                    brand=b,
-                    brand_sov=brand_sov.get(b, 0),
-                    brand_citations=brand_citations.get(b, 0),
-                    cluster_coverage=cluster_coverage_map.get(b, 0)
-                )
+        market_comparison_combined.append(
+            MarketComparison(
+                entity=e,
+                sov=round(combined_sov, 1),
+                citations=combined_count,
+                cluster_coverage=round(compute_coverage(e, "combined", entity), 1)
             )
+        )
 
-            logger.info(
-                f"{b} → SOV: {brand_sov.get(b, 0)}%, "
-                f"Citations: {brand_citations.get(b, 0)}, "
-                f"Coverage: {cluster_coverage_map.get(b, 0)}%"
-            )
-    else:
-        # No citation answers - create basic market comparison
-        logger.info("Phase 3: No citation answers available - creating basic market comparison")
-        all_brands = [brand] + list(competitors_list)
-        
-        for b in all_brands:
-            market_comparison.append(
-                MarketComparison(
-                    brand=b,
-                    brand_sov=0.0,
-                    brand_citations=0,
-                    cluster_coverage=0.0
-                )
-            )
-
-
-    # -----------------------------
-    # Return
-    # -----------------------------
     return LlmSignals(
-        competitors=list(competitors_list),
-        brand_analysis=brand_analysis,
-        citation_prompt_answers=citation_prompt_answers,
-        market_comparison=market_comparison
+        signals=LlmSignal(
+            entity_analysis=entity_analysis,
+            competitors=list(competitors),
+            citation_prompt_answers=citation_prompt_answers,
+            market_comparison_web=market_comparison_web,
+            market_comparison_llm=market_comparison_llm,
+            market_comparison_combined=market_comparison_combined
+        ),
+        status=True
     )
 
-
-# -----------------------------
-# Run
-# -----------------------------
 
 if __name__ == "__main__":
-    result = asyncio.run(find_llm_signals("Express", "US"))
-    print(result.model_dump_json(indent=2))
+    import asyncio
+    import json
+
+    result = asyncio.run(find_llm_signals("Banana Club", "India"))
+
+    with open("test_example.json", "w", encoding="utf-8") as f:
+        json.dump(result.model_dump(), f, indent=2, ensure_ascii=False)

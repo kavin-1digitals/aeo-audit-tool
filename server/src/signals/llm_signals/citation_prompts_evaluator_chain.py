@@ -1,181 +1,52 @@
-from typing import List
-
+from typing import List, Optional
 from pydantic import BaseModel, RootModel
+from openai import OpenAI
 
-from langchain_core.prompts import PromptTemplate
-from langchain_core.output_parsers import PydanticOutputParser
-
-from src.config import LLM_PROVIDERS
-from src.signals.llm_signals.llm_client import get_llm_client
+from src.config import OPENAI_API_KEY
 from src.signals.llm_signals.citation_prompts_chain import CitationPromptCluster
+
 import asyncio
 
+
+client = OpenAI(api_key=OPENAI_API_KEY)
+
+
 # -----------------------------
-# Pydantic Models
+# Models
 # -----------------------------
 
 class CompetitorCitation(BaseModel):
-    competitor_brand: str
+    competitor_entity: str
     is_competitor_mentioned: bool
 
+
 class PromptAnswer(BaseModel):
+    cluster: str
     prompt: str
     answer: str
 
-class PromptInput(PromptAnswer):
-    cluster: str
 
-class PromptAnswers(RootModel[List[PromptInput]]):
+class PromptAnswers(RootModel[List[PromptAnswer]]):
     pass
 
-class PromptAnswerCitations(PromptAnswer):
-    is_brand_mentioned: bool
-    competitor_citations: List[CompetitorCitation]
+
+class PromptAnswerDual(BaseModel):
+    prompt: str
+    web_answer: str
+    llm_answer: str
+    web_entity_mentioned: bool
+    llm_entity_mentioned: bool
+    competitor_citations_web: List[CompetitorCitation]
+    competitor_citations_llm: List[CompetitorCitation]
+
 
 class PromptAnswerCluster(BaseModel):
     cluster: str
-    prompts: List[PromptAnswerCitations]
-    is_brand_mentioned: bool
-    competitor_citations: List[CompetitorCitation]
+    prompts: List[PromptAnswerDual]
+
 
 class PromptAnswerClusters(RootModel[List[PromptAnswerCluster]]):
     pass
-
-# -----------------------------
-# Parser
-# -----------------------------
-
-parser = PydanticOutputParser(pydantic_object=PromptAnswers)
-
-
-# -----------------------------
-# Prompt Template
-# -----------------------------
-
-prompt_eval_template = PromptTemplate(
-    input_variables=["prompts"],
-    partial_variables={
-        "format_instructions": parser.get_format_instructions()
-    },
-template="""
-You are simulating responses from advanced AI assistants like ChatGPT, Perplexity, or Gemini.
-
-Your task is to answer EACH user query individually in a realistic, high-quality manner.
-
-════════════════════════════════════════════════════════════════
-INPUT PROMPTS
-════════════════════════════════════════════════════════════════
-
-{prompts}
-
-INPUT FORMAT:
-
-Each prompt is prefixed with its cluster like:
-[CLUSTER: <cluster_name>] <prompt>
-
-You MUST:
-- Extract ONLY the cluster_name exactly as provided
-- REMOVE the "[CLUSTER: ...]" wrapper
-- Return only the clean cluster value
-
-Example:
-Input: [CLUSTER: Pricing & Value]
-Output: "Pricing & Value"
-
-════════════════════════════════════════════════════════════════
-CORE INSTRUCTIONS
-════════════════════════════════════════════════════════════════
-
-- Answer EVERY prompt
-- Do NOT skip any prompt
-- Do NOT merge prompts
-- Maintain strict 1:1 mapping:
-  → one prompt → one answer
-
-════════════════════════════════════════════════════════════════
-ANSWER QUALITY REQUIREMENTS (CRITICAL)
-════════════════════════════════════════════════════════════════
-
-Each answer MUST:
-
-1. Include 3–5 relevant brands
-2. NOT just list brands — provide context
-3. Include light comparison or differentiation
-4. Reflect implicit ranking or positioning
-
-GOOD STYLE:
-- "Nike and Lululemon are among the leading brands..."
-- "Fabletics is a more affordable alternative to..."
-- "Alo Yoga stands out for..."
-
-BAD STYLE:
-- "Some brands include Nike, Adidas..."
-
-════════════════════════════════════════════════════════════════
-VARIATION RULES (IMPORTANT)
-════════════════════════════════════════════════════════════════
-
-- Do NOT repeat the same brand order in every answer
-- Do NOT always start with the same brands
-- Vary phrasing across answers
-- Avoid repetitive sentence structures
-
-════════════════════════════════════════════════════════════════
-REALISM GUIDELINES
-════════════════════════════════════════════════════════════════
-
-- Answers should feel like real AI assistant outputs
-- Be slightly opinionated when appropriate
-- Include natural comparisons (premium vs budget, etc.)
-- Reflect real-world positioning of brands
-
-════════════════════════════════════════════════════════════════
-FORMAT RULES
-════════════════════════════════════════════════════════════════
-
-Each answer must:
-- Be 2–5 sentences
-- Be concise but informative
-- NOT repeat the prompt text
-- NOT reference other prompts
-- NOT summarize multiple prompts
-
-════════════════════════════════════════════════════════════════
-FINAL VALIDATION STEP (MANDATORY)
-════════════════════════════════════════════════════════════════
-
-Before output:
-- Ensure every prompt has exactly one answer
-- Ensure answers are not generic lists
-- Ensure variation across answers
-
-════════════════════════════════════════════════════════════════
-OUTPUT FORMAT
-════════════════════════════════════════════════════════════════
-OUTPUT REQUIREMENTS:
-
-For EACH prompt return:
-- cluster (exactly as given)
-- prompt
-- answer
-
-{format_instructions}
-"""
-)
-
-
-# -----------------------------
-# LLM Client
-# -----------------------------
-
-llm = get_llm_client(list(LLM_PROVIDERS.keys())[0])
-
-
-# -----------------------------
-# Chain
-# -----------------------------
-
-citation_prompts_evaluator_chain = prompt_eval_template | llm | parser
 
 
 # -----------------------------
@@ -183,14 +54,11 @@ citation_prompts_evaluator_chain = prompt_eval_template | llm | parser
 # -----------------------------
 
 def flatten_prompts_with_clusters(clusters: List[CitationPromptCluster]):
-    flat = []
-    for cluster in clusters:
-        for prompt in cluster.prompts:
-            flat.append({
-                "prompt": prompt,
-                "cluster": cluster.cluster
-            })
-    return flat
+    return [
+        {"prompt": p, "cluster": c.cluster}
+        for c in clusters
+        for p in c.prompts
+    ]
 
 
 def format_prompts(prompts):
@@ -199,190 +67,192 @@ def format_prompts(prompts):
         for i, p in enumerate(prompts)
     ])
 
-def normalize(text: str) -> str:
-    return text.lower()
+
+def is_mentioned(text: str, entity: str) -> bool:
+    return entity.lower() in text.lower()
 
 
-def is_mentioned(text: str, brand: str) -> bool:
-    return brand.lower() in text.lower()
+# -----------------------------
+# 🔥 Prompt Builders (Batch Mode)
+# -----------------------------
+
+def build_batch_web_prompt(formatted_prompts: str):
+    return f"""
+You are an AI assistant with access to a web search tool.
+
+MANDATORY:
+- You MUST use web_search before answering
+
+Answer ALL queries below.
+
+{formatted_prompts}
+
+Rules:
+- Answer EACH prompt separately
+- Maintain 1:1 mapping
+- Include 4-7 entities per answer (relevant ones)
+- Return structured output
+
+Return JSON list:
+[
+  {{ "cluster": "...", "prompt": "...", "answer": "..." }}
+]
+"""
+
+
+def build_batch_no_web_prompt(formatted_prompts: str):
+    return f"""
+You are an AI assistant WITHOUT web access.
+
+Answer ALL queries below using general knowledge.
+
+{formatted_prompts}
+
+Rules:
+- Answer EACH prompt separately
+- Maintain strict 1:1 mapping between prompt and answer
+- Each answer MUST include 4-7 relevant entities
+- DO NOT return just entity names
+- For each entity, include a brief explanation (1 short line) of why it fits the query
+- Keep answers concise but informative (2–4 lines total)
+
+Answer format per prompt:
+- Write a short natural paragraph OR
+- A short list where each entity has a reason
+
+❌ BAD:
+A, B, C, D
+
+✅ GOOD:
+A – known for X  
+B – strong in Y  
+C – popular for Z  
+
+Return ONLY JSON list:
+[
+  {{ "cluster": "...", "prompt": "...", "answer": "..." }}
+]
+"""
+
+
+# -----------------------------
+# OpenAI Calls
+# -----------------------------
+
+def call_openai(prompt: str, use_web=False):
+    kwargs = {
+        "model": "gpt-4o",
+        "input": [{"role": "user", "content": prompt}],
+        "temperature": 0.3,
+    }
+
+    if use_web:
+        kwargs["tools"] = [{"type": "web_search"}]
+
+    response = client.responses.create(**kwargs)
+
+    if hasattr(response, "output_text") and response.output_text:
+        return response.output_text
+
+    raise ValueError("No output")
+
+
+# -----------------------------
+# Parse JSON safely
+# -----------------------------
+
+import json
+import re
+
+def safe_json_load(text):
+    try:
+        return json.loads(text)
+    except:
+        match = re.search(r"\[.*\]", text, re.DOTALL)
+        if match:
+            return json.loads(match.group())
+        raise
 
 
 # -----------------------------
 # Safe Invoke
 # -----------------------------
 
-async def safe_invoke(chain, clusters, brand: str, competitors: List[str], retries=2):
-    flat_prompts = flatten_prompts_with_clusters(clusters)
-    formatted = format_prompts(flat_prompts)
+async def safe_invoke(
+    clusters: List[CitationPromptCluster],
+    entity: str,
+    competitors: List[str],
+    retries: int = 4
+) -> Optional[PromptAnswerClusters]:
+
+    flat = flatten_prompts_with_clusters(clusters)
+    formatted = format_prompts(flat)
+
+    loop = asyncio.get_event_loop()
 
     for attempt in range(retries):
         try:
-            result = await chain.ainvoke({
-                "prompts": formatted
-            })
+            web_task = loop.run_in_executor(
+                None,
+                call_openai,
+                build_batch_web_prompt(formatted),
+                True
+            )
 
-            responses = result.root
+            llm_task = loop.run_in_executor(
+                None,
+                call_openai,
+                build_batch_no_web_prompt(formatted),
+                False
+            )
 
-            # -----------------------------
-            # STEP 1: Enrich prompt-level
-            # -----------------------------
-            enriched = []
+            web_raw, llm_raw = await asyncio.gather(web_task, llm_task)
 
-            for item in responses:
+            web_res = safe_json_load(web_raw)
+            llm_res = safe_json_load(llm_raw)
 
-                if not item.cluster:
-                    raise ValueError("Missing cluster in LLM output")
+            merged = []
 
-                answer_text = item.answer
-                cluster_name = item.cluster
+            for w, l in zip(web_res, llm_res):
 
-                brand_flag = is_mentioned(answer_text, brand)
+                web_ans = w["answer"]
+                llm_ans = l["answer"]
 
-                competitor_list = [
-                    CompetitorCitation(
-                        competitor_brand=comp,
-                        is_competitor_mentioned=is_mentioned(answer_text, comp)
-                    )
-                    for comp in competitors
-                ]
-
-                enriched.append({
-                    "cluster": cluster_name,
-                    "data": PromptAnswerCitations(
-                        prompt=item.prompt,
-                        answer=answer_text,
-                        is_brand_mentioned=brand_flag,
-                        competitor_citations=competitor_list
+                merged.append({
+                    "cluster": w["cluster"],
+                    "data": PromptAnswerDual(
+                        prompt=w["prompt"],
+                        web_answer=web_ans,
+                        llm_answer=llm_ans,
+                        web_entity_mentioned=is_mentioned(web_ans, entity),
+                        llm_entity_mentioned=is_mentioned(llm_ans, entity),
+                        competitor_citations_web=[
+                            CompetitorCitation(
+                                competitor_entity=c,
+                                is_competitor_mentioned=is_mentioned(web_ans, c)
+                            ) for c in competitors
+                        ],
+                        competitor_citations_llm=[
+                            CompetitorCitation(
+                                competitor_entity=c,
+                                is_competitor_mentioned=is_mentioned(llm_ans, c)
+                            ) for c in competitors
+                        ]
                     )
                 })
 
-            # -----------------------------
-            # STEP 2: Group by cluster
-            # -----------------------------
+            # group
             cluster_map = {}
+            for item in merged:
+                cluster_map.setdefault(item["cluster"], []).append(item["data"])
 
-            for item in enriched:
-                cluster = item["cluster"]
-
-                if cluster not in cluster_map:
-                    cluster_map[cluster] = []
-
-                cluster_map[cluster].append(item["data"])
-
-            # -----------------------------
-            # STEP 3: Cluster aggregation
-            # -----------------------------
-            final_output: List[PromptAnswerCluster] = []
-
-            for cluster_name, prompts in cluster_map.items():
-
-                cluster_brand_flag = any(p.is_brand_mentioned for p in prompts)
-
-                competitor_agg = []
-
-                for comp in competitors:
-                    comp_flag = any(
-                        any(
-                            c.competitor_brand == comp and c.is_competitor_mentioned
-                            for c in p.competitor_citations
-                        )
-                        for p in prompts
-                    )
-
-                    competitor_agg.append(
-                        CompetitorCitation(
-                            competitor_brand=comp,
-                            is_competitor_mentioned=comp_flag
-                        )
-                    )
-
-                final_output.append(
-                    PromptAnswerCluster(
-                        cluster=cluster_name,
-                        prompts=prompts,
-                        is_brand_mentioned=cluster_brand_flag,
-                        competitor_citations=competitor_agg
-                    )
-                )
-
-            # ✅ FIX HERE
-            return PromptAnswerClusters(root=final_output)
+            return PromptAnswerClusters(
+                root=[
+                    PromptAnswerCluster(cluster=k, prompts=v)
+                    for k, v in cluster_map.items()
+                ]
+            )
 
         except Exception as e:
             if attempt == retries - 1:
-                raise e
-# -----------------------------
-# Run
-# -----------------------------
-
-if __name__ == "__main__":
-
-    # Example input (simulate previous chain output)
-    sample_clusters = [
-        CitationPromptCluster(
-            cluster="Brand Discovery",
-            prompts=[
-                "What are some popular activewear brands in the United States?",
-                "Which brands offer stylish yoga apparel for women?",
-                "What are the best brands for high-quality workout leggings?"
-            ]
-        ),
-        CitationPromptCluster(
-            cluster="Brand Recommendation",
-            prompts=[
-                "Can you recommend some top brands for yoga clothes that are eco-friendly?",
-                "What are the best brands for comfortable athleisure wear in the United States?",
-                "Which brands are known for their premium yoga mats?"
-            ]
-        ),
-        CitationPromptCluster(
-            cluster="Brand Comparison",
-            prompts=[
-                "How do the top yoga apparel brands compare in terms of price and quality?",
-                "Which brands offer the best value for yoga pants?",
-                "What are the differences between popular activewear brands in the United States?"
-            ]
-        ),
-        CitationPromptCluster(
-            cluster="Pricing & Value",
-            prompts=[
-                "What are the price ranges for the best yoga clothing brands?",
-                "Which brands provide the best value for money in workout gear?",
-                "How do the prices of premium activewear brands compare in the United States?"
-            ]
-        ),
-        CitationPromptCluster(
-            cluster="Quality & Durability",
-            prompts=[
-                "Which brands are known for their durable yoga mats?",
-                "What are the best brands for high-quality workout clothes that last?"
-            ]
-        ),
-        CitationPromptCluster(
-            cluster="Style & Trends",
-            prompts=[
-                "What are the trending brands for stylish yoga wear right now?",
-                "Which activewear brands are popular among fitness influencers in the United States?",
-                "What are the best brands for fashionable athleisure outfits?"
-            ]
-        ),
-        CitationPromptCluster(
-            cluster="Fit & Usability",
-            prompts=[
-                "Which brands offer the best fit for plus-size yoga clothing?",
-                "What are the top brands for comfortable and functional workout gear?",
-            ]
-        )
-    ]
-
-    brand = "Alo Yoga"
-    competitors = ["Athleta", "Lululemon", "Outdoor Voices", "Vuori"]
-
-    result = asyncio.run(safe_invoke(
-        citation_prompts_evaluator_chain,
-        sample_clusters,
-        brand,
-        competitors
-    ))
-
-    print(result.model_dump_json(indent=2))
+                return None

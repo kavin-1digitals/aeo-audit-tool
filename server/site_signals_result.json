@@ -51,5 +51,188 @@
       }
     }
   ],
-  "jsonld_signals": []
+  "jsonld_signals": [
+    {
+      "url": "https://www.express.com",
+      "type_": "Offer",
+      "exists": false,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.express.com",
+      "type_": "Organization",
+      "exists": false,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.express.com",
+      "type_": "FAQPage",
+      "exists": false,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.express.com",
+      "type_": "WebSite",
+      "exists": false,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.express.com",
+      "type_": "Product",
+      "exists": false,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.express.com",
+      "type_": "Review",
+      "exists": false,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.express.com",
+      "type_": "BreadcrumbList",
+      "exists": false,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.express.com",
+      "type_": "AggregateRating",
+      "exists": false,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.express.com",
+      "type_": "ItemList",
+      "exists": false,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.express.com",
+      "type_": "Article",
+      "exists": false,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.express.com/mens-clothing/shirts/short-sleeve-casual-shirts/cat3450006?ICID=TN_M_STYLE_EP",
+      "type_": "Offer",
+      "exists": false,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.express.com/mens-clothing/shirts/short-sleeve-casual-shirts/cat3450006?ICID=TN_M_STYLE_EP",
+      "type_": "Organization",
+      "exists": false,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.express.com/mens-clothing/shirts/short-sleeve-casual-shirts/cat3450006?ICID=TN_M_STYLE_EP",
+      "type_": "FAQPage",
+      "exists": false,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.express.com/mens-clothing/shirts/short-sleeve-casual-shirts/cat3450006?ICID=TN_M_STYLE_EP",
+      "type_": "WebSite",
+      "exists": false,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.express.com/mens-clothing/shirts/short-sleeve-casual-shirts/cat3450006?ICID=TN_M_STYLE_EP",
+      "type_": "Product",
+      "exists": false,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.express.com/mens-clothing/shirts/short-sleeve-casual-shirts/cat3450006?ICID=TN_M_STYLE_EP",
+      "type_": "Review",
+      "exists": false,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.express.com/mens-clothing/shirts/short-sleeve-casual-shirts/cat3450006?ICID=TN_M_STYLE_EP",
+      "type_": "BreadcrumbList",
+      "exists": false,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.express.com/mens-clothing/shirts/short-sleeve-casual-shirts/cat3450006?ICID=TN_M_STYLE_EP",
+      "type_": "AggregateRating",
+      "exists": false,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.express.com/mens-clothing/shirts/short-sleeve-casual-shirts/cat3450006?ICID=TN_M_STYLE_EP",
+      "type_": "ItemList",
+      "exists": false,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.express.com/mens-clothing/shirts/short-sleeve-casual-shirts/cat3450006?ICID=TN_M_STYLE_EP",
+      "type_": "Article",
+      "exists": false,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.express.com/womens-clothing/wear-to-work/best-suits/cat5050154",
+      "type_": "Offer",
+      "exists": false,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.express.com/womens-clothing/wear-to-work/best-suits/cat5050154",
+      "type_": "Organization",
+      "exists": false,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.express.com/womens-clothing/wear-to-work/best-suits/cat5050154",
+      "type_": "FAQPage",
+      "exists": false,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.express.com/womens-clothing/wear-to-work/best-suits/cat5050154",
+      "type_": "WebSite",
+      "exists": false,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.express.com/womens-clothing/wear-to-work/best-suits/cat5050154",
+      "type_": "Product",
+      "exists": false,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.express.com/womens-clothing/wear-to-work/best-suits/cat5050154",
+      "type_": "Review",
+      "exists": false,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.express.com/womens-clothing/wear-to-work/best-suits/cat5050154",
+      "type_": "BreadcrumbList",
+      "exists": false,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.express.com/womens-clothing/wear-to-work/best-suits/cat5050154",
+      "type_": "AggregateRating",
+      "exists": false,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.express.com/womens-clothing/wear-to-work/best-suits/cat5050154",
+      "type_": "ItemList",
+      "exists": false,
+      "is_valid": false
+    },
+    {
+      "url": "https://www.express.com/womens-clothing/wear-to-work/best-suits/cat5050154",
+      "type_": "Article",
+      "exists": false,
+      "is_valid": false
+    }
+  ],
+  "issue_found": null,
+  "cause_of_issue": null
 }

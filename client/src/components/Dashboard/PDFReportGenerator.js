@@ -10,7 +10,8 @@ import {
   CalendarIcon,
   ExclamationTriangleIcon,
   XCircleIcon,
-  LockClosedIcon
+  LockClosedIcon,
+  ChatBubbleLeftRightIcon
 } from '@heroicons/react/24/outline';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
@@ -64,7 +65,7 @@ const formatSignalName = (signalName) => {
   return nameMap[signalName] || signalName.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 };
 
-const PrintableScorecards = ({ auditData, llmMetrics, audit_metadata }) => {
+const PrintableScorecards = ({ auditData, llmMetrics, llmSignals, audit_metadata }) => {
   const pathScorecard = auditData?.path_scorecard || {};
 
   const getTechnicalReadiness = () => {
@@ -75,39 +76,90 @@ const PrintableScorecards = ({ auditData, llmMetrics, audit_metadata }) => {
     return (allTechnicalScores.filter(score => score.value > 0).length / allTechnicalScores.length) * 100;
   };
 
+  // Use the same calculation methods as ExecutiveSummary.js
   const getAIPromptVisibility = () => {
-    const clusters = llmMetrics?.citation_prompt_answers || [];
-    let totalPrompts = 0, brandCitations = 0;
-    clusters.forEach(cluster => {
+    // Handle both cases: citation_prompt_answers as array directly or with .root property (same as ExecutiveSummary)
+    const citationData = llmSignals?.signals?.citation_prompt_answers?.root || llmSignals?.signals?.citation_prompt_answers || llmMetrics?.citation_prompt_answers || [];
+    let totalPrompts = 0;
+    let brandCitations = 0;
+    
+    citationData.forEach(cluster => {
       totalPrompts += cluster.prompts?.length || 0;
-      cluster.prompts?.forEach(prompt => { if (prompt.is_brand_mentioned) brandCitations++; });
+      cluster.prompts?.forEach(prompt => {
+        // Check both web and llm entity mentions (new structure)
+        if (prompt.web_entity_mentioned || prompt.llm_entity_mentioned) {
+          brandCitations++;
+        }
+      });
     });
-    return { score: totalPrompts === 0 ? 0 : (brandCitations / totalPrompts) * 100, totalPrompts, brandCitations, clusterCount: clusters.length };
+    
+    return { score: totalPrompts > 0 ? (brandCitations / totalPrompts) * 100 : 0, citations: brandCitations, prompts: totalPrompts };
   };
 
   const getCompetitorCitationScore = () => {
-    const clusters = llmMetrics?.citation_prompt_answers || [];
+    // Handle both cases: citation_prompt_answers as array directly or with .root property (same as ScorecardsSection)
+    const citationData = llmSignals?.signals?.citation_prompt_answers?.root || llmSignals?.signals?.citation_prompt_answers || llmMetrics?.citation_prompt_answers || [];
     let totalPrompts = 0;
     const competitorCitations = {};
-    clusters.forEach(cluster => {
+    
+    citationData.forEach(cluster => {
       totalPrompts += cluster.prompts?.length || 0;
       cluster.prompts?.forEach(prompt => {
-        prompt.competitor_citations?.forEach(citation => {
+        // Handle new structure with separate web and llm competitor citations
+        const webCitations = prompt.competitor_citations_web || [];
+        const llmCitations = prompt.competitor_citations_llm || [];
+        
+        // Combine unique competitors from both web and llm (count each competitor only once per prompt)
+        const uniqueCompetitors = new Set();
+        [...webCitations, ...llmCitations].forEach(citation => {
           if (citation.is_competitor_mentioned) {
-            const comp = citation.competitor_brand;
-            competitorCitations[comp] = (competitorCitations[comp] || 0) + 1;
+            uniqueCompetitors.add(citation.competitor_entity);
           }
+        });
+        
+        uniqueCompetitors.forEach(comp => {
+          competitorCitations[comp] = (competitorCitations[comp] || 0) + 1;
         });
       });
     });
-    const bestCompCitations = Math.max(0, ...Object.values(competitorCitations));
-    return totalPrompts === 0 ? 0 : (bestCompCitations / totalPrompts) * 100;
+    
+    // Find the best competitor (highest citations) - prevent -1 values
+    const competitorValues = Object.values(competitorCitations);
+    const bestCompCitations = competitorValues.length > 0 ? Math.max(...competitorValues) : 0;
+    
+    console.log('PrintableScorecards getCompetitorCitationScore Debug:', {
+      competitorCitations,
+      competitorValues,
+      bestCompCitations,
+      totalPrompts
+    });
+    
+    return { score: totalPrompts === 0 ? 0 : (bestCompCitations / totalPrompts) * 100, citations: bestCompCitations, prompts: totalPrompts };
   };
 
   const getClustersCovered = () => {
-    const marketData = llmMetrics?.market_comparison || [];
-    const mainBrandData = marketData.find(item => item.brand === audit_metadata.brand) || { cluster_coverage: 0 };
-    return mainBrandData.cluster_coverage || 0;
+    // Calculate coverage directly from raw data instead of using backend's potentially incorrect calculation (same as ScorecardsSection)
+    const citationData = llmSignals?.signals?.citation_prompt_answers?.root || llmSignals?.signals?.citation_prompt_answers || llmMetrics?.citation_prompt_answers || [];
+    const brand = audit_metadata.brand;
+    
+    let coveredClusters = 0;
+    const totalClusters = citationData.length;
+    
+    citationData.forEach(cluster => {
+      // Check if brand is mentioned in any prompt within this cluster (web or llm)
+      const brandMentioned = cluster.prompts?.some(prompt => 
+        prompt.web_entity_mentioned || prompt.llm_entity_mentioned
+      );
+      
+      if (brandMentioned) {
+        coveredClusters++;
+      }
+    });
+    
+    // Calculate correct percentage
+    const coverage = totalClusters > 0 ? Math.round((coveredClusters / totalClusters) * 100 * 10) / 10 : 0;
+    
+    return { score: coverage, clusters: coveredClusters, total: totalClusters };
   };
 
   const visibility = getAIPromptVisibility();
@@ -117,9 +169,9 @@ const PrintableScorecards = ({ auditData, llmMetrics, audit_metadata }) => {
 
   const primaryMetrics = [
     { label: 'Technical Readiness', value: `${techScore.toFixed(0)}%`, num: techScore, color: '#3b82f6', desc: `Domain optimization + Site signals accessibility score` },
-    { label: 'AI Prompt Visibility', value: `${visibility.score.toFixed(1)}%`, num: visibility.score, color: '#8b5cf6', desc: `Brand mentioned in ${visibility.brandCitations} of ${visibility.totalPrompts} AI prompts` },
-    { label: 'Competitor Citation Score', value: `${compScore.toFixed(1)}%`, num: compScore, color: '#ef4444', desc: `Performance relative to top competing mentions in AI responses` },
-    { label: 'Clusters Covered', value: `${clusterScore.toFixed(1)}%`, num: clusterScore, color: '#06b6d4', desc: `Brand presence across defined user intent clusters` }
+    { label: 'AI Prompt Visibility', value: `${visibility.score.toFixed(1)}%`, num: visibility.score, color: '#8b5cf6', desc: `Brand mentioned in ${visibility.citations} of ${visibility.prompts} AI prompts` },
+    { label: 'Competitor Citation Score', value: `${compScore.score.toFixed(1)}%`, num: compScore.score, color: '#ef4444', desc: `Performance relative to top competing mentions in AI responses` },
+    { label: 'Clusters Covered', value: `${clusterScore.score.toFixed(1)}%`, num: clusterScore.score, color: '#06b6d4', desc: `Brand presence across ${clusterScore.clusters} of ${clusterScore.total} user intent clusters` }
   ];
 
   const MetricBar = ({ label, value, num, color, desc }) => (
@@ -137,9 +189,26 @@ const PrintableScorecards = ({ auditData, llmMetrics, audit_metadata }) => {
 
   const secondaryMetrics = [
     { label: 'Pages Analyzed', value: auditData?.signals?.site_signals?.site_signals?.length || 0, desc: 'Website pages crawled for analysis' },
-    { label: 'Prompts Used', value: visibility.totalPrompts, desc: 'AI conversation prompts tested' },
-    { label: 'Competitors Identified', value: (llmMetrics?.market_comparison || []).length - 1, desc: 'Competing brands benchmarked' }
+    { label: 'Prompts Used', value: visibility.prompts, desc: 'AI conversation prompts tested' },
+    { 
+      label: 'Competitors Identified', 
+      value: (() => {
+        // Try multiple approaches like ProfessionalCharts does
+        const directCompetitors = llmSignals?.signals?.competitors || [];
+        const marketCompetitors = llmSignals?.signals?.market_comparison_combined?.filter(item => item.entity !== audit_metadata.brand) || [];
+        const competitorsList = directCompetitors.length > 0 ? directCompetitors : marketCompetitors.map(c => c.entity);
+        return Math.max(0, Array.isArray(competitorsList) ? competitorsList.length : 0);
+      })(), 
+      desc: 'Competing brands benchmarked' 
+    }
   ];
+
+  // Check if LLM data is available - same as ExecutiveSummary.js
+  const hasLLMData = llmSignals && llmMetrics && 
+    (llmSignals?.signals?.citation_prompt_answers?.root?.length > 0 || 
+     llmSignals?.signals?.citation_prompt_answers?.length > 0 || 
+     llmMetrics?.citation_prompt_answers?.length > 0) &&
+    auditData?.signals?.llm_signals?.status;
 
   return (
     <div className="space-y-6 mb-8 mt-4">
@@ -452,12 +521,101 @@ const PrintableScoreOverview = ({ audit_metadata }) => {
   );
 };
 
-const PrintableExecutiveSummary = ({ audit_metadata, categories_count, critical_issues, llmMetrics }) => {
+const PrintableExecutiveSummary = ({ audit_metadata, categories_count, critical_issues, llmMetrics, llmSignals, auditData }) => {
   const currentDate = new Date().toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric'
   });
+
+  // Use the same calculation methods as ExecutiveSummary.js
+  const getAIPromptVisibility = () => {
+    // Handle both cases: citation_prompt_answers as array directly or with .root property (same as ExecutiveSummary)
+    const citationData = llmSignals?.signals?.citation_prompt_answers?.root || llmSignals?.signals?.citation_prompt_answers || llmMetrics?.citation_prompt_answers || [];
+    let totalPrompts = 0;
+    let brandCitations = 0;
+    
+    citationData.forEach(cluster => {
+      totalPrompts += cluster.prompts?.length || 0;
+      cluster.prompts?.forEach(prompt => {
+        // Check both web and llm entity mentions (new structure)
+        if (prompt.web_entity_mentioned || prompt.llm_entity_mentioned) {
+          brandCitations++;
+        }
+      });
+    });
+    
+    return totalPrompts > 0 ? (brandCitations / totalPrompts) * 100 : 0;
+  };
+
+  const getClustersCovered = () => {
+    // Handle new structure with market_comparison_combined (same as ExecutiveSummary)
+    const marketData = llmSignals?.signals?.market_comparison_combined || llmMetrics?.market_comparison || [];
+    const mainBrandData = marketData.find(item => item.entity === audit_metadata.brand) || {
+      cluster_coverage: 0
+    };
+    
+    return mainBrandData.cluster_coverage || 0;
+  };
+
+  const getBrandCitations = () => {
+    // Handle both cases: citation_prompt_answers as array directly or with .root property (same as ExecutiveSummary)
+    const citationData = llmSignals?.signals?.citation_prompt_answers?.root || llmSignals?.signals?.citation_prompt_answers || llmMetrics?.citation_prompt_answers || [];
+    let brandCitations = 0;
+    
+    citationData.forEach(cluster => {
+      cluster.prompts?.forEach(prompt => {
+        // Check both web and llm entity mentions (new structure)
+        if (prompt.web_entity_mentioned || prompt.llm_entity_mentioned) {
+          brandCitations++;
+        }
+      });
+    });
+    
+    return brandCitations;
+  };
+
+  // Use real LLM metrics if available, otherwise use fallback values - same as ExecutiveSummary
+  const getLLMMetrics = () => {
+    // Check if LLM signals are available - same as ExecutiveSummary
+    const hasLLMData = llmSignals && llmMetrics && 
+      (llmSignals?.signals?.citation_prompt_answers?.root?.length > 0 || 
+       llmSignals?.signals?.citation_prompt_answers?.length > 0 || 
+       llmMetrics?.citation_prompt_answers?.length > 0) &&
+      auditData?.signals?.llm_signals?.status;
+    
+    if (hasLLMData) {
+      // Get brand SOV from market_comparison_combined (new structure) - same as ExecutiveSummary
+      const marketData = llmSignals?.signals?.market_comparison_combined || llmMetrics?.market_comparison || [];
+      const mainBrandData = marketData.find(item => item.entity === audit_metadata.brand) || {
+        sov: 0,
+        citations: 0,
+        cluster_coverage: 0
+      };
+      
+      console.log('PrintableExecutiveSummary getLLMMetrics Debug:', {
+        marketData,
+        mainBrandData,
+        brand: audit_metadata.brand,
+        llmSignals: llmSignals?.signals
+      });
+      
+      return {
+        brandSOV: mainBrandData.sov || 0,
+        brandCitations: getBrandCitations(),
+        clusterCoverage: mainBrandData.cluster_coverage || 0 // Use the value from market_comparison_combined
+      };
+    }
+    
+    // Fallback values if no LLM data available
+    return {
+      brandSOV: null,
+      brandCitations: null,
+      clusterCoverage: null
+    };
+  };
+
+  const metrics = getLLMMetrics();
 
   const getHealthStatus = (score) => {
     if (score >= 90) return { status: 'Excellent', color: 'text-green-600 bg-green-100' };
@@ -534,15 +692,15 @@ const PrintableExecutiveSummary = ({ audit_metadata, categories_count, critical_
             <div className="space-y-4">
               <div>
                 <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Brand SOV</p>
-                <p className="text-3xl font-black text-gray-900 leading-none">{(llmMetrics?.brandSOV || 0).toFixed(1)}%</p>
+                <p className="text-3xl font-black text-gray-900 leading-none">{metrics.brandSOV !== null ? `${metrics.brandSOV.toFixed(1)}%` : '--'}</p>
               </div>
               <div>
                 <p className="text-[10px] font-bold text-gray-400 uppercase">Brand Citations</p>
-                <p className="text-xs font-bold text-gray-800">{llmMetrics?.brandCitations || 0} citations found</p>
+                <p className="text-xs font-bold text-gray-800">{metrics.brandCitations !== null ? `${metrics.brandCitations} citations found` : '-- citations found'}</p>
               </div>
               <div>
                 <p className="text-[10px] font-bold text-gray-400 uppercase">Cluster Coverage</p>
-                <p className="text-xs font-bold text-gray-800">{(llmMetrics?.clusterCoverage || 0).toFixed(1)}% coverage</p>
+                <p className="text-xs font-bold text-gray-800">{metrics.clusterCoverage !== null ? `${metrics.clusterCoverage.toFixed(1)}% coverage` : '--% coverage'}</p>
               </div>
             </div>
           </div>
@@ -565,17 +723,44 @@ const PrintableExecutiveSummary = ({ audit_metadata, categories_count, critical_
 };
 
 const PrintableLLMAnalysis = ({ llmSignals, brand, isUngated = true }) => {
-  if (!llmSignals?.citation_prompt_answers) return null;
+  // Use the same data access pattern as LLMAnalysisSection.js
+  const citationData = llmSignals?.signals?.citation_prompt_answers?.root || llmSignals?.signals?.citation_prompt_answers;
+  
+  // Debug logging
+  console.log('PrintableLLMAnalysis Debug:', { llmSignals, citationData, brand });
+  
+  // Check if we have valid LLM signals data - same as LLMAnalysisSection.js
+  if (!citationData?.length) {
+    return (
+      <PrintableGatedMask isUngated={isUngated} label="LLM Analysis Map Gated">
+        <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl shadow-lg border border-purple-100 p-12">
+          <div className="text-center text-gray-500">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-white rounded-full shadow-md mb-4">
+              <ChatBubbleLeftRightIcon className="h-10 w-10 text-purple-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-700 mb-2">
+              No LLM Signal Data Available
+            </h3>
+            <p className="text-sm text-gray-500 mb-4">
+              Try running a new audit to see AI conversation analysis
+            </p>
+          </div>
+        </div>
+      </PrintableGatedMask>
+    );
+  }
+
+  const clusters = citationData; // Use the citationData directly like LLMAnalysisSection.js
 
   return (
     <PrintableGatedMask isUngated={isUngated} label="LLM Analysis Map Gated">
       <div className="space-y-8">
-        {llmSignals.citation_prompt_answers.map((cluster, idx) => (
+        {clusters.map((cluster, idx) => (
           <div key={idx} className="border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm">
             <div className="bg-slate-900 p-4 flex justify-between items-center text-white">
               <h4 className="font-bold text-lg">{cluster.cluster}</h4>
               <span className="text-xs font-bold bg-white/20 px-3 py-1 rounded-full uppercase tracking-widest">
-                Market Presence: {(cluster.prompts.filter(p => p.is_brand_mentioned).length / Math.max(1, cluster.prompts.length) * 100).toFixed(0)}%
+                Market Presence: {(cluster.prompts.filter(p => p.web_entity_mentioned || p.llm_entity_mentioned).length / Math.max(1, cluster.prompts.length) * 100).toFixed(0)}%
               </span>
             </div>
             <div className="p-4 space-y-8">
@@ -585,16 +770,33 @@ const PrintableLLMAnalysis = ({ llmSignals, brand, isUngated = true }) => {
                     <div className="w-6 h-6 rounded bg-gray-100 flex-shrink-0 flex items-center justify-center text-[10px] font-bold text-gray-400">{pIdx + 1}</div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-bold text-gray-800 leading-tight mb-2 tracking-tight">{prompt.prompt}</p>
-                      <div className="bg-blue-50 p-4 rounded-lg text-sm text-gray-600 leading-relaxed italic border-l-4 border-blue-200 max-w-full overflow-hidden">
-                        "{prompt.answer}"
+                      
+                      {/* Web Search Response */}
+                      <div className="bg-green-50 p-4 rounded-lg text-sm text-gray-600 leading-relaxed italic border-l-4 border-green-200 max-w-full overflow-hidden mb-3">
+                        <div className="text-xs font-bold text-green-700 mb-2 uppercase tracking-wider">Web Search Response</div>
+                        "{prompt.web_answer}"
                       </div>
+                      
+                      {/* AI Response */}
+                      <div className="bg-blue-50 p-4 rounded-lg text-sm text-gray-600 leading-relaxed italic border-l-4 border-blue-200 max-w-full overflow-hidden mb-3">
+                        <div className="text-xs font-bold text-blue-700 mb-2 uppercase tracking-wider">AI Response</div>
+                        "{prompt.llm_answer}"
+                      </div>
+                      
                       <div className="flex flex-wrap gap-2 mt-3">
-                        <span className={`text-[9px] px-2 py-0.5 rounded font-bold uppercase tracking-tighter ${prompt.is_brand_mentioned ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                          {brand}: {prompt.is_brand_mentioned ? 'Cited' : 'Omitted'}
+                        <span className={`text-[9px] px-2 py-0.5 rounded font-bold uppercase tracking-tighter ${(prompt.web_entity_mentioned || prompt.llm_entity_mentioned) ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                          {brand}: {(prompt.web_entity_mentioned || prompt.llm_entity_mentioned) ? 'Cited' : 'Omitted'}
                         </span>
-                        {prompt.competitor_citations.map((c, cIdx) => (
+                        <span className={`text-[9px] px-2 py-0.5 rounded font-bold uppercase tracking-tighter ${prompt.web_entity_mentioned ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                          Web: {prompt.web_entity_mentioned ? '✓' : '✗'}
+                        </span>
+                        <span className={`text-[9px] px-2 py-0.5 rounded font-bold uppercase tracking-tighter ${prompt.llm_entity_mentioned ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                          AI: {prompt.llm_entity_mentioned ? '✓' : '✗'}
+                        </span>
+                        {/* Handle new competitor structure */}
+                        {[(prompt.competitor_citations_web || []), (prompt.competitor_citations_llm || [])].flat().map((c, cIdx) => (
                           <span key={cIdx} className={`text-[9px] px-2 py-0.5 rounded font-bold uppercase tracking-tighter ${c.is_competitor_mentioned ? 'bg-orange-100 text-orange-700' : 'bg-gray-100 text-gray-400'}`}>
-                            {c.competitor_brand}: {c.is_competitor_mentioned ? 'Cited' : 'Skip'}
+                            {c.competitor_entity}: {c.is_competitor_mentioned ? 'Cited' : 'Skip'}
                           </span>
                         ))}
                       </div>
@@ -695,17 +897,30 @@ const TechCategoryPanel = ({ name, data }) => {
 };
 
 
-const PrintableMarketComparison = ({ market_comparison, brand }) => {
-  if (!market_comparison || market_comparison.length === 0) return null;
-
-  const mainBrandIndex = market_comparison.findIndex(m => m.brand === brand);
-  const mainBrandData = market_comparison[mainBrandIndex] || market_comparison[0];
-  const sortedByCitations = [...market_comparison].sort((a, b) => b.brand_citations - a.brand_citations).slice(0, 5);
-  const avgCitations = Math.round(market_comparison.reduce((acc, curr) => acc + curr.brand_citations, 0) / market_comparison.length);
+const PrintableMarketComparison = ({ llmSignals, brand }) => {
+  // Use the same data access pattern as ProfessionalCharts.js
+  const marketData = llmSignals?.signals?.market_comparison_combined || [];
+  const hasRealData = marketData.length > 0;
+  
+  // Debug logging
+  console.log('PrintableMarketComparison Debug:', { marketData, brand, llmSignals });
+  
+  // Get main brand data like ProfessionalCharts.js
+  const mainBrandData = marketData.find(item => item.entity === brand) || {
+    sov: 0,
+    cluster_coverage: 0,
+    citations: 0
+  };
+  
+  const mainBrandSOV = mainBrandData.sov || 0;
+  const competitors = marketData.filter(item => item.entity !== brand);
+  const topCompetitor = competitors.length > 0 ? competitors.reduce((top, comp) => (comp.citations || 0) > (top.citations || 0) ? comp : top) : { entity: 'N/A', citations: 0 };
+  const avgSOV = competitors.length > 0 ? competitors.reduce((sum, comp) => sum + (comp.sov || 0), 0) / competitors.length : 0;
+  const avgCitations = competitors.length > 0 ? competitors.reduce((sum, comp) => sum + (comp.citations || 0), 0) / competitors.length : 0;
 
   // SVG Bar Chart Component for SOV
   const MarketSOVChart = () => {
-    const maxSOV = Math.max(...market_comparison.map(m => m.brand_sov), 1);
+    const maxSOV = hasRealData ? Math.max(...marketData.map(m => m.sov || 0), 1) : 1;
     const chartHeight = 120;
     const barWidth = 40;
 
@@ -715,29 +930,47 @@ const PrintableMarketComparison = ({ market_comparison, brand }) => {
         <p className="text-[10px] text-gray-400 font-bold uppercase mb-8">Brand vs competitors SOV comparison</p>
         <div className="flex-1 flex flex-col">
           <div className="flex-1 flex items-end justify-between px-4 pb-2 border-b border-gray-100">
-            {market_comparison.slice(0, 5).map((item, i) => {
-              const barHeight = (item.brand_sov / maxSOV) * chartHeight;
-              const isMain = item.brand === brand;
-              return (
-                <div key={i} className="flex flex-col items-center">
-                  <div className="text-[10px] font-black text-gray-900 mb-1">{item.brand_sov}%</div>
-                  <div
-                    className="rounded-t-lg transition-all"
-                    style={{
-                      width: `${barWidth}px`,
-                      height: `${barHeight}px`,
-                      backgroundColor: isMain ? '#8b5cf6' : '#94a3b8'
-                    }}
-                  />
+            {/* Brand Bar */}
+            <div className="flex flex-col items-center flex-1 min-w-0 mx-1">
+              <div className="text-xs font-bold mb-1 text-gray-700">
+                {hasRealData ? `${mainBrandSOV.toFixed(1)}%` : '--'}
+              </div>
+              {hasRealData ? (
+                <div
+                  className="w-full bg-purple-500 rounded-t-lg max-w-16"
+                  style={{ height: `${Math.min(mainBrandSOV * 3, 200)}px` }}
+                />
+              ) : (
+                <div className="w-full bg-gray-300 rounded-t-lg max-w-16 h-4"></div>
+              )}
+            </div>
+            
+            {/* Competitor Bars */}
+            {(hasRealData ? competitors.slice(0, 4) : [{ entity: 'No Data', sov: 0 }]).map((competitor, i) => (
+              <div key={i} className="flex flex-col items-center flex-1 min-w-0 mx-1">
+                <div className="text-xs font-bold text-gray-700 mb-1">
+                  {hasRealData ? `${(competitor.sov || 0).toFixed(1)}%` : '--'}
                 </div>
-              );
-            })}
+                <div
+                  className="w-full bg-gray-400 rounded-t-lg max-w-16"
+                  style={{
+                    height: hasRealData ? `${Math.min((competitor.sov || 0) * 3, 200)}px` : '16px'
+                  }}
+                />
+              </div>
+            ))}
           </div>
           {/* Labels Row */}
           <div className="flex justify-between px-4 mt-3 pb-2 min-h-[40px]">
-            {market_comparison.slice(0, 5).map((item, i) => (
+            {/* Brand Label */}
+            <div className="flex-1 text-[8px] font-black text-gray-400 text-center leading-[1.2] break-words px-1">
+              {brand}
+            </div>
+            
+            {/* Competitor Labels */}
+            {(hasRealData ? competitors.slice(0, 4) : [{ entity: 'No Data' }]).map((competitor, i) => (
               <div key={i} className="flex-1 text-[8px] font-black text-gray-400 text-center leading-[1.2] break-words px-1">
-                {item.brand}
+                {competitor.entity}
               </div>
             ))}
           </div>
@@ -771,31 +1004,43 @@ const PrintableMarketComparison = ({ market_comparison, brand }) => {
   };
 
   const CitationComparison = () => {
-    const maxCits = Math.max(...sortedByCitations.map(m => m.brand_citations), 1);
+    const maxCits = hasRealData ? Math.max(...competitors.map(c => c.citations || 0), 1) : 1;
+
+    // Get top competitor like ProfessionalCharts does
+    const topCompetitor = hasRealData && competitors.length > 0 
+      ? competitors.reduce((top, comp) => (comp.citations || 0) > (top.citations || 0) ? comp : top)
+      : { entity: 'No Data', citations: 0 };
 
     return (
-      <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm flex flex-col h-full">
+      <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm flex flex-col min-h-[140px]">
         <h4 className="text-sm font-black text-gray-900 mb-1">Brand Citations</h4>
         <p className="text-[10px] text-gray-400 font-bold uppercase mb-6">Brand citation count comparison</p>
-        <div className="space-y-4 flex-1 flex flex-col justify-center">
-          {sortedByCitations.slice(0, 3).map((item, i) => {
-            const isMain = item.brand === brand;
-            return (
-              <div key={i} className="flex items-center space-x-3">
-                <div className="w-16 text-[9px] font-black text-gray-700 truncate">{item.brand}</div>
-                <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-                  <div className="h-full rounded-full" style={{ width: `${(item.brand_citations / maxCits) * 100}%`, backgroundColor: isMain ? '#8b5cf6' : '#f59e0b' }}></div>
-                </div>
-                <div className="text-[9px] font-black text-gray-900 w-4 text-right">{item.brand_citations}</div>
-              </div>
-            );
-          })}
+        <div className="space-y-4 flex-1 flex flex-col justify-start">
+          {/* Top Competitor - YELLOW (like ProfessionalCharts) */}
           <div className="flex items-center space-x-3">
-            <div className="w-16 text-[9px] font-black text-gray-400 italic">Average</div>
+            <div className="w-20 text-[9px] font-black text-gray-700 truncate">{topCompetitor.entity}</div>
             <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-              <div className="h-full bg-slate-400 rounded-full" style={{ width: `${(avgCitations / maxCits) * 100}%` }}></div>
+              <div className="h-full rounded-full" style={{ width: `${hasRealData ? ((topCompetitor.citations || 0) / maxCits) * 100 : 0}%`, backgroundColor: '#f59e0b' }}></div>
             </div>
-            <div className="text-[9px] font-black text-gray-400 w-4 text-right">{avgCitations}</div>
+            <div className="text-[9px] font-black text-gray-900 w-8 text-right">{hasRealData ? (topCompetitor.citations || 0) : '--'}</div>
+          </div>
+          
+          {/* Brand - PURPLE (like ProfessionalCharts) */}
+          <div className="flex items-center space-x-3">
+            <div className="w-20 text-[9px] font-black text-gray-700 truncate">{brand}</div>
+            <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+              <div className="h-full rounded-full" style={{ width: `${hasRealData ? ((mainBrandData.citations || 0) / maxCits) * 100 : 0}%`, backgroundColor: '#8b5cf6' }}></div>
+            </div>
+            <div className="text-[9px] font-black text-gray-900 w-8 text-right">{hasRealData ? (mainBrandData.citations || 0) : '--'}</div>
+          </div>
+          
+          {/* Average - GRAY (like ProfessionalCharts) */}
+          <div className="flex items-center space-x-3">
+            <div className="w-20 text-[9px] font-black text-gray-400 italic">Average</div>
+            <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+              <div className="h-full bg-slate-400 rounded-full" style={{ width: `${avgCitations > 0 ? (avgCitations / maxCits) * 100 : 0}%` }}></div>
+            </div>
+            <div className="text-[9px] font-black text-gray-400 w-8 text-right">{hasRealData ? avgCitations.toFixed(0) : '--'}</div>
           </div>
         </div>
       </div>
@@ -819,31 +1064,50 @@ const PrintableMarketComparison = ({ market_comparison, brand }) => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-50">
-            {market_comparison.map((item, idx) => {
-              const isMain = item.brand === brand;
-              return (
-                <tr key={idx} className={isMain ? 'bg-blue-50/10' : ''}>
-                  <td className="py-5 px-8">
-                    <div className="flex items-center">
-                      {isMain && <span className="mr-3 text-blue-500 font-bold">★</span>}
-                      <div className={`text-xs font-black ${isMain ? 'text-gray-900' : 'text-gray-600'}`}>{item.brand}</div>
+            {/* Brand Row */}
+            <tr className="bg-blue-50/10">
+              <td className="py-5 px-8">
+                <div className="flex items-center">
+                  <span className="mr-3 text-blue-500 font-bold">★</span>
+                  <div className="text-xs font-black text-gray-900">{brand}</div>
+                </div>
+              </td>
+              <td className="py-5 px-8 text-center text-xs font-bold text-gray-500">{mainBrandData.citations || 0}</td>
+              <td className="py-5 px-8">
+                <div className="flex flex-col items-center">
+                  <div className="flex items-center space-x-2 mb-1">
+                    <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                    <span className="text-[11px] font-black text-blue-600">{mainBrandSOV.toFixed(1)}%</span>
+                  </div>
+                  <div className="w-20 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-full rounded-full" style={{ width: `${hasRealData ? mainBrandSOV : 0}%`, backgroundColor: '#3b82f6' }}></div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            
+            {/* Competitor Rows */}
+            {(hasRealData ? competitors.slice(0, 4) : [{ entity: 'No Data', citations: 0, sov: 0 }]).map((competitor, idx) => (
+              <tr key={idx}>
+                <td className="py-5 px-8">
+                  <div className="flex items-center">
+                    <div className="text-xs font-black text-gray-600">{competitor.entity}</div>
+                  </div>
+                </td>
+                <td className="py-5 px-8 text-center text-xs font-bold text-gray-500">{competitor.citations || 0}</td>
+                <td className="py-5 px-8">
+                  <div className="flex flex-col items-center">
+                    <div className="flex items-center space-x-2 mb-1">
+                      <div className="w-1.5 h-1.5 rounded-full bg-gray-400"></div>
+                      <span className="text-[11px] font-black text-gray-900">{(competitor.sov || 0).toFixed(1)}%</span>
                     </div>
-                  </td>
-                  <td className="py-5 px-8 text-center text-xs font-bold text-gray-500">{item.brand_citations}</td>
-                  <td className="py-5 px-8">
-                    <div className="flex flex-col items-center">
-                      <div className="flex items-center space-x-2 mb-1">
-                        <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: isMain ? '#3b82f6' : '#94a3b8' }}></div>
-                        <span className={`text-[11px] font-black ${isMain ? 'text-blue-600' : 'text-gray-900'}`}>{item.brand_sov}%</span>
-                      </div>
-                      <div className="w-20 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                        <div className="h-full rounded-full" style={{ width: `${item.brand_sov}%`, backgroundColor: isMain ? '#3b82f6' : '#94a3b8' }}></div>
-                      </div>
+                    <div className="w-20 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                      <div className="h-full rounded-full" style={{ width: `${hasRealData ? (competitor.sov || 0) : 0}%`, backgroundColor: '#94a3b8' }}></div>
                     </div>
-                  </td>
-                </tr>
-              );
-            })}
+                  </div>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
@@ -857,7 +1121,7 @@ const PrintableMarketComparison = ({ market_comparison, brand }) => {
           <div className="h-[180px]">
             <CoverageGauge />
           </div>
-          <div className="h-[140px]">
+          <div className="flex flex-col">
             <CitationComparison />
           </div>
         </div>
@@ -885,11 +1149,12 @@ const PDFReportGenerator = ({ auditData, onGeneratePDF }) => {
       const llmMetrics = (() => {
         const metadata = auditData.audit_metadata;
         const llmSignals = auditData.signals?.llm_signals;
-        if (!llmSignals?.market_comparison) return null;
-        const mainBrandData = llmSignals.market_comparison.find(item => item.brand === metadata.brand);
-        const allCompetitors = llmSignals.market_comparison.filter(item => item.brand !== metadata.brand);
+        // Handle new structure with market_comparison_combined
+        if (!llmSignals?.market_comparison_combined) return null;
+        const mainBrandData = llmSignals.market_comparison_combined.find(item => item.entity === metadata.brand);
+        const allCompetitors = llmSignals.market_comparison_combined.filter(item => item.entity !== metadata.brand);
         return {
-          brandSOV: mainBrandData?.brand_sov || 0,
+          brandSOV: mainBrandData?.sov || 0,
           clusterCoverage: mainBrandData?.cluster_coverage || 0,
           competitorCount: allCompetitors.length
         };
@@ -1075,17 +1340,9 @@ const PDFReportGenerator = ({ auditData, onGeneratePDF }) => {
             audit_metadata={auditData.audit_metadata}
             categories_count={Object.keys(auditData.path_scorecard || {}).length}
             critical_issues={Object.values(auditData.path_scorecard || {}).flatMap(d => d.scores || []).filter(s => s.value < 0).length}
-            llmMetrics={(() => {
-              const llm = auditData.signals?.llm_signals;
-              if (!llm?.market_comparison) return null;
-              const main = llm.market_comparison.find(item => item.brand === auditData.audit_metadata.brand);
-              return {
-                brandSOV: main?.brand_sov || 0,
-                brandCitations: main?.brand_citations || 0,
-                clusterCoverage: main?.cluster_coverage || 0,
-                competitorCount: llm.market_comparison.length - 1
-              };
-            })()}
+            llmMetrics={auditData.signals?.llm_signals}
+            llmSignals={auditData.signals?.llm_signals}
+            auditData={auditData}
           />
         </div>
         <div id="pdf-score-overview" className="p-8 bg-white">
@@ -1095,6 +1352,7 @@ const PDFReportGenerator = ({ auditData, onGeneratePDF }) => {
           <PrintableScorecards
             auditData={auditData}
             llmMetrics={auditData.signals?.llm_signals}
+            llmSignals={auditData.signals?.llm_signals}
             audit_metadata={auditData.audit_metadata}
           />
         </div>
@@ -1113,7 +1371,7 @@ const PDFReportGenerator = ({ auditData, onGeneratePDF }) => {
         </div>
         <div id="pdf-market" className="p-8 bg-white">
           <PrintableMarketComparison
-            market_comparison={auditData.signals?.llm_signals?.market_comparison}
+            llmSignals={auditData.signals?.llm_signals}
             brand={auditData.audit_metadata?.brand}
           />
         </div>

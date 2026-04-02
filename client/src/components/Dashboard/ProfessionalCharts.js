@@ -10,6 +10,9 @@ const ProfessionalCharts = ({ llmMetrics, audit_metadata, llmSignals, auditData 
   console.log('llmMetrics:', llmMetrics);
   console.log('llmSignals:', llmSignals);
 
+  // Check if LLM data is available - updated for new structure
+  const hasLLMData = llmSignals && llmMetrics && Object.keys(llmSignals).length > 0 && auditData?.signals?.llm_signals?.status;
+
   // Handle low confidence case
   if (llmSignals?.low_confidence_reasoning) {
     return (
@@ -24,50 +27,27 @@ const ProfessionalCharts = ({ llmMetrics, audit_metadata, llmSignals, auditData 
             
             <h4 className="text-lg font-semibold text-amber-800 mb-2">Limited Brand Analysis Available</h4>
             <p className="text-sm text-amber-700 mb-4 max-w-md mx-auto">
-              {llmSignals.low_confidence_reasoning}
+              Limited brand information available for comprehensive AI conversation analysis
             </p>
             
             <div className="bg-white rounded-lg p-4 border border-amber-200 text-left max-w-sm mx-auto">
-              <div className="flex items-start space-x-2">
-                <InformationCircleIcon className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-sm font-medium text-amber-800 mb-1">What this means:</p>
-                  <ul className="text-xs text-amber-700 space-y-1">
-                    <li>• Insufficient brand data for competitive analysis</li>
-                    <li>• AI models have limited awareness of brand</li>
-                    <li>• Market share calculations cannot be performed</li>
-                  </ul>
+              <div className="bg-gray-50 rounded-lg p-3">
+                <div className="text-xs text-gray-600 font-medium">Confidence Score</div>
+                <div className="text-lg font-bold text-gray-900">
+                  {llmSignals.signals.entity_analysis ? `${(llmSignals.signals.entity_analysis.entity_confidence * 100).toFixed(1)}%` : 'N/A'}
                 </div>
               </div>
+              {llmSignals.signals.competitors && llmSignals.signals.competitors.length > 0 && (
+                <div className="bg-gray-50 rounded-lg p-3">
+                  <div className="text-xs text-gray-600 font-medium">Competitors Identified</div>
+                  <div className="text-lg font-bold text-gray-900">{llmSignals.signals.competitors.length}</div>
+                </div>
+              )}
             </div>
           </div>
         </div>
 
         <div className="lg:w-[35%] space-y-6">
-          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
-            <h4 className="text-lg font-semibold text-gray-900 mb-3">Analysis Details</h4>
-            <div className="space-y-3">
-              <div className="bg-gray-50 rounded-lg p-3">
-                <div className="text-xs text-gray-600 font-medium">Confidence Score</div>
-                <div className="text-lg font-bold text-gray-900">
-                  {llmSignals.brand_analysis ? `${(llmSignals.brand_analysis.brand_confidence * 100).toFixed(1)}%` : 'N/A'}
-                </div>
-              </div>
-              {llmSignals.brand_analysis?.domain && (
-                <div className="bg-gray-50 rounded-lg p-3">
-                  <div className="text-xs text-gray-600 font-medium">Domain</div>
-                  <div className="text-sm font-medium text-gray-900">{llmSignals.brand_analysis.domain}</div>
-                </div>
-              )}
-              {llmSignals.competitors && llmSignals.competitors.length > 0 && (
-                <div className="bg-gray-50 rounded-lg p-3">
-                  <div className="text-xs text-gray-600 font-medium">Competitors Identified</div>
-                  <div className="text-lg font-bold text-gray-900">{llmSignals.competitors.length}</div>
-                </div>
-              )}
-            </div>
-          </div>
-          
           <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
             <h4 className="text-lg font-semibold text-gray-900 mb-3">Recommendations</h4>
             <ul className="text-sm text-gray-700 space-y-2">
@@ -90,37 +70,37 @@ const ProfessionalCharts = ({ llmMetrics, audit_metadata, llmSignals, auditData 
     );
   }
 
-  const marketData = llmMetrics?.market_comparison || [];
+  const marketData = llmSignals?.signals?.market_comparison_combined || llmMetrics?.market_comparison || [];
   const hasRealData = marketData.length > 0;
 
   const mainBrandData =
-    marketData.find(item => item.brand === audit_metadata.brand) || {
-      brand_sov: 0,
+    marketData.find(item => item.entity === audit_metadata.brand) || {
+      sov: 0,
       cluster_coverage: 0
     };
 
-  const mainBrandSOV = mainBrandData.brand_sov || 0;
+  const mainBrandSOV = mainBrandData.sov || 0;
 
   const competitors = marketData.filter(
-    item => item.brand !== audit_metadata.brand
+    item => item.entity !== audit_metadata.brand
   );
 
   const topCompetitor =
     competitors.length > 0
       ? competitors.reduce((top, comp) =>
-          comp.brand_citations > top.brand_citations ? comp : top
+          comp.citations > top.citations ? comp : top
         )
-      : { brand: 'N/A', brand_citations: 0 };
+      : { entity: 'N/A', citations: 0 };
 
   const avgSOV =
     competitors.length > 0
-      ? competitors.reduce((sum, comp) => sum + comp.brand_sov, 0) /
+      ? competitors.reduce((sum, comp) => sum + comp.sov, 0) /
         competitors.length
       : 0;
 
   const avgCitations =
     competitors.length > 0
-      ? competitors.reduce((sum, comp) => sum + comp.brand_citations, 0) /
+      ? competitors.reduce((sum, comp) => sum + comp.citations, 0) /
         competitors.length
       : 0;
 
@@ -133,16 +113,16 @@ const ProfessionalCharts = ({ llmMetrics, audit_metadata, llmSignals, auditData 
         <div className="lg:w-[65%] bg-white rounded-lg shadow border overflow-hidden">
           <div className="p-6 flex flex-col items-center justify-center h-64 text-gray-500">
             <ChartBarIcon className="h-12 w-12 mb-4 text-gray-400" />
-            No competitive analysis data available yet.
+            Citation comparison not available — no citation analysis data found.
           </div>
         </div>
 
         <div className="lg:w-[35%] space-y-6">
           <div className="bg-white rounded-lg shadow border p-6 text-center text-gray-500">
-            Market share coming soon
+            Cluster analysis not available — no citation analysis data found.
           </div>
           <div className="bg-white rounded-lg shadow border p-6 text-center text-gray-500">
-            Competitive position coming soon
+            Competitive position not available — no citation analysis data found.
           </div>
         </div>
       </div>
@@ -173,13 +153,18 @@ const ProfessionalCharts = ({ llmMetrics, audit_metadata, llmSignals, auditData 
             <div className="flex flex-col items-center flex-1 min-w-0 mx-1">
               {/* FIXED HEIGHT BAR AREA */}
               <div className="flex flex-col items-center justify-end h-48 w-full">
-                <div className="text-xs font-bold text-gray-700 mb-1">
-                  {mainBrandSOV.toFixed(1)}%
+                <div className={`text-xs font-bold mb-1 ${hasLLMData ? 'text-gray-700' : 'text-red-500'}`}>
+                  {hasLLMData ? `${mainBrandSOV.toFixed(1)}%` : '--'}
                 </div>
-                <div
-                  className="w-full bg-purple-500 rounded-t-lg max-w-16"
-                  style={{ height: `${Math.min(mainBrandSOV * 3, 200)}px` }}
-                />
+                {hasLLMData && (
+                  <div
+                    className="w-full bg-purple-500 rounded-t-lg max-w-16"
+                    style={{ height: `${Math.min(mainBrandSOV * 3, 200)}px` }}
+                  />
+                )}
+                {!hasLLMData && (
+                  <div className="w-full bg-gray-300 rounded-t-lg max-w-16 h-4"></div>
+                )}
               </div>
               {/* LABEL (independent — won't push bar) */}
               <div className="mt-2 text-xs text-center font-medium text-gray-700 max-w-16 leading-tight break-words">
@@ -193,18 +178,18 @@ const ProfessionalCharts = ({ llmMetrics, audit_metadata, llmSignals, auditData 
                 {/* FIXED HEIGHT BAR AREA */}
                 <div className="flex flex-col items-center justify-end h-48 w-full">
                   <div className="text-xs font-bold text-gray-700 mb-1">
-                    {competitor.brand_sov.toFixed(1)}%
+                    {competitor.sov.toFixed(1)}%
                   </div>
                   <div
                     className="w-full bg-gray-400 rounded-t-lg max-w-16"
                     style={{
-                      height: `${Math.min(competitor.brand_sov * 3, 200)}px`
+                      height: `${Math.min(competitor.sov * 3, 200)}px`
                     }}
                   />
                 </div>
                 {/* LABEL (independent — won't push bar) */}
                 <div className="mt-2 text-xs text-center font-medium text-gray-600 max-w-16 leading-tight break-words">
-                  {competitor.brand}
+                  {competitor.entity}
                 </div>
               </div>
             ))}
@@ -239,8 +224,8 @@ const ProfessionalCharts = ({ llmMetrics, audit_metadata, llmSignals, auditData 
 
                 <div className="absolute inset-3 rounded-full bg-white flex items-center justify-center">
                   <div className="text-center">
-                    <div className="text-lg font-bold">
-                      {(mainBrandData.cluster_coverage ?? 0).toFixed(1)}%
+                    <div className={`text-lg font-bold ${hasLLMData ? '' : 'text-red-500'}`}>
+                      {hasLLMData ? `${(mainBrandData.cluster_coverage ?? 0).toFixed(1)}%` : '--'}
                     </div>
                     <div className="text-xs text-gray-600">Coverage</div>
                   </div>
@@ -262,16 +247,16 @@ const ProfessionalCharts = ({ llmMetrics, audit_metadata, llmSignals, auditData 
 
             <div className="flex items-center">
               <div className="w-20 text-xs truncate">
-                {topCompetitor.brand}
+                {topCompetitor.entity}
               </div>
               <div className="flex-1 mx-2 bg-gray-200 rounded-full h-3">
                 <div
                   className="bg-yellow-500 h-3 rounded-full"
-                  style={{ width: `${Math.min((topCompetitor.brand_citations || 0) / Math.max(...competitors.map(c => c.brand_citations || 1)) * 100, 100)}%` }}
+                  style={{ width: `${Math.min((topCompetitor.citations || 0) / Math.max(...competitors.map(c => c.citations || 1)) * 100, 100)}%` }}
                 />
               </div>
               <div className="text-xs w-10 text-right">
-                {topCompetitor.brand_citations || 0}
+                {hasLLMData ? (topCompetitor.citations || 0) : '--'}
               </div>
             </div>
 
@@ -282,11 +267,11 @@ const ProfessionalCharts = ({ llmMetrics, audit_metadata, llmSignals, auditData 
               <div className="flex-1 mx-2 bg-gray-200 rounded-full h-3">
                 <div
                   className="bg-purple-500 h-3 rounded-full"
-                  style={{ width: `${Math.min((mainBrandData.brand_citations || 0) / Math.max(...competitors.map(c => c.brand_citations || 1)) * 100, 100)}%` }}
+                  style={{ width: `${Math.min((mainBrandData.citations || 0) / Math.max(...competitors.map(c => c.citations || 1)) * 100, 100)}%` }}
                 />
               </div>
               <div className="text-xs w-10 text-right">
-                {mainBrandData.brand_citations || 0}
+                {hasLLMData ? (mainBrandData.citations || 0) : '--'}
               </div>
             </div>
 
@@ -295,11 +280,11 @@ const ProfessionalCharts = ({ llmMetrics, audit_metadata, llmSignals, auditData 
               <div className="flex-1 mx-2 bg-gray-200 rounded-full h-3">
                 <div
                   className="bg-gray-400 h-3 rounded-full"
-                  style={{ width: `${Math.min(avgCitations / Math.max(...competitors.map(c => c.brand_citations || 1)) * 100, 100)}%` }}
+                  style={{ width: `${Math.min(avgCitations / Math.max(...competitors.map(c => c.citations || 1)) * 100, 100)}%` }}
                 />
               </div>
               <div className="text-xs w-10 text-right">
-                {avgCitations.toFixed(0)}
+                {hasLLMData ? avgCitations.toFixed(0) : '--'}
               </div>
             </div>
 

@@ -15,7 +15,11 @@ const LLMAnalysisSection = ({ llmSignals, audit_metadata }) => {
   const [selectedCluster, setSelectedCluster] = useState(0);
   const [selectedQuery, setSelectedQuery] = useState(0);
 
-  if (!llmSignals?.citation_prompt_answers?.length) {
+  // Check if we have valid LLM signals data with the new structure
+  // Handle both cases: citation_prompt_answers as array directly or with .root property
+  const citationData = llmSignals?.signals?.citation_prompt_answers?.root || llmSignals?.signals?.citation_prompt_answers;
+  
+  if (!citationData?.length) {
     return (
       <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl shadow-lg border border-purple-100 p-12">
         <div className="text-center text-gray-500">
@@ -23,63 +27,45 @@ const LLMAnalysisSection = ({ llmSignals, audit_metadata }) => {
             <ChatBubbleLeftRightIcon className="h-10 w-10 text-purple-400" />
           </div>
           <h3 className="text-lg font-semibold text-gray-700 mb-2">
-            {llmSignals?.low_confidence_reasoning ? 'Low Confidence Brand Analysis' : 'No LLM Signal Data Available'}
+            No LLM Signal Data Available
           </h3>
           <p className="text-sm text-gray-500 mb-4">
-            {llmSignals?.low_confidence_reasoning 
-              ? 'Limited brand information available for comprehensive AI conversation analysis'
-              : 'Run an audit to see AI conversation analysis'
-            }
+            Try running a new audit to see AI conversation analysis
           </p>
-          
-          {llmSignals?.low_confidence_reasoning && (
-            <div className="max-w-md mx-auto bg-amber-50 border border-amber-200 rounded-lg p-4 text-left">
-              <div className="flex items-start space-x-3">
-                <LightBulbIcon className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
-                <div>
-                  <h6 className="text-sm font-semibold text-amber-800 mb-1">Analysis Details</h6>
-                  <p className="text-xs text-amber-700">{llmSignals.low_confidence_reasoning}</p>
-                  
-                  {llmSignals.brand_analysis && (
-                    <div className="mt-3 pt-3 border-t border-amber-200">
-                      <p className="text-xs font-medium text-amber-800 mb-1">Available Information:</p>
-                      <div className="text-xs text-amber-700 space-y-1">
-                        <p>• Confidence Score: {(llmSignals.brand_analysis.brand_confidence * 100).toFixed(1)}%</p>
-                        {llmSignals.brand_analysis.domain && (
-                          <p>• Domain: {llmSignals.brand_analysis.domain}</p>
-                        )}
-                        {llmSignals.competitors && llmSignals.competitors.length > 0 && (
-                          <p>• Competitors Identified: {llmSignals.competitors.length}</p>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                  
-                  <div className="mt-3 pt-3 border-t border-amber-200">
-                    <p className="text-xs font-medium text-amber-800 mb-1">Recommendations:</p>
-                    <ul className="text-xs text-amber-700 space-y-1">
-                      <li>• Improve brand online presence and documentation</li>
-                      <li>• Ensure consistent brand information across platforms</li>
-                      <li>• Increase brand mentions in authoritative sources</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     );
   }
 
-  const clusters = llmSignals.citation_prompt_answers; // Direct array, not .clusters
+  const clusters = citationData; // Use the citationData directly
   const currentCluster = clusters[selectedCluster];
   const currentPrompt = currentCluster.prompts[selectedQuery];
   const brand = audit_metadata.brand;
-  const competitors = llmSignals.competitors || [];
+  const competitors = llmSignals.signals.competitors || [];
 
   const highlightText = (text, brand, competitors) => {
     let highlightedText = text;
+    
+    // Convert markdown links [text](url) to HTML links
+    highlightedText = highlightedText.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-blue-600 underline hover:text-blue-800">$1</a>');
+    
+    // Only convert bullet points if they exist, and wrap them properly
+    if (highlightedText.includes('• ')) {
+      // Split by lines and process bullet points
+      const lines = highlightedText.split('\n');
+      const processedLines = lines.map(line => {
+        if (line.trim().startsWith('• ')) {
+          // Remove the • and wrap in li, then add the • back as content
+          const content = line.trim().substring(2); // Remove "• "
+          return `<li class="ml-4 my-1">• ${content}</li>`;
+        }
+        return line;
+      });
+      
+      // Join back and wrap bullet sections in ul tags (without list-disc to avoid double bullets)
+      highlightedText = processedLines.join('\n');
+      highlightedText = highlightedText.replace(/(<li[^>]*>.*<\/li>\s*)+/gs, '<ul class="list-inside my-2 space-y-1 ml-4">$&</ul>');
+    }
     
     highlightedText = highlightedText.replace(
       new RegExp(`\\b(${brand})\\b`, 'gi'), 
@@ -115,9 +101,14 @@ const LLMAnalysisSection = ({ llmSignals, audit_metadata }) => {
   };
 
   const calculateClusterStats = (cluster) => {
-    const brandMentions = cluster.prompts.filter(p => p.is_brand_mentioned).length;
+    // Update for new structure: check both web_entity_mentioned and llm_entity_mentioned
+    const brandMentions = cluster.prompts.filter(p => p.web_entity_mentioned || p.llm_entity_mentioned).length;
+    
+    // Update for new structure: competitor citations are now split into web and llm arrays
     const competitorMentions = cluster.prompts.reduce((acc, prompt) => {
-      return acc + prompt.competitor_citations.filter(c => c.is_competitor_mentioned).length;
+      const webCompetitorMentions = (prompt.competitor_citations_web || []).filter(c => c.is_competitor_mentioned).length;
+      const llmCompetitorMentions = (prompt.competitor_citations_llm || []).filter(c => c.is_competitor_mentioned).length;
+      return acc + webCompetitorMentions + llmCompetitorMentions;
     }, 0);
     
     return {
@@ -129,7 +120,8 @@ const LLMAnalysisSection = ({ llmSignals, audit_metadata }) => {
   };
 
   const clusterStats = calculateClusterStats(currentCluster);
-  const brandSOV = llmSignals.market_comparison?.find(m => m.brand === brand)?.brand_sov || 0;
+  // Update for new structure: access market_comparison_combined from signals
+  const brandSOV = llmSignals.signals.market_comparison_combined?.find(m => m.entity === brand)?.sov || 0;
 
   return (
     <div className="bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden">
@@ -198,7 +190,7 @@ const LLMAnalysisSection = ({ llmSignals, audit_metadata }) => {
                           {stats.brandMentions}/{stats.totalQueries} queries
                         </span>
                         <div className="flex items-center">
-                          {cluster.is_brand_mentioned ? (
+                          {(currentCluster.prompts.some(p => p.web_entity_mentioned || p.llm_entity_mentioned)) ? (
                             <CheckCircleIcon className="h-5 w-5 text-green-500" />
                           ) : (
                             <XCircleIcon className="h-5 w-5 text-red-400" />
@@ -275,26 +267,67 @@ const LLMAnalysisSection = ({ llmSignals, audit_metadata }) => {
               </div>
             </div>
 
-            {/* Answer Card */}
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-5 border-2 border-blue-200 shadow-md">
-              <div className="flex items-start space-x-3">
-                <div className="flex-shrink-0 w-8 h-8 bg-blue-200 rounded-lg flex items-center justify-center">
-                  <SparklesIcon className="h-5 w-5 text-blue-600" />
-                </div>
-                <div className="flex-1">
-                  <h5 className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-3">AI Response</h5>
-                  <div 
-                    className="text-gray-800 leading-relaxed"
-                    dangerouslySetInnerHTML={{ 
-                      __html: highlightText(currentPrompt.answer, brand, competitors) 
-                    }}
-                  />
+              {/* LLM Answer with Web Search Tool */}
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-5 border-2 border-blue-200 shadow-md">
+                <div className="flex items-start space-x-3">
+                  <div className="flex-shrink-0 w-8 h-8 bg-blue-200 rounded-lg flex items-center justify-center">
+                    <SparklesIcon className="h-5 w-5 text-blue-600" />
+                  </div>
+                  <div className="flex-1">
+                    <h5 className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-3">
+                      AI Response
+                      <span className="ml-4 text-xs font-normal text-gray-500">
+                        {currentPrompt.llm_entity_mentioned ? (
+                          <span className="text-green-600">✓ Brand mentioned</span>
+                        ) : (
+                          <span className="text-red-600">✗ Brand not mentioned</span>
+                        )}
+                      </span>
+                    </h5>
+                    <div 
+                      className="text-gray-800 leading-relaxed"
+                      dangerouslySetInnerHTML={{ 
+                        __html: highlightText(currentPrompt.llm_answer || 'No AI response available', brand, competitors) 
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
 
+            <div className="h-4"></div> {/* Spacer between responses */}
+
+            {/* Answer Cards - Web Search and LLM */}
+            <div className="space-y-4">
+              {/* Web Search Answer */}
+              <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-5 border-2 border-green-200 shadow-md">
+                <div className="flex items-start space-x-3">
+                  <div className="flex-shrink-0 w-8 h-8 bg-green-200 rounded-lg flex items-center justify-center">
+                    <span className="text-lg">🌐</span>
+                  </div>
+                  <div className="flex-1">
+                    <h5 className="text-xs font-semibold text-green-600 uppercase tracking-wide mb-3">
+                      AI Response [Web Search Tool]
+                      <span className="ml-4 text-xs font-normal text-gray-500">
+                        {currentPrompt.web_entity_mentioned ? (
+                          <span className="text-green-600">✓ Brand mentioned</span>
+                        ) : (
+                          <span className="text-red-600">✗ Brand not mentioned</span>
+                        )}
+                      </span>
+                    </h5>
+                    <div 
+                      className="text-gray-800 leading-relaxed"
+                      dangerouslySetInnerHTML={{ 
+                        __html: highlightText(currentPrompt.web_answer || 'No web search response available', brand, competitors) 
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
             {/* Insights Alert */}
-            {!currentPrompt.is_brand_mentioned && (
+            {!(currentPrompt.web_entity_mentioned || currentPrompt.llm_entity_mentioned) && (
               <div className="bg-amber-50 border-l-4 border-amber-400 rounded-lg p-4 flex items-start space-x-3">
                 <LightBulbIcon className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
                 <div className="flex-1">
@@ -362,41 +395,87 @@ const LLMAnalysisSection = ({ llmSignals, audit_metadata }) => {
             {/* Mention Status Card */}
             <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
               <h5 className="text-sm font-semibold text-gray-900 mb-4">Current Query Status</h5>
-              <div className="space-y-2">
-                <div className={`flex items-center space-x-2 p-2 rounded-lg ${
-                  currentPrompt.is_brand_mentioned ? 'bg-green-50' : 'bg-red-50'
-                }`}>
-                  {currentPrompt.is_brand_mentioned ? (
-                    <CheckCircleIcon className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  ) : (
-                    <XCircleIcon className="h-5 w-5 text-red-500 flex-shrink-0" />
-                  )}
-                  <span className={`text-sm font-medium ${
-                    currentPrompt.is_brand_mentioned ? 'text-green-700' : 'text-red-700'
-                  }`}>
-                    {brand}
-                  </span>
+              <div className="space-y-3">
+                {/* Brand Status */}
+                <div className="flex items-center space-x-2 p-2 rounded-lg bg-gray-50">
+                  <span className="text-sm font-medium text-gray-700">{brand}</span>
+                  <div className="flex items-center space-x-1 ml-auto">
+                    {/* Web Search Status */}
+                    <div className={`flex items-center space-x-1 px-2 py-1 rounded text-xs ${
+                      currentPrompt.web_entity_mentioned ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                    }`}>
+                      <span>Web</span>
+                      <span>{currentPrompt.web_entity_mentioned ? '✓' : '✗'}</span>
+                    </div>
+                    {/* LLM Status */}
+                    <div className={`flex items-center space-x-1 px-2 py-1 rounded text-xs ${
+                      currentPrompt.llm_entity_mentioned ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                    }`}>
+                      <span>AI</span>
+                      <span>{currentPrompt.llm_entity_mentioned ? '✓' : '✗'}</span>
+                    </div>
+                  </div>
                 </div>
                 
-                {currentPrompt.competitor_citations.map((citation, index) => (
-                  <div 
-                    key={index} 
-                    className={`flex items-center space-x-2 p-2 rounded-lg ${
-                      citation.is_competitor_mentioned ? 'bg-orange-50' : 'bg-gray-50'
-                    }`}
-                  >
-                    {citation.is_competitor_mentioned ? (
-                      <CheckCircleIcon className="h-5 w-5 text-orange-500 flex-shrink-0" />
-                    ) : (
-                      <XCircleIcon className="h-5 w-5 text-gray-400 flex-shrink-0" />
-                    )}
-                    <span className={`text-sm ${
-                      citation.is_competitor_mentioned ? 'text-orange-700 font-medium' : 'text-gray-600'
-                    }`}>
-                      {citation.competitor_brand}
-                    </span>
-                  </div>
-                ))}
+                {/* Competitor Status - Consolidated */}
+                {(() => {
+                  // Get all unique competitors and their mention counts
+                  const competitorStatus = {};
+                  
+                  // Process web search citations
+                  (currentPrompt.competitor_citations_web || []).forEach(citation => {
+                    const competitor = citation.competitor_entity;
+                    if (!competitorStatus[competitor]) {
+                      competitorStatus[competitor] = { web: false, llm: false, count: 0 };
+                    }
+                    if (citation.is_competitor_mentioned) {
+                      competitorStatus[competitor].web = true;
+                      competitorStatus[competitor].count++;
+                    }
+                  });
+                  
+                  // Process LLM citations
+                  (currentPrompt.competitor_citations_llm || []).forEach(citation => {
+                    const competitor = citation.competitor_entity;
+                    if (!competitorStatus[competitor]) {
+                      competitorStatus[competitor] = { web: false, llm: false, count: 0 };
+                    }
+                    if (citation.is_competitor_mentioned) {
+                      competitorStatus[competitor].llm = true;
+                      competitorStatus[competitor].count++;
+                    }
+                  });
+                  
+                  return Object.entries(competitorStatus).map(([competitor, status]) => (
+                    <div 
+                      key={competitor} 
+                      className={`flex items-center space-x-2 p-2 rounded-lg ${
+                        status.count > 0 ? 'bg-orange-50' : 'bg-gray-50'
+                      }`}
+                    >
+                      <span className={`text-sm font-medium ${
+                        status.count > 0 ? 'text-orange-700' : 'text-gray-600'
+                      }`}>
+                        {competitor}
+                      </span>
+                      <div className="flex items-center space-x-1 ml-auto">
+                        {/* Type indicators with text labels */}
+                        <div className={`flex items-center space-x-1 px-2 py-1 rounded text-xs ${
+                          status.web ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                        }`}>
+                          <span>Web</span>
+                          <span>{status.web ? '✓' : '✗'}</span>
+                        </div>
+                        <div className={`flex items-center space-x-1 px-2 py-1 rounded text-xs ${
+                          status.llm ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                        }`}>
+                          <span>AI</span>
+                          <span>{status.llm ? '✓' : '✗'}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ));
+                })()}
               </div>
             </div>
           </div>

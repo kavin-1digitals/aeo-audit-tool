@@ -64,7 +64,7 @@ export const AuditProvider = ({ children }) => {
   }, []);
 
   // Start audit - more comprehensive call
-  const startAudit = useCallback(async (domain, brand, geo) => {
+  const startAudit = useCallback(async (domain, brand, geo, siteType) => {
     try {
       dispatch({ type: AUDIT_ACTIONS.START_AUDIT });
       
@@ -76,7 +76,7 @@ export const AuditProvider = ({ children }) => {
       });
       
       const response = await Promise.race([
-        getAuditResults(domain, brand, geo),
+        getAuditResults(domain, brand, geo, siteType),
         timeoutPromise
       ]);
       

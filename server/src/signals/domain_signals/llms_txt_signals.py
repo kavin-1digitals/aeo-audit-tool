@@ -22,6 +22,9 @@ class LlmsTxtMeta(BaseModel):
 
 class LlmsTxtSignals(BaseModel):
     llm_txts: LlmsTxtMeta
+    status: bool
+    issue_found: Optional[str] = None
+    cause_of_issue: Optional[str] = None
 
 # -------------------------
 # Enrichment check
@@ -152,7 +155,14 @@ async def _fetch_llm_txt_from_domain(domain: str) -> LlmsTxtMeta:
 # -------------------------
 async def find_llm_txt_signals(full_domain: str) -> LlmsTxtSignals:
     llm_txts = await fetch_llm_txt(full_domain)
-    return LlmsTxtSignals(llm_txts=llm_txts)
+    if not llm_txts.status:
+        return LlmsTxtSignals(llm_txts=llm_txts, status=False, issue_found="llms.txt file is inaccessible", cause_of_issue="Failed to fetch robots.txt due to internal server error, retry after some time")
+    if llm_txts.status == 200:
+        return LlmsTxtSignals(llm_txts=llm_txts, status=True)
+    elif llm_txts.status == 404:
+        return LlmsTxtSignals(llm_txts=llm_txts, status=True)
+    # For other errors, set status=False to trigger problem card
+    return LlmsTxtSignals(llm_txts=llm_txts, status=False, issue_found="llms.txt file is inaccessible", cause_of_issue="Failed due to bot protection or server error on that domain")
 
 # -------------------------
 # CLI test

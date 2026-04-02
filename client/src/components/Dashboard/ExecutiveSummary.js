@@ -7,26 +7,104 @@ import {
   ExclamationTriangleIcon
 } from '@heroicons/react/24/outline';
 
-const ExecutiveSummary = ({ audit_metadata, total_checks, categories_count, critical_issues, llmMetrics }) => {
-  // Use real LLM metrics if available, otherwise use fallback values
+const ExecutiveSummary = ({ audit_metadata, total_checks, categories_count, critical_issues, llmMetrics, llmSignals, auditData }) => {
+  // Check if LLM signals are available - updated to match ScorecardsSection pattern
+  const hasLLMData = llmSignals && llmMetrics && 
+    (llmSignals?.signals?.citation_prompt_answers?.root?.length > 0 || 
+     llmSignals?.signals?.citation_prompt_answers?.length > 0 || 
+     llmMetrics?.citation_prompt_answers?.length > 0) &&
+    auditData?.signals?.llm_signals?.status;
+  
+  // Calculate metrics the same way as ScorecardsSection - updated for new structure
+  const getAIPromptVisibility = () => {
+    // Handle both cases: citation_prompt_answers as array directly or with .root property (same as ScorecardsSection)
+    const citationData = llmSignals?.signals?.citation_prompt_answers?.root || llmSignals?.signals?.citation_prompt_answers || llmMetrics?.citation_prompt_answers || [];
+    let totalPrompts = 0;
+    let brandCitations = 0;
+    
+    citationData.forEach(cluster => {
+      totalPrompts += cluster.prompts?.length || 0;
+      cluster.prompts?.forEach(prompt => {
+        // Check both web and llm entity mentions (new structure)
+        if (prompt.web_entity_mentioned || prompt.llm_entity_mentioned) {
+          brandCitations++;
+        }
+      });
+    });
+    
+    return totalPrompts > 0 ? (brandCitations / totalPrompts) * 100 : 0;
+  };
+
+  const getClustersCovered = () => {
+    // Handle new structure with market_comparison_combined (same as ScorecardsSection)
+    const marketData = llmMetrics?.market_comparison_combined || llmMetrics?.market_comparison || [];
+    const mainBrandData = marketData.find(item => item.entity === audit_metadata.brand) || {
+      cluster_coverage: 0
+    };
+    
+    return mainBrandData.cluster_coverage || 0;
+  };
+
+  const getBrandCitations = () => {
+    // Handle both cases: citation_prompt_answers as array directly or with .root property (same as ScorecardsSection)
+    const citationData = llmSignals?.signals?.citation_prompt_answers?.root || llmSignals?.signals?.citation_prompt_answers || llmMetrics?.citation_prompt_answers || [];
+    let brandCitations = 0;
+    
+    citationData.forEach(cluster => {
+      cluster.prompts?.forEach(prompt => {
+        // Check both web and llm entity mentions (new structure)
+        if (prompt.web_entity_mentioned || prompt.llm_entity_mentioned) {
+          brandCitations++;
+        }
+      });
+    });
+    
+    return brandCitations;
+  };
+
+  // Use real LLM metrics if available, otherwise use fallback values - updated for new structure
   const getLLMMetrics = () => {
-    if (llmMetrics && llmMetrics.brandSOV !== undefined) {
+    if (hasLLMData) {
+      // Get brand SOV from market_comparison_combined (new structure) - same as Dashboard.js
+      const marketData = llmSignals?.signals?.market_comparison_combined || llmMetrics?.market_comparison || [];
+      const mainBrandData = marketData.find(item => item.entity === audit_metadata.brand) || {
+        sov: 0,
+        citations: 0,
+        cluster_coverage: 0
+      };
+      
+      console.log('ExecutiveSummary getLLMMetrics Debug:', {
+        marketData,
+        mainBrandData,
+        brand: audit_metadata.brand,
+        llmSignals: llmSignals?.signals
+      });
+      
       return {
-        brandSOV: llmMetrics.brandSOV,
-        brandCitations: llmMetrics.brandCitations || 0,
-        clusterCoverage: llmMetrics.clusterCoverage || 0
+        brandSOV: mainBrandData.sov || 0,
+        brandCitations: getBrandCitations(),
+        clusterCoverage: mainBrandData.cluster_coverage || 0 // Use the value from market_comparison_combined
       };
     }
     
     // Fallback values if no LLM data available
     return {
-      brandSOV: 0,
-      brandCitations: 0,
-      clusterCoverage: 0
+      brandSOV: null,
+      brandCitations: null,
+      clusterCoverage: null
     };
   };
 
   const metrics = getLLMMetrics();
+  
+  // Debug logging to help identify issues
+  console.log('ExecutiveSummary Debug:', {
+    hasLLMData,
+    llmSignals,
+    llmMetrics,
+    metrics,
+    auditDataSignals: auditData?.signals?.llm_signals
+  });
   const currentDate = new Date().toLocaleDateString('en-US', { 
     year: 'numeric', 
     month: 'long', 
@@ -109,18 +187,22 @@ const ExecutiveSummary = ({ audit_metadata, total_checks, categories_count, crit
               <div>
                 <p className="text-sm font-medium text-gray-900">Brand SOV</p>
                 <div className="flex items-center mt-1">
-                  <div className="text-2xl font-bold text-gray-900">
-                    {metrics.brandSOV.toFixed(1)}%
+                  <div className={`text-2xl font-bold ${hasLLMData ? 'text-gray-900' : 'text-red-500'}`}>
+                    {hasLLMData ? `${metrics.brandSOV.toFixed(1)}%` : '--'}
                   </div>
                 </div>
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-900">Brand Citations</p>
-                <p className="text-sm text-gray-600">{metrics.brandCitations} citations found</p>
+                <p className={`text-sm ${hasLLMData ? 'text-gray-600' : 'text-red-500'}`}>
+                  {hasLLMData ? `${metrics.brandCitations} citations found` : '-- citations found'}
+                </p>
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-900">Cluster Coverage</p>
-                <p className="text-sm text-gray-600">{metrics.clusterCoverage.toFixed(1)}% coverage</p>
+                <p className={`text-sm ${hasLLMData ? 'text-gray-600' : 'text-red-500'}`}>
+                  {hasLLMData ? `${metrics.clusterCoverage.toFixed(1)}% coverage` : '--% coverage'}
+                </p>
               </div>
             </div>
           </div>

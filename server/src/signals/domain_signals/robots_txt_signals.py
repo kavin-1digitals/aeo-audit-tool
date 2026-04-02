@@ -17,26 +17,34 @@ class RobotsMeta(BaseModel):
     exists: bool
     status: Optional[int]
 
+
 class SitemapInfo(BaseModel):
     exists: bool
     urls: List[str] = []
+
 
 class CategoryAccess(BaseModel):
     category: str
     is_accessible: bool
 
+
 class AgentAccess(BaseModel):
     agent: str
     category_access: List[CategoryAccess]
 
+
 class CrawlerAccessGroup(BaseModel):
     agents: List[AgentAccess]
+
 
 class RobotsTxtSignals(BaseModel):
     robots: RobotsMeta
     sitemaps: SitemapInfo
     ai_crawlers: Optional[CrawlerAccessGroup]
     search_crawlers: Optional[CrawlerAccessGroup]
+    status: bool
+    issue_found: Optional[str] = None
+    cause_of_issue: Optional[str] = None
 
 
 # -------------------------
@@ -46,14 +54,9 @@ async def fetch_robots_txt(full_domain: str) -> tuple[str, RobotsMeta]:
     robots_url = urljoin(full_domain, "/robots.txt")
     logger.info(f"Fetching robots.txt from: {robots_url}")
 
-    # Use fake browser headers to avoid blocking
     headers = {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
-        "Accept": "text/plain,text/html,*/*;q=0.8",
-        "Accept-Language": "en-US,en;q=0.9",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Cache-Control": "no-cache",
-        "Pragma": "no-cache"
+        "User-Agent": "Mozilla/5.0",
+        "Accept": "text/plain,text/html,*/*;q=0.8"
     }
 
     try:
@@ -61,19 +64,14 @@ async def fetch_robots_txt(full_domain: str) -> tuple[str, RobotsMeta]:
             resp = await client.get(robots_url)
 
             if resp.status_code == 200:
-                logger.info(f"robots.txt fetched successfully: status={resp.status_code}, content_length={len(resp.text)}")
                 return resp.text, RobotsMeta(exists=True, status=200)
-
             elif resp.status_code == 404:
-                logger.warning(f"robots.txt not found: status={resp.status_code}")
                 return None, RobotsMeta(exists=False, status=404)
-
             else:
-                logger.warning(f"robots.txt fetch failed: status={resp.status_code}")
                 return None, RobotsMeta(exists=False, status=resp.status_code)
 
     except httpx.RequestError as e:
-        logger.error(f"robots.txt request error for {robots_url}: {e}")
+        logger.error(f"robots.txt request error: {e}")
         return None, RobotsMeta(exists=False, status=None)
 
 
@@ -81,40 +79,27 @@ async def fetch_robots_txt(full_domain: str) -> tuple[str, RobotsMeta]:
 # Extract sitemap
 # -------------------------
 def extract_sitemaps(content: str) -> SitemapInfo:
-    logger.debug(f"Extracting sitemaps from robots.txt content")
     sitemaps = [
         line.split(":", 1)[1].strip()
         for line in content.splitlines()
         if line.lower().startswith("sitemap:")
     ]
-    
-    logger.debug(f"Found {len(sitemaps)} sitemap entries before deduplication")
-    
-    # Remove duplicates while preserving order
-    seen = set()
-    unique_sitemaps = []
-    for sitemap in sitemaps:
-        if sitemap not in seen:
-            seen.add(sitemap)
-            unique_sitemaps.append(sitemap)
-
-    logger.info(f"Extracted {len(unique_sitemaps)} unique sitemaps from robots.txt")
-    for i, sitemap in enumerate(unique_sitemaps):
-        logger.debug(f"  Sitemap {i+1}: {sitemap}")
 
     return SitemapInfo(
-        exists=len(unique_sitemaps) > 0,
-        urls=unique_sitemaps
+        exists=len(sitemaps) > 0,
+        urls=list(dict.fromkeys(sitemaps))
     )
 
 
 # -------------------------
-# Generate test paths
+# Generate test paths (UPDATED)
 # -------------------------
-def generate_test_paths() -> dict[str, list[str]]:
+def generate_test_paths(site_type: str) -> dict[str, list[str]]:
     test_paths: dict[str, list[str]] = {}
 
-    for category, patterns in CRITICAL_PATTERNS.items():
+    patterns_by_type = CRITICAL_PATTERNS.get(site_type, {})
+
+    for category, patterns in patterns_by_type.items():
         paths: list[str] = []
 
         for p in patterns:
@@ -128,125 +113,138 @@ def generate_test_paths() -> dict[str, list[str]]:
 
 
 # -------------------------
-# Evaluate access
+# Evaluate access (UPDATED)
 # -------------------------
-def evaluate_critical_access(rp: Protego, agents: list[str]) -> CrawlerAccessGroup:
-    logger.debug(f"Evaluating critical access for {len(agents)} agents")
-    test_paths = generate_test_paths()
+def evaluate_critical_access(rp: Protego, agents: list[str], site_type: str) -> CrawlerAccessGroup:
+    test_paths = generate_test_paths(site_type)
     crawler_group = CrawlerAccessGroup(agents=[])
 
     for agent in agents:
-        logger.debug(f"Testing access for agent: {agent}")
         agent_access = AgentAccess(agent=agent, category_access=[])
 
         for category, paths in test_paths.items():
-            accessible = False
-
-            for path in paths:
-                if rp.can_fetch(agent, path):
-                    accessible = True
-                    logger.debug(f"  {agent} CAN access {category} path: {path}")
-                    break
-                else:
-                    logger.debug(f"  {agent} CANNOT access {category} path: {path}")
-            
-            agent_access.category_access.append(CategoryAccess(category=category, is_accessible=accessible))
-
-        # Summary for this agent
-        accessible_categories = [cat.category for cat in agent_access.category_access if cat.is_accessible]
-        logger.debug(f"  {agent} can access {len(accessible_categories)}/{len(test_paths)} categories: {accessible_categories}")
+            accessible = any(rp.can_fetch(agent, path) for path in paths)
+            agent_access.category_access.append(
+                CategoryAccess(category=category, is_accessible=accessible)
+            )
 
         crawler_group.agents.append(agent_access)
 
-    # Summary for all agents
-    total_accessible = sum(len([cat for cat in agent.category_access if cat.is_accessible]) for agent in crawler_group.agents)
-    total_possible = len(crawler_group.agents) * len(test_paths)
-    logger.info(f"Critical access summary: {total_accessible}/{total_possible} paths accessible")
-    
     return crawler_group
 
 
 # -------------------------
-# Main function
+# Helper (missing before)
 # -------------------------
-async def find_robots_txt_signals(full_domain: str) -> RobotsTxtSignals:
-    logger.info(f"Starting robots.txt analysis for: {full_domain}")
-    content, robots_meta = await fetch_robots_txt(full_domain)
+def build_crawler_group(data: dict[str, dict[str, bool]]) -> CrawlerAccessGroup:
+    agents = []
 
+    for agent, categories in data.items():
+        agent_access = AgentAccess(
+            agent=agent,
+            category_access=[
+                CategoryAccess(category=k, is_accessible=v)
+                for k, v in categories.items()
+            ]
+        )
+        agents.append(agent_access)
+
+    return CrawlerAccessGroup(agents=agents)
+
+
+# -------------------------
+# Main function (UPDATED)
+# -------------------------
+async def find_robots_txt_signals(full_domain: str, site_type: str) -> RobotsTxtSignals:
+    logger.info(f"Starting robots.txt analysis for: {full_domain}")
+
+    content, robots_meta = await fetch_robots_txt(full_domain)
     status = robots_meta.status
 
+    if not status:
+        return RobotsTxtSignals(
+            robots=robots_meta,
+            sitemaps=SitemapInfo(exists=False),
+            ai_crawlers=None,
+            search_crawlers=None,
+            status=False,
+            issue_found="robots.txt file is inaccessible",
+            cause_of_issue="Fetch failed"
+        )
+
+    patterns = CRITICAL_PATTERNS.get(site_type, {})
+
     # -------------------------
-    # Case 1: robots.txt missing (404) → allow all
+    # Case 1: 404 → allow all
     # -------------------------
     if status == 404:
-        logger.info("robots.txt not found (404) - assuming all access allowed")
-        all_true = {
-            category: True for category in CRITICAL_PATTERNS
-        }
-
-        ai_data = {agent: all_true for agent in AI_CRAWLERS}
-        search_data = {agent: all_true for agent in SEARCH_CRAWLERS}
-
-        logger.info(f"Generated default access rules for {len(AI_CRAWLERS)} AI crawlers and {len(SEARCH_CRAWLERS)} search crawlers")
+        all_true = {category: True for category in patterns}
 
         return RobotsTxtSignals(
             robots=robots_meta,
-            sitemaps=SitemapInfo(exists=False, urls=[]),
-            ai_crawlers=build_crawler_group(ai_data),
-            search_crawlers=build_crawler_group(search_data)
+            sitemaps=SitemapInfo(exists=False),
+            ai_crawlers=build_crawler_group({a: all_true for a in AI_CRAWLERS}),
+            search_crawlers=build_crawler_group({a: all_true for a in SEARCH_CRAWLERS}),
+            status=True
         )
 
     # -------------------------
-    # Case 2: error / blocked
+    # Case 2: invalid
     # -------------------------
     if status != 200 or not content:
-        logger.error(f"robots.txt fetch failed with status {status}, no content available")
         return RobotsTxtSignals(
             robots=robots_meta,
-            sitemaps=SitemapInfo(exists=False, urls=[]),
+            sitemaps=SitemapInfo(exists=False),
             ai_crawlers=None,
-            search_crawlers=None
+            search_crawlers=None,
+            status=False,
+            issue_found="robots.txt inaccessible",
+            cause_of_issue="Server error or blocked"
         )
 
     # -------------------------
     # Case 3: valid robots.txt
     # -------------------------
-    logger.info(f"Processing valid robots.txt content ({len(content)} characters)")
     rp = Protego.parse(content)
 
     sitemap_info = extract_sitemaps(content)
 
-    ai_crawlers = evaluate_critical_access(rp, AI_CRAWLERS)
-    search_crawlers = evaluate_critical_access(rp, SEARCH_CRAWLERS)
+    ai_crawlers = evaluate_critical_access(rp, AI_CRAWLERS, site_type)
+    search_crawlers = evaluate_critical_access(rp, SEARCH_CRAWLERS, site_type)
 
-    # Final summary
-    ai_accessible = sum(len([cat for cat in agent.category_access if cat.is_accessible]) for agent in ai_crawlers.agents)
-    search_accessible = sum(len([cat for cat in agent.category_access if cat.is_accessible]) for agent in search_crawlers.agents)
-    total_ai_possible = len(ai_crawlers.agents) * len(CRITICAL_PATTERNS)
-    total_search_possible = len(search_crawlers.agents) * len(CRITICAL_PATTERNS)
+    total_categories = len(patterns)
 
-    logger.info(f"robots.txt analysis complete:")
-    logger.info(f"  AI crawlers: {ai_accessible}/{total_ai_possible} paths accessible")
-    logger.info(f"  Search crawlers: {search_accessible}/{total_search_possible} paths accessible")
-    logger.info(f"  Sitemaps found: {len(sitemap_info.urls)}")
+    ai_accessible = sum(
+        len([c for c in a.category_access if c.is_accessible])
+        for a in ai_crawlers.agents
+    )
+
+    search_accessible = sum(
+        len([c for c in a.category_access if c.is_accessible])
+        for a in search_crawlers.agents
+    )
+
+    logger.info(f"AI: {ai_accessible}/{len(ai_crawlers.agents) * total_categories}")
+    logger.info(f"Search: {search_accessible}/{len(search_crawlers.agents) * total_categories}")
 
     return RobotsTxtSignals(
         robots=robots_meta,
         sitemaps=sitemap_info,
         ai_crawlers=ai_crawlers,
-        search_crawlers=search_crawlers
+        search_crawlers=search_crawlers,
+        status=True
     )
 
 
 # -------------------------
-# CLI test
+# CLI test (FIXED)
 # -------------------------
 if __name__ == "__main__":
     import asyncio
     import json
 
     result = asyncio.run(
-        find_robots_txt_signals("https://www.ajio.com")
+        find_robots_txt_signals("https://www.ameriprise.com", "hospital")
     )
 
     print(json.dumps(result.model_dump(), indent=2))

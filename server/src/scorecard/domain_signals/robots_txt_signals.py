@@ -1,10 +1,19 @@
 from pydantic import BaseModel, computed_field
 from src.signals.domain_signals.robots_txt_signals import RobotsTxtSignals
-from src.scorecard import Score, RawScoreCard
+from src.scorecard import Score, RawScoreCard, ProblemCard, Problem
 
 from typing import Optional, List
 
 async def calculate_robots_txt_score(robots_txt_signal: RobotsTxtSignals):
+
+    if not robots_txt_signal.status:
+        return RawScoreCard(scores=[]), ProblemCard(problems=[Problem(
+            signal_names=['robots_txt_exists', 'sitemap_exists', 'ai_crawler_access', 'search_crawler_access'],
+            signal_path=['Domain Signals', 'Robots.txt File'],
+            issue_found=robots_txt_signal.issue_found,
+            cause_of_issue=robots_txt_signal.cause_of_issue
+        )])
+    
     robots = robots_txt_signal.robots
     sitemaps = robots_txt_signal.sitemaps
     ai_crawlers = robots_txt_signal.ai_crawlers
@@ -51,5 +60,5 @@ async def calculate_robots_txt_score(robots_txt_signal: RobotsTxtSignals):
         # If no search_crawlers data, no score applied (NA)
         pass
     
-    return RawScoreCard(scores=scores)
+    return RawScoreCard(scores=scores), ProblemCard(problems=[])
     

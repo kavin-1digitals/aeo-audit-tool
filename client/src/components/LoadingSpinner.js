@@ -195,7 +195,7 @@ export const LoadingSpinner = () => {
                 <div className="h-10 w-[1px] bg-slate-200"></div>
                 <div className="flex flex-col items-end">
                   <span className="text-xs uppercase tracking-wider text-slate-400 font-bold">Est. Total</span>
-                  <span className="text-lg font-mono font-bold text-slate-700">~06:15</span>
+                  <span className="text-lg font-mono font-bold text-slate-700">~01:15</span>
                 </div>
               </div>
 

@@ -9,6 +9,7 @@ export const Home = () => {
   const [domain, setDomain] = useState('https://www.aloyoga.com');
   const [brand, setBrand] = useState('Alo Yoga');
   const [geo, setGeo] = useState('United States');
+  const [siteType, setSiteType] = useState('ecommerce'); // Added site type state
   const [auditData, setAuditData] = useState(null);
 
   const handleSubmit = async (e) => {
@@ -20,9 +21,9 @@ export const Home = () => {
 
     try {
       clearError();
-      console.log(`Starting AEO audit for ${domain.trim()} with brand ${brand.trim()}...`);
+      console.log(`Starting AEO audit for ${domain.trim()} with brand ${brand.trim()} and site type ${siteType}...`);
       
-      const data = await startAudit(domain.trim(), brand.trim(), geo.trim());
+      const data = await startAudit(domain.trim(), brand.trim(), geo.trim(), siteType.toLowerCase());
       console.log('Raw API response:', data);
       
       setAuditData(data);
@@ -37,6 +38,7 @@ export const Home = () => {
     setDomain('https://www.aloyoga.com');
     setBrand('Alo Yoga');
     setGeo('United States');
+    setSiteType('ecommerce'); // Reset site type
     clearError();
   };
 
@@ -138,6 +140,23 @@ export const Home = () => {
                     placeholder="e.g., United States"
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500"
                   />
+                </div>
+
+                <div>
+                  <label htmlFor="siteType" className="block text-sm font-semibold text-gray-900 mb-2">
+                    Site Type
+                  </label>
+                  <select
+                    id="siteType"
+                    value={siteType}
+                    onChange={(e) => setSiteType(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  >
+                    <option value="ecommerce">E-commerce</option>
+                    <option value="hospital">Hospital</option>
+                    <option value="saas">SaaS</option>
+                    <option value="media">Media</option>
+                  </select>
                 </div>
 
                 <button
