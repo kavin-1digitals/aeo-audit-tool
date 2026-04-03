@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import List, Dict, Any
 import json
 import os
-
+from src.config import SCORING_WEIGHTS as weights
 
 # -----------------------------
 # CONFIG LOADER
@@ -85,7 +85,6 @@ def calculate_target_score(current_score: float, delta: float, max_possible: flo
 # -----------------------------
 def analyze_quick_remediations(
     scorecard_data: Dict[str, Any],
-    weights: Dict
 ) -> QuickRemediations:
 
     current_score = scorecard_data.get("percentage", 0)

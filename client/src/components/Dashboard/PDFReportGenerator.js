@@ -68,6 +68,100 @@ const formatSignalName = (signalName) => {
 const PrintableScorecards = ({ auditData, llmMetrics, llmSignals, audit_metadata }) => {
   const pathScorecard = auditData?.path_scorecard || {};
 
+  // Improved entity matching functions (same as LLMAnalysisSection and backend)
+  const normalizeEntity = (entity) => {
+    // Convert to lowercase
+    let normalized = entity.toLowerCase();
+    
+    // Handle common punctuation variations
+    normalized = normalized.replace(/&/g, ' and ');
+    normalized = normalized.replace(/\+/g, ' plus ');
+    normalized = normalized.replace(/@/g, ' at ');
+    normalized = normalized.replace(/#/g, ' number ');
+    
+    // Remove punctuation
+    normalized = normalized.replace(/[^\w\s]/g, '');
+    
+    // Remove extra spaces
+    normalized = normalized.replace(/\s+/g, ' ').trim();
+    
+    return normalized;
+  };
+
+  const isMentioned = (text, entity) => {
+    // Normalize both text and entity
+    const normalizedText = normalizeEntity(text);
+    const normalizedEntity = normalizeEntity(entity);
+    
+    // Handle plural/singular variations
+    const entityVariations = [normalizedEntity];
+    
+    // Add plural form (simple 's' addition)
+    if (!normalizedEntity.endsWith('s')) {
+      entityVariations.push(normalizedEntity + 's');
+    }
+    
+    // Remove trailing 's' for singular form
+    if (normalizedEntity.endsWith('s') && normalizedEntity.length > 1) {
+      entityVariations.push(normalizedEntity.slice(0, -1));
+    }
+    
+    // Check each variation with word boundaries
+    for (const variation of entityVariations) {
+      // Create regex pattern with word boundaries
+      const pattern = new RegExp(`\\b${variation}\\b`, 'i');
+      if (pattern.test(normalizedText)) {
+        return true;
+      }
+    }
+    
+    return false;
+  };
+
+  const highlightText = (text, brand, competitors) => {
+    let highlightedText = text;
+    
+    // Improved brand highlighting using the same logic as backend
+    if (isMentioned(highlightedText, brand)) {
+      // Create variations for highlighting
+      const brandVariations = [brand];
+      if (!brand.toLowerCase().endsWith('s')) {
+        brandVariations.push(brand + 's');
+      }
+      if (brand.toLowerCase().endsWith('s') && brand.length > 1) {
+        brandVariations.push(brand.slice(0, -1));
+      }
+      
+      // Highlight each variation with word boundaries
+      brandVariations.forEach(variation => {
+        const pattern = new RegExp(`\\b${variation}\\b`, 'gi');
+        highlightedText = highlightedText.replace(pattern, '<span style="background: linear-gradient(120deg, #D1FAE5 0%, #A7F3D0 100%); color: #065F46; font-weight: 700; padding: 2px 6px; border-radius: 4px; border: 1px solid #10B981;">$&</span>');
+      });
+    }
+    
+    // Improved competitor highlighting
+    competitors.forEach(competitor => {
+      if (isMentioned(highlightedText, competitor)) {
+        // Create variations for highlighting
+        const competitorVariations = [competitor];
+        if (!competitor.toLowerCase().endsWith('s')) {
+          competitorVariations.push(competitor + 's');
+        }
+        if (competitor.toLowerCase().endsWith('s') && competitor.length > 1) {
+          competitorVariations.push(competitor.slice(0, -1));
+        }
+        
+        // Highlight each variation with word boundaries
+        competitorVariations.forEach(variation => {
+          const pattern = new RegExp(`\\b${variation}\\b`, 'gi');
+          highlightedText = highlightedText.replace(pattern, '<span style="background: linear-gradient(120deg, #FEE2E2 0%, #FECACA 100%); color: #DC2626; font-weight: 700; padding: 2px 6px; border-radius: 4px; border: 1px solid #FCA5A5;">$&</span>');
+        });
+      }
+    });
+    
+    return highlightedText;
+  };
+
   const getTechnicalReadiness = () => {
     const domainSignals = Object.values(pathScorecard).filter(item => item.signal_path && item.signal_path[0] === 'Domain Signals');
     const siteSignals = Object.values(pathScorecard).filter(item => item.signal_path && item.signal_path[0] === 'Site Signals');
@@ -733,6 +827,100 @@ const PrintableExecutiveSummary = ({ audit_metadata, categories_count, critical_
 };
 
 const PrintableLLMAnalysis = ({ llmSignals, brand, isUngated = true }) => {
+  // Improved entity matching functions (same as backend)
+  const normalizeEntity = (entity) => {
+    // Convert to lowercase
+    let normalized = entity.toLowerCase();
+    
+    // Handle common punctuation variations
+    normalized = normalized.replace(/&/g, ' and ');
+    normalized = normalized.replace(/\+/g, ' plus ');
+    normalized = normalized.replace(/@/g, ' at ');
+    normalized = normalized.replace(/#/g, ' number ');
+    
+    // Remove punctuation
+    normalized = normalized.replace(/[^\w\s]/g, '');
+    
+    // Remove extra spaces
+    normalized = normalized.replace(/\s+/g, ' ').trim();
+    
+    return normalized;
+  };
+
+  const isMentioned = (text, entity) => {
+    // Normalize both text and entity
+    const normalizedText = normalizeEntity(text);
+    const normalizedEntity = normalizeEntity(entity);
+    
+    // Handle plural/singular variations
+    const entityVariations = [normalizedEntity];
+    
+    // Add plural form (simple 's' addition)
+    if (!normalizedEntity.endsWith('s')) {
+      entityVariations.push(normalizedEntity + 's');
+    }
+    
+    // Remove trailing 's' for singular form
+    if (normalizedEntity.endsWith('s') && normalizedEntity.length > 1) {
+      entityVariations.push(normalizedEntity.slice(0, -1));
+    }
+    
+    // Check each variation with word boundaries
+    for (const variation of entityVariations) {
+      // Create regex pattern with word boundaries
+      const pattern = new RegExp(`\\b${variation}\\b`, 'i');
+      if (pattern.test(normalizedText)) {
+        return true;
+      }
+    }
+    
+    return false;
+  };
+
+  const highlightText = (text, brand, competitors) => {
+    let highlightedText = text;
+    
+    // Improved brand highlighting using the same logic as backend
+    if (isMentioned(highlightedText, brand)) {
+      // Create variations for highlighting
+      const brandVariations = [brand];
+      if (!brand.toLowerCase().endsWith('s')) {
+        brandVariations.push(brand + 's');
+      }
+      if (brand.toLowerCase().endsWith('s') && brand.length > 1) {
+        brandVariations.push(brand.slice(0, -1));
+      }
+      
+      // Highlight each variation with word boundaries
+      brandVariations.forEach(variation => {
+        const pattern = new RegExp(`\\b${variation}\\b`, 'gi');
+        highlightedText = highlightedText.replace(pattern, '<span style="background: linear-gradient(120deg, #D1FAE5 0%, #A7F3D0 100%); color: #065F46; font-weight: 700; padding: 2px 6px; border-radius: 4px; border: 1px solid #10B981;">$&</span>');
+      });
+    }
+    
+    // Improved competitor highlighting
+    competitors.forEach(competitor => {
+      if (isMentioned(highlightedText, competitor)) {
+        // Create variations for highlighting
+        const competitorVariations = [competitor];
+        if (!competitor.toLowerCase().endsWith('s')) {
+          competitorVariations.push(competitor + 's');
+        }
+        if (competitor.toLowerCase().endsWith('s') && competitor.length > 1) {
+          competitorVariations.push(competitor.slice(0, -1));
+        }
+        
+        // Highlight each variation with word boundaries
+        competitorVariations.forEach(variation => {
+          const pattern = new RegExp(`\\b${variation}\\b`, 'gi');
+          highlightedText = highlightedText.replace(pattern, '<span style="background: linear-gradient(120deg, #FEE2E2 0%, #FECACA 100%); color: #DC2626; font-weight: 700; padding: 2px 6px; border-radius: 4px; border: 1px solid #FCA5A5;">$&</span>');
+        });
+      }
+    });
+    
+    return highlightedText;
+  };
+
   // Use the same data access pattern as LLMAnalysisSection.js
   const citationData = llmSignals?.signals?.citation_prompt_answers?.root || llmSignals?.signals?.citation_prompt_answers;
   
@@ -784,13 +972,17 @@ const PrintableLLMAnalysis = ({ llmSignals, brand, isUngated = true }) => {
                       {/* Web Search Response */}
                       <div className="bg-green-50 p-4 rounded-lg text-sm text-gray-600 leading-relaxed italic border-l-4 border-green-200 max-w-full overflow-hidden mb-3">
                         <div className="text-xs font-bold text-green-700 mb-2 uppercase tracking-wider">Web Search Response</div>
-                        "{prompt.web_answer}"
+                        <div dangerouslySetInnerHTML={{ 
+                          __html: `"${highlightText(prompt.web_answer || '', brand || '', llmSignals?.signals?.competitors || [])}"` 
+                        }} />
                       </div>
                       
                       {/* AI Response */}
                       <div className="bg-blue-50 p-4 rounded-lg text-sm text-gray-600 leading-relaxed italic border-l-4 border-blue-200 max-w-full overflow-hidden mb-3">
                         <div className="text-xs font-bold text-blue-700 mb-2 uppercase tracking-wider">AI Response</div>
-                        "{prompt.llm_answer}"
+                        <div dangerouslySetInnerHTML={{ 
+                          __html: `"${highlightText(prompt.llm_answer || '', brand || '', llmSignals?.signals?.competitors || [])}"` 
+                        }} />
                       </div>
                       
                       <div className="flex flex-wrap gap-2 mt-3">

@@ -100,12 +100,29 @@ async def create_aeo_scorecard(signals: Signals, brand: str = None, site_type: s
                 all_scores.extend(jsonld_scorecard.scores)
 
         else:
-            all_scores.append(Score(
-                value=-1.0,
-                signal_name='site_scrapable',
-                signal_path=['Site Signals', 'Scrapability'],
-                remediation_plan="Site not scrapable"
-            ))
+            all_scores.append(
+                Score(
+                    value=-1.0,
+                    signal_name='site_scrapable',
+                    signal_path=['Site Signals', 'Scrapability'],
+                    remediation_plan="Site not scrapable"
+                ),
+                
+                # Score(
+                #     value=-1.0,
+                #     signal_name='site_scrapable',
+                #     signal_path=['Site Signals', 'Scrapability'],
+                #     remediation_plan="Site not scrapable"
+                # ),
+            )
+            all_problems.append(
+                Problem(
+                    signal_names=["canonical_exists", "canonical_matches", "canonical_clean", "jsonld_exists", "jsonld_valid"],
+                    signal_path=['Site Signals', 'Scrapability'],
+                    issue_found=signals.site_signals.issue_found,
+                    cause_of_issue=signals.site_signals.cause_of_issue,
+                )
+            )
 
     # -----------------------------
     # LLM SIGNALS
@@ -126,48 +143,10 @@ async def create_aeo_scorecard(signals: Signals, brand: str = None, site_type: s
     # -----------------------------
     # CATEGORY SCORING (🔥 FIX)
     # -----------------------------
-    weights = {
-        'llm_signals': {
-            'cluster_presence': 12,
-            'cluster_dominance': 12,
-            'prompt_citation': 16,
-            'total_weight': 40
-        },
-
-        'domain_signals': {
-            'llms_txt_exists': 4,
-            'llms_txt_valid': 3,
-            'llms_txt_enriched': 3,
-
-            'robots_txt_exists': 3,
-
-            'sitemap_exists': 3,
-            'sitemap_type_valid': 3,
-            'sitemap_freshness': 3,
-
-            'ai_crawler_access': 4,
-            'search_crawler_access': 4,
-
-            'total_weight': 30
-        },
-
-        'site_signals': {
-            'site_scrapable': 8,
-
-            'canonical_exists': 5,
-            'canonical_matches': 5,
-            'canonical_clean': 4,
-
-            'jsonld_exists': 4,
-            'jsonld_valid': 4,
-
-            'total_weight': 30
-        }
-    }
+    
 
     category_result: CategoryScoringResult = calculate_category_scores(
         raw_scorecard,
-        weights,
         brand
     )
 

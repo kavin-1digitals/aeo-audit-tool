@@ -199,7 +199,7 @@ async def find_robots_txt_signals(full_domain: str, site_type: str) -> RobotsTxt
             search_crawlers=None,
             status=False,
             issue_found="robots.txt inaccessible",
-            cause_of_issue="Server error or blocked"
+            cause_of_issue="Failed due to bot protection or server error on that domain"
         )
 
     # -------------------------
