@@ -40,6 +40,49 @@ const PrintableGatedMask = ({ children, isUngated, label = "Strategic Insights L
   );
 };
 
+// Component to mask specific sections with blurred content underneath
+const SectionMask = ({ children, sectionTitle, isUngated }) => {
+  const maskedSections = [
+    'Performance Benchmarks',
+    'Prioritized Remediation Strategy', 
+    'Technical Signal Compliance',
+    'Market Landscape Analysis',
+    'Audit Summary & Evaluation'
+  ];
+  
+  const shouldMask = maskedSections.includes(sectionTitle) && !isUngated;
+  
+  if (shouldMask) {
+    return (
+      <div className="relative">
+        {/* Show blurred content underneath with mask overlay */}
+        <div className="relative">
+          {/* Blurred background content - more professional blur */}
+          <div className="opacity-[0.08] blur-[8px] select-none pointer-events-none grayscale scale-[0.98] transition-all">
+            {children}
+          </div>
+          
+          {/* Professional mask overlay */}
+          <div className="absolute inset-0 flex items-center justify-center p-6">
+            <div className="bg-gradient-to-br from-white/96 to-white/92 backdrop-blur-sm border border-gray-200/50 px-10 py-6 rounded-xl shadow-2xl flex flex-col items-center text-center max-w-xs">
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-3 rounded-full mb-3 shadow-lg border border-blue-100">
+                <LockClosedIcon className="h-6 w-6 text-blue-600" />
+              </div>
+              <span className="text-xs font-bold uppercase tracking-wider text-blue-600 mb-1">Premium Content</span>
+              <h4 className="text-sm font-black text-gray-900 mb-2 uppercase tracking-tight">Analysis Locked</h4>
+              <p className="text-[10px] font-medium text-gray-500 leading-relaxed">
+                Upgrade to unlock detailed insights and strategic recommendations
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  
+  return children;
+};
+
 /**
  * THIN LAYER PRINT COMPONENTS
  * Standalone versions of dashboard components optimized for linear, structured PDF generation.
@@ -1343,7 +1386,40 @@ const PDFReportGenerator = ({ auditData, onGeneratePDF }) => {
     setProgress(0);
 
     try {
-      const pdf = new jsPDF('p', 'mm', 'a4');
+      // Helper to load image and convert to base64 data URL (required by jsPDF)
+      const loadImageAsBase64 = (url) => {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+          img.onload = () => {
+            try {
+              const canvas = document.createElement('canvas');
+              canvas.width = img.naturalWidth;
+              canvas.height = img.naturalHeight;
+              const ctx = canvas.getContext('2d');
+              ctx.drawImage(img, 0, 0);
+              const dataURL = canvas.toDataURL('image/png');
+              resolve({ dataURL, width: img.naturalWidth, height: img.naturalHeight });
+            } catch (e) {
+              console.error('Logo canvas conversion failed:', e);
+              resolve(null);
+            }
+          };
+          img.onerror = () => {
+            console.error('Logo image failed to load from:', url);
+            resolve(null);
+          };
+          img.src = url;
+        });
+      };
+
+      const logoData = await loadImageAsBase64(process.env.PUBLIC_URL + '/logo/1D_Logo.png');
+      const pdf = new jsPDF({
+        orientation: 'p',
+        unit: 'mm',
+        format: 'a4',
+        compress: true // Enable built-in PDF stream compression
+      });
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
       const margin = 20;
@@ -1379,7 +1455,7 @@ const PDFReportGenerator = ({ auditData, onGeneratePDF }) => {
         element.style.position = 'relative';
 
         const canvas = await html2canvas(element, {
-          scale: 2,
+          scale: 1, // Standard resolution for much smaller file size
           logging: false,
           useCORS: true,
           backgroundColor: '#ffffff'
@@ -1388,7 +1464,8 @@ const PDFReportGenerator = ({ auditData, onGeneratePDF }) => {
         element.style.display = originalDisplay;
         element.style.position = originalPosition;
 
-        const imgData = canvas.toDataURL('image/png');
+        // Use JPEG with 0.5 quality for maximum compression while maintaining readability
+        const imgData = canvas.toDataURL('image/jpeg', 0.5);
         const imgWidth = pageWidth - (margin * 2);
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
@@ -1416,12 +1493,8 @@ const PDFReportGenerator = ({ auditData, onGeneratePDF }) => {
             pdf.text(`${title.toUpperCase()} (CONTINUED)`, margin, 15);
           }
 
-          // Draw the image segment
-          // We use a negative 'y' to show only the current segment
-          // We also need to "hide" the parts that exceed the page height
-          // jspdf.addImage(imgData, 'PNG', x, y, width, height)
-          // The 'y' will be (headerSpace - position)
-          pdf.addImage(imgData, 'PNG', margin, headerSpace - position, imgWidth, imgHeight);
+          // Draw the image segment using JPEG format and 'FAST' compression
+          pdf.addImage(imgData, 'JPEG', margin, headerSpace - position, imgWidth, imgHeight, undefined, 'FAST');
 
           // Calculate space used on this page
           const usablePageHeight = pageHeight - headerSpace - 15; // 15 for bottom margin
@@ -1510,6 +1583,16 @@ const PDFReportGenerator = ({ auditData, onGeneratePDF }) => {
       const totalPages = pdf.internal.getNumberOfPages();
       for (let i = 1; i <= totalPages; i++) {
         pdf.setPage(i);
+        
+        // Add Logo to top right of every page
+        if (logoData) {
+          const logoWidth = 22; // mm
+          const logoHeight = (logoData.height * logoWidth) / logoData.width;
+          const logoRightMargin = 8; // mm from right edge
+          const logoTopMargin = 6;   // mm from top edge
+          pdf.addImage(logoData.dataURL, 'PNG', pageWidth - logoRightMargin - logoWidth, logoTopMargin, logoWidth, logoHeight);
+        }
+
         pdf.setFontSize(8);
         pdf.setTextColor(148, 163, 184);
         pdf.text(`${auditData.audit_metadata?.brand} | AEO Technical Audit`, margin, pageHeight - 10);
@@ -1551,31 +1634,39 @@ const PDFReportGenerator = ({ auditData, onGeneratePDF }) => {
           <PrintableScoreOverview audit_metadata={auditData.audit_metadata} scorecard={auditData.scorecard} />
         </div>
         <div id="pdf-scorecards" className="p-8 bg-white">
-          <PrintableScorecards
-            auditData={auditData}
-            llmMetrics={auditData.signals?.llm_signals}
-            llmSignals={auditData.signals?.llm_signals}
-            audit_metadata={auditData.audit_metadata}
-          />
+          <SectionMask sectionTitle="Performance Benchmarks" isUngated={isUngated}>
+            <PrintableScorecards
+              auditData={auditData}
+              llmMetrics={auditData.signals?.llm_signals}
+              llmSignals={auditData.signals?.llm_signals}
+              audit_metadata={auditData.audit_metadata}
+            />
+          </SectionMask>
         </div>
         <div id="pdf-remediations" className="p-8 bg-white">
-          <PrintableRemediations
-            quickRemediations={auditData.quick_remediations}
-            currentScore={auditData.audit_metadata?.score_percentage || 0}
-            isUngated={isUngated}
-          />
+          <SectionMask sectionTitle="Prioritized Remediation Strategy" isUngated={isUngated}>
+            <PrintableRemediations
+              quickRemediations={auditData.quick_remediations}
+              currentScore={auditData.audit_metadata?.score_percentage || 0}
+              isUngated={isUngated}
+            />
+          </SectionMask>
         </div>
         <div id="pdf-domain" className="p-8 bg-white">
-          <PrintableDomainPanels
-            categories={auditData.path_scorecard || {}}
-            isUngated={isUngated}
-          />
+          <SectionMask sectionTitle="Technical Signal Compliance" isUngated={isUngated}>
+            <PrintableDomainPanels
+              categories={auditData.path_scorecard || {}}
+              isUngated={isUngated}
+            />
+          </SectionMask>
         </div>
         <div id="pdf-market" className="p-8 bg-white">
-          <PrintableMarketComparison
-            llmSignals={auditData.signals?.llm_signals}
-            brand={auditData.audit_metadata?.brand}
-          />
+          <SectionMask sectionTitle="Market Landscape Analysis" isUngated={isUngated}>
+            <PrintableMarketComparison
+              llmSignals={auditData.signals?.llm_signals}
+              brand={auditData.audit_metadata?.brand}
+            />
+          </SectionMask>
         </div>
         <div id="pdf-llm" className="p-8 bg-white">
           <PrintableLLMAnalysis
@@ -1585,10 +1676,12 @@ const PDFReportGenerator = ({ auditData, onGeneratePDF }) => {
           />
         </div>
         <div id="pdf-audit-summary" className="p-8 bg-white">
-          <PrintableAuditSummary
-            summary={auditData.summary}
-            isUngated={isUngated}
-          />
+          <SectionMask sectionTitle="Audit Summary & Evaluation" isUngated={isUngated}>
+            <PrintableAuditSummary
+              summary={auditData.summary}
+              isUngated={isUngated}
+            />
+          </SectionMask>
         </div>
       </div>
 
