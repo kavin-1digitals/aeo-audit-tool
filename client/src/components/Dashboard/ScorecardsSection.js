@@ -191,7 +191,7 @@ const ScorecardsSection = ({ auditData, llmMetrics, llmSignals, audit_metadata }
       
       {/* Total Analysis Done */}
       <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
-        <h3 className="text-sm font-medium text-gray-600 mb-2">Total Analysis Done</h3>
+        <h3 className="text-sm font-medium text-gray-600 mb-2">Total Analyses Done</h3>
         <div className="flex items-center justify-between mb-3">
           <div className="text-3xl font-bold text-blue-600">
             {totalAnalyzesDone.score}%
@@ -219,7 +219,7 @@ const ScorecardsSection = ({ auditData, llmMetrics, llmSignals, audit_metadata }
             </svg>
           </div>
         </div>
-        <p className="text-xs text-gray-600">Maximum possible score from weighted category analysis across all AEO signals</p>
+        <p className="text-xs text-gray-600">Maximum possible score from weighted category analyses across all AEO signals</p>
       </div>
 
       {/* AI Prompt Visibility */}

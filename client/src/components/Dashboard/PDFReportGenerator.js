@@ -313,7 +313,7 @@ const PrintableScorecards = ({ auditData, llmMetrics, llmSignals, audit_metadata
   const clusterScore = getClustersCovered();
 
   const primaryMetrics = [
-    { label: 'Total Analysis Done', value: `${techScore.toFixed(0)}%`, num: techScore, color: '#3b82f6', desc: `Maximum possible score from weighted category analysis across all AEO signals` },
+    { label: 'Total Analyses Done', value: `${techScore.toFixed(0)}%`, num: techScore, color: '#3b82f6', desc: `Maximum possible score from weighted category analyses across all AEO signals` },
     { label: 'AI Prompt Visibility', value: `${visibility.score.toFixed(1)}%`, num: visibility.score, color: '#8b5cf6', desc: `Brand mentioned in ${visibility.citations} of ${visibility.prompts} AI prompts` },
     { label: 'Competitor Citation Score', value: `${compScore.score.toFixed(1)}%`, num: compScore.score, color: '#ef4444', desc: `Performance relative to top competing mentions in AI responses` },
     { label: 'Clusters Covered', value: `${clusterScore.score.toFixed(1)}%`, num: clusterScore.score, color: '#06b6d4', desc: `Brand presence across ${clusterScore.clusters} of ${clusterScore.total} user intent clusters` }

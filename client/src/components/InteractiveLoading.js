@@ -100,7 +100,7 @@ export const InteractiveLoading = () => {
           {/* Progress Animation */}
           <div className="space-y-3">
             <div className="flex justify-between text-sm text-gray-600">
-              <span>Analysis Progress</span>
+              <span>Analyses Progress</span>
               <span>{Math.min(100, Math.round((timeElapsed / 300) * 100))}%</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
