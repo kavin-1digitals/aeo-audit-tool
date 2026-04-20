@@ -609,7 +609,8 @@ const PrintableScoreOverview = ({ audit_metadata, scorecard }) => {
   // Use the new percentage from scorecard (weighted percentage) with fallback to total_percentage
   const percentage = scorecard?.percentage || audit_metadata?.percentage || audit_metadata?.score_percentage || 0;
   const totalChecks = audit_metadata?.total_checks || 0;
-  const passedChecks = Math.round((percentage / 100) * totalChecks);
+  // Fix: Use total_score from audit_metadata like the dashboard does
+  const passedChecks = audit_metadata?.total_score || 0;
   const failedChecks = totalChecks - passedChecks;
 
   const getGrade = (p) => {
@@ -1455,17 +1456,25 @@ const PDFReportGenerator = ({ auditData, onGeneratePDF }) => {
         element.style.position = 'relative';
 
         const canvas = await html2canvas(element, {
-          scale: 1, // Standard resolution for much smaller file size
+          scale: 2, // 2x resolution (192 DPI)
           logging: false,
           useCORS: true,
-          backgroundColor: '#ffffff'
+          backgroundColor: '#ffffff',
+          allowTaint: true,
+          scrollX: 0,
+          scrollY: 0,
+          windowWidth: element.scrollWidth,
+          windowHeight: element.scrollHeight,
+          foreignObjectRendering: true,
+          imageTimeout: 15000,
+          removeContainer: false
         });
 
         element.style.display = originalDisplay;
         element.style.position = originalPosition;
 
-        // Use JPEG with 0.5 quality for maximum compression while maintaining readability
-        const imgData = canvas.toDataURL('image/jpeg', 0.5);
+        // Use JPEG with 0.8 quality for better border and text rendering
+        const imgData = canvas.toDataURL('image/jpeg', 0.8);
         const imgWidth = pageWidth - (margin * 2);
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
