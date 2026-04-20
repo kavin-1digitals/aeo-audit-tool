@@ -96,7 +96,7 @@ export const AuditResults = () => {
             </h2>
             <p className="text-gray-600">
               {isPolling 
-                ? 'Please wait while we analyze your website for AEO readiness.'
+                ? 'Please wait while we analyse your website for AEO readiness.'
                 : 'Loading your audit results...'
               }
             </p>

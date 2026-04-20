@@ -168,7 +168,7 @@ const ExecutiveSummary = ({ audit_metadata, total_checks, categories_count, crit
                 <CheckCircleIcon className="h-5 w-5 text-gray-400 mt-0.5 mr-3 flex-shrink-0" />
                 <div>
                   <p className="text-sm font-medium text-gray-900">Categories Tested</p>
-                  <p className="text-sm text-gray-600">{categories_count} categories analyzed</p>
+                  <p className="text-sm text-gray-600">{categories_count} categories Analysed</p>
                 </div>
               </div>
               <div className="flex items-start">

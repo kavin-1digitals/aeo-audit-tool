@@ -299,7 +299,7 @@ const PrintableScorecards = ({ auditData, llmMetrics, llmSignals, audit_metadata
     return { score: coverage, clusters: coveredClusters, total: totalClusters };
   };
 
-  // Calculate total analyzes done from scorecard (same as ScorecardsSection)
+  // Calculate total Analysed done from scorecard (same as ScorecardsSection)
   const getTotalAnalyzesDone = () => {
     const scorecard = auditData?.scorecard || auditData?.signals?.scorecard || auditData?.signals?.aeo_scorecard;
     const maxPossibleScore = scorecard?.max_possible_score || 0;
@@ -313,7 +313,7 @@ const PrintableScorecards = ({ auditData, llmMetrics, llmSignals, audit_metadata
   const clusterScore = getClustersCovered();
 
   const primaryMetrics = [
-    { label: 'Total Analyzes Done', value: `${techScore.toFixed(0)}%`, num: techScore, color: '#3b82f6', desc: `Maximum possible score from weighted category analysis across all AEO signals` },
+    { label: 'Total Analysis Done', value: `${techScore.toFixed(0)}%`, num: techScore, color: '#3b82f6', desc: `Maximum possible score from weighted category analysis across all AEO signals` },
     { label: 'AI Prompt Visibility', value: `${visibility.score.toFixed(1)}%`, num: visibility.score, color: '#8b5cf6', desc: `Brand mentioned in ${visibility.citations} of ${visibility.prompts} AI prompts` },
     { label: 'Competitor Citation Score', value: `${compScore.score.toFixed(1)}%`, num: compScore.score, color: '#ef4444', desc: `Performance relative to top competing mentions in AI responses` },
     { label: 'Clusters Covered', value: `${clusterScore.score.toFixed(1)}%`, num: clusterScore.score, color: '#06b6d4', desc: `Brand presence across ${clusterScore.clusters} of ${clusterScore.total} user intent clusters` }
@@ -333,7 +333,7 @@ const PrintableScorecards = ({ auditData, llmMetrics, llmSignals, audit_metadata
   );
 
   const secondaryMetrics = [
-    { label: 'Pages Analyzed', value: auditData?.signals?.site_signals?.site_signals?.length || 0, desc: 'Website pages crawled for analysis' },
+    { label: 'Pages Analysed', value: auditData?.signals?.site_signals?.site_signals?.length || 0, desc: 'Website pages crawled for analysis' },
     { label: 'Prompts Used', value: visibility.prompts, desc: 'AI conversation prompts tested' },
     { 
       label: 'Competitors Identified', 
@@ -821,7 +821,7 @@ const PrintableExecutiveSummary = ({ audit_metadata, categories_count, critical_
                 <CheckCircleIcon className="h-5 w-5 text-gray-300 mr-3 mt-0.5 flex-shrink-0" />
                 <div>
                   <p className="text-[10px] font-bold text-gray-400 uppercase">Categories Tested</p>
-                  <p className="text-xs font-bold text-gray-800">{categories_count} categories analyzed</p>
+                  <p className="text-xs font-bold text-gray-800">{categories_count} categories analysed</p>
                 </div>
               </div>
               <div className="flex items-start">

@@ -90,7 +90,7 @@ export const Home = () => {
                 Optimize for Answer Engines & AI Search
               </p>
               <p className="text-gray-500 max-w-3xl text-lg">
-                Get comprehensive insights into your website's AI readiness. Analyze domain signals, 
+                Get comprehensive insights into your website's AI readiness. Analyse domain signals, 
                 site structure, and brand visibility across modern AI-powered search platforms.
               </p>
             </div>
@@ -118,7 +118,7 @@ export const Home = () => {
                         required
                       />
                       <div className="absolute top-full left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-gray-800 text-white text-xs rounded p-2 z-10 w-64 pointer-events-none mt-2">
-                        Enter the exact URL you want to analyze (e.g., https://example.com). Make sure it matches the specific website URL you intend to audit.
+                        Enter the exact URL you want to analyse (e.g., https://example.com). Make sure it matches the specific website URL you intend to audit.
                       </div>
                     </div>
                   </div>
@@ -309,7 +309,7 @@ export const Home = () => {
               </div>
               <h4 className="text-lg font-semibold text-gray-900 mb-2">Site Structure</h4>
               <p className="text-gray-600 text-sm">
-                Analyzes canonical URLs, JSON-LD structured data, and technical SEO elements
+                Analysis canonical URLs, JSON-LD structured data, and technical SEO elements
               </p>
             </div>
 

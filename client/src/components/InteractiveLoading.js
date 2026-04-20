@@ -25,7 +25,7 @@ const tips = [
 ];
 
 const stats = [
-  { label: "Pages Analyzed", value: "0", max: 50 },
+  { label: "Pages Analysed", value: "0", max: 50 },
   { label: "Signals Checked", value: "0", max: 25 },
   { label: "AI Models Queried", value: "0", max: 5 },
   { label: "Recommendations", value: "0", max: 20 }
