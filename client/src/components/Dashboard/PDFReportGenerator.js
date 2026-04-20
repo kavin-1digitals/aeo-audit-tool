@@ -821,7 +821,7 @@ const PrintableExecutiveSummary = ({ audit_metadata, categories_count, critical_
                 <CheckCircleIcon className="h-5 w-5 text-gray-300 mr-3 mt-0.5 flex-shrink-0" />
                 <div>
                   <p className="text-[10px] font-bold text-gray-400 uppercase">Categories Tested</p>
-                  <p className="text-xs font-bold text-gray-800">{categories_count} analyzed</p>
+                  <p className="text-xs font-bold text-gray-800">{categories_count} categories analyzed</p>
                 </div>
               </div>
               <div className="flex items-start">
@@ -1461,20 +1461,18 @@ const PDFReportGenerator = ({ auditData, onGeneratePDF }) => {
           useCORS: true,
           backgroundColor: '#ffffff',
           allowTaint: true,
+          useCORS: true,
           scrollX: 0,
           scrollY: 0,
           windowWidth: element.scrollWidth,
-          windowHeight: element.scrollHeight,
-          foreignObjectRendering: true,
-          imageTimeout: 15000,
-          removeContainer: false
+          windowHeight: element.scrollHeight
         });
 
         element.style.display = originalDisplay;
         element.style.position = originalPosition;
 
-        // Use JPEG with 0.8 quality for better border and text rendering
-        const imgData = canvas.toDataURL('image/jpeg', 0.8);
+        // Use JPEG with 0.5 quality for maximum compression while maintaining readability
+        const imgData = canvas.toDataURL('image/jpeg', 0.5);
         const imgWidth = pageWidth - (margin * 2);
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
@@ -1632,7 +1630,17 @@ const PDFReportGenerator = ({ auditData, onGeneratePDF }) => {
         <div id="pdf-summary" className="p-8 bg-white">
           <PrintableExecutiveSummary
             audit_metadata={auditData.audit_metadata}
-            categories_count={Object.keys(auditData.path_scorecard || {}).length}
+            categories_count={(() => {
+              // Group by main category like the dashboard does
+              const categories = {};
+              Object.entries(auditData.path_scorecard || {}).forEach(([pathKey, data]) => {
+                const mainCategory = pathKey.split(' -> ')[0];
+                if (!categories[mainCategory]) {
+                  categories[mainCategory] = true;
+                }
+              });
+              return Object.keys(categories).length;
+            })()}
             critical_issues={Object.values(auditData.path_scorecard || {}).flatMap(d => d.scores || []).filter(s => s.value < 0).length}
             llmMetrics={auditData.signals?.llm_signals}
             llmSignals={auditData.signals?.llm_signals}
