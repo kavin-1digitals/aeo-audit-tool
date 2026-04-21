@@ -1,15 +1,18 @@
-from typing import List, Dict
+from typing import List, Dict, Optional
 from src.signals.site_signals.jsonld_signals import JsonLdType
 from src.scorecard import Score, RawScoreCard
 from src.config import JSONLD_VALIDATION_RULES, JSONLD_CATEGORIES
 
 
-async def calculate_jsonld_score(jsonld_signals: List[JsonLdType], site_type: str = None):
+async def calculate_jsonld_score(jsonld_signals: List[JsonLdType], site_types: Optional[List[str]] = None):
     scores = []
 
-    # Get site-specific expected types, fallback to all types if site_type not provided
-    if site_type:
-        expected_types = JSONLD_CATEGORIES.get(site_type, list(JSONLD_VALIDATION_RULES.keys()))
+    # Get site-specific expected types, fallback to all types if site_types not provided
+    if site_types:
+        # For multiple site types, collect all expected types
+        expected_types = []
+        for st in site_types:
+            expected_types.extend(JSONLD_CATEGORIES.get(st, []))
     else:
         expected_types = list(JSONLD_VALIDATION_RULES.keys())
 

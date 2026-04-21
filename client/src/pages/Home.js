@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAudit } from '../contexts/AuditContext';
-import { ExclamationTriangleIcon, SparklesIcon, ChartBarIcon } from '@heroicons/react/24/outline';
+import { ExclamationTriangleIcon, SparklesIcon, ChartBarIcon, XMarkIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import AeoReportPage from './AeoReportPage';
 
@@ -9,8 +9,280 @@ export const Home = () => {
   const [domain, setDomain] = useState('https://www.aloyoga.com');
   const [brand, setBrand] = useState('Alo Yoga');
   const [geo, setGeo] = useState('United States');
-  const [siteType, setSiteType] = useState('ecommerce'); // Added site type state
+  const [siteTypes, setSiteTypes] = useState([]); // Array of site types
+  const [allSiteTypes, setAllSiteTypes] = useState([]); // All available site types
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showDropdown, setShowDropdown] = useState(false);
   const [auditData, setAuditData] = useState(null);
+
+  // Format snake_case to Title Case
+  const formatDisplayText = (snakeCase) => {
+    return snakeCase
+      .split('_')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
+
+  // Load site types from file
+  useEffect(() => {
+    const loadSiteTypes = () => {
+      try {
+        // Import site types directly from the file
+        const siteTypesList = `ecommerce
+marketplace
+saas
+subscription_service
+brand
+hospital
+clinic
+physician
+dentist
+optician
+podiatrist
+chiropractor
+physical_therapist
+medical_organization
+pharmacy
+diagnostic_lab
+telemedicine
+wellness_center
+fitness_center
+mental_health_service
+veterinary
+eldercare_facility
+childcare
+restaurant
+fast_food_restaurant
+cafe
+bakery
+bar
+winery
+brewery
+ice_cream_shop
+food_establishment
+hotel
+resort
+motel
+hostel
+bed_breakfast
+campground
+rv_park
+travel_agency
+tourist_attraction
+store
+auto_dealer
+furniture_store
+electronics_store
+clothing_store
+jewelry_store
+cosmetics_store
+book_store
+sporting_goods_store
+music_store
+video_game_store
+computer_store
+optical_store
+antique_store
+pawn_shop
+convenience_store
+liquor_store
+hardware_store
+garden_store
+bike_store
+pet_store
+toy_store
+shopping_center
+bank
+insurance_agency
+accounting_service
+attorney
+financial_service
+real_estate_agent
+employment_agency
+moving_company
+tax_service
+consulting_company
+marketing_agency
+advertising_agency
+architect
+interior_designer
+photographer
+graphic_designer
+professional_service
+educational_organization
+school
+college_university
+preschool
+elementary_school
+middle_school
+high_school
+online_course
+real_estate_agency
+apartment_complex
+residence
+home_service_business
+locksmith
+electrician
+plumber
+hvac_business
+roofing_contractor
+house_painter
+general_contractor
+landscaper
+pest_control_service
+pool_service
+appliance_repair
+auto_repair
+motorcycle_dealer
+motorcycle_repair
+auto_parts_store
+auto_body_shop
+auto_wash
+tire_shop
+car_rental
+parking_facility
+gas_station
+taxi_service
+sports_organization
+sports_team
+sports_club
+golf_course
+tennis_complex
+ski_resort
+bowling_alley
+stadium
+exercise_gym
+yoga_studio
+public_swimming_pool
+sports_activity_location
+news_media_organization
+radio_station
+television_station
+movie_theater
+entertainment_business
+night_club
+arcade
+art_gallery
+museum
+performing_group
+music_venue
+comedy_club
+casino
+amusement_park
+aquarium
+zoo
+community_center
+library
+civic_structure
+religious_organization
+church
+mosque
+hindu_temple
+buddhist_temple
+synagogue
+animal_shelter
+recreation_center
+funeral_home
+cemetery
+local_business
+home_and_construction_business
+cleaning_service
+dry_cleaning_laundry
+beauty_salon
+hair_salon
+day_spa
+nail_salon
+tattoo_parlor
+notary
+courier_service
+self_storage
+recycling_center
+printing_service
+event_venue
+wedding_venue
+conference_center
+florist
+corporation
+organization
+government_organization
+ngo
+project
+research_organization
+emergency_service
+fire_station
+police_station
+hospital_emergency
+website
+blog
+web_page
+article
+news_article
+faq_page
+how_to
+product
+service
+course
+event
+job_posting
+recipe
+video_object
+software_application`;
+
+        const types = siteTypesList.split('\n').filter(type => type.trim());
+        console.log('Loaded site types (direct import):', types.length, 'types');
+        console.log('First 5 types:', types.slice(0, 5));
+        
+        setAllSiteTypes(types);
+      } catch (error) {
+        console.error('Error loading site types:', error);
+        // Fallback to basic types
+        const fallbackTypes = ['ecommerce', 'saas', 'media', 'bank', 'hospital', 'restaurant', 'store'];
+        setAllSiteTypes(fallbackTypes);
+        console.log('Using fallback types:', fallbackTypes.length, 'types');
+      }
+    };
+    
+    loadSiteTypes();
+  }, []);
+
+  // Filter site types based on search
+  const filteredSiteTypes = allSiteTypes.filter(type => 
+    type.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    !siteTypes.includes(type)
+  );
+
+  // Add site type to selection
+  const addSiteType = (type) => {
+    if (siteTypes.length < 3 && !siteTypes.includes(type)) {
+      setSiteTypes([...siteTypes, type]);
+      setSearchTerm('');
+    }
+  };
+
+  // Remove site type from selection
+  const removeSiteType = (typeToRemove) => {
+    setSiteTypes(siteTypes.filter(type => type !== typeToRemove));
+  };
+
+  // Handle input change
+  const handleInputChange = (e) => {
+    setSearchTerm(e.target.value);
+    setShowDropdown(true);
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showDropdown && !event.target.closest('.site-type-dropdown')) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showDropdown]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,9 +293,9 @@ export const Home = () => {
 
     try {
       clearError();
-      console.log(`Starting AEO audit for ${domain.trim()} with brand ${brand.trim()} and site type ${siteType}...`);
+      console.log(`Starting AEO audit for ${domain.trim()} with brand ${brand.trim()} and site types ${siteTypes.join(', ')}...`);
       
-      const data = await startAudit(domain.trim(), brand.trim(), geo.trim(), siteType.toLowerCase());
+      const data = await startAudit(domain.trim(), brand.trim(), geo.trim(), siteTypes);
       console.log('Raw API response:', data);
       
       setAuditData(data);
@@ -38,7 +310,8 @@ export const Home = () => {
     setDomain('https://www.aloyoga.com');
     setBrand('Alo Yoga');
     setGeo('United States');
-    setSiteType('ecommerce'); // Reset site type
+    setSiteTypes([]); // Reset site types
+    setSearchTerm('');
     clearError();
   };
 
@@ -124,27 +397,90 @@ export const Home = () => {
                   </div>
 
                   <div className="relative group">
-                    <label htmlFor="siteType" className="block text-sm font-semibold text-gray-900 mb-2">
+                    <label htmlFor="siteTypes" className="block text-sm font-semibold text-gray-900 mb-2">
                       <span className="flex items-center">
                         <i className="fas fa-store text-blue-500 mr-2"></i>
-                        Website Type
+                        Website Type (Max 3)
                       </span>
                     </label>
                     <div className="relative">
-                      <select
-                        id="siteType"
-                        value={siteType}
-                        onChange={(e) => setSiteType(e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 appearance-none cursor-pointer"
+                      {/* Selected Items Display */}
+                      <div 
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 min-h-[48px] cursor-pointer"
+                        onClick={() => setShowDropdown(!showDropdown)}
                       >
-                        <option value="ecommerce">E-commerce</option>
-                        <option value="hospital">Hospital</option>
-                        <option value="saas">SaaS</option>
-                        <option value="media">Media</option>
-                        <option value="bank">Bank</option>
-                      </select>
+                        {siteTypes.length === 0 ? (
+                          <span className="text-gray-500">Select website types...</span>
+                        ) : (
+                          <div className="flex flex-wrap gap-2">
+                            {siteTypes.map((type, index) => (
+                              <span 
+                                key={index}
+                                className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full"
+                              >
+                                {formatDisplayText(type)}
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    removeSiteType(type);
+                                  }}
+                                  className="ml-1 text-blue-600 hover:text-blue-800"
+                                >
+                                  <XMarkIcon className="h-3 w-3" />
+                                </button>
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      
+                      {/* Dropdown Arrow */}
+                      <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                        <ChevronDownIcon className="h-5 w-5 text-gray-400" />
+                      </div>
+                      
+                      {/* Dropdown */}
+                      {showDropdown && (
+                        <div className="site-type-dropdown absolute top-full left-0 right-0 mt-2 bg-white border border-gray-300 rounded-xl shadow-lg z-50 max-h-60 overflow-y-auto">
+                          {/* Search Input */}
+                          <div className="p-3 border-b border-gray-200">
+                            <input
+                              type="text"
+                              placeholder="Search website types..."
+                              value={searchTerm}
+                              onChange={handleInputChange}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                              autoFocus
+                            />
+                          </div>
+                          
+                          {/* Filtered Options */}
+                          <div className="max-h-48 overflow-y-auto">
+                            {filteredSiteTypes.length === 0 ? (
+                              <div className="p-3 text-gray-500 text-sm">
+                                {siteTypes.length >= 3 ? 'Maximum 3 selections allowed' : 'No matching website types found'}
+                              </div>
+                            ) : (
+                              filteredSiteTypes.slice(0, 10).map((type, index) => (
+                                <div
+                                  key={index}
+                                  onClick={() => {
+                                    addSiteType(type);
+                                    setShowDropdown(false);
+                                  }}
+                                  className="px-4 py-3 hover:bg-gray-100 cursor-pointer text-gray-900 text-sm border-b border-gray-100 last:border-b-0"
+                                >
+                                  {formatDisplayText(type)}
+                                </div>
+                              ))
+                            )}
+                          </div>
+                        </div>
+                      )}
+                      
                       <div className="absolute top-full left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-gray-800 text-white text-xs rounded p-2 z-10 w-64 pointer-events-none mt-2">
-                        Choose the category that best describes your website.
+                        Select up to 3 categories that best describe your website. Start typing to search and select from suggestions.
                       </div>
                     </div>
                   </div>
@@ -201,7 +537,7 @@ export const Home = () => {
 
                 <button
                   type="submit"
-                  disabled={!domain.trim() || !brand.trim() || isLoading}
+                  disabled={!domain.trim() || !brand.trim() || siteTypes.length === 0 || isLoading}
                   className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-4 px-6 rounded-xl hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg"
                 >
                   {isLoading ? (

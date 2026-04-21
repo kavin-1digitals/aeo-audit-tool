@@ -8,6 +8,29 @@ import asyncio
 import os
 import json
 from datetime import datetime
+import logging
+
+# Setup JSON-LD validation logger
+jsonld_logger = logging.getLogger('jsonld_validation')
+jsonld_logger.setLevel(logging.DEBUG)
+
+# Control logging - set to False to pause JSON-LD logging
+ENABLE_JSONLD_LOGGING = False
+
+# Create file handler for JSON-LD validation logs
+if ENABLE_JSONLD_LOGGING:
+    jsonld_handler = logging.FileHandler('jsonld_validation_debug.log')
+    jsonld_handler.setLevel(logging.DEBUG)
+
+    # Create formatter
+    jsonld_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+    jsonld_handler.setFormatter(jsonld_formatter)
+
+    # Add handler to logger
+    jsonld_logger.addHandler(jsonld_handler)
+else:
+    # Set to higher level to effectively disable logging
+    jsonld_logger.setLevel(logging.CRITICAL + 1)
 
 
 class SiteSignal(BaseModel):
@@ -29,7 +52,7 @@ class SiteSignals(BaseModel):
     cause_of_issue: Optional[str] = None
 
 
-async def find_site_signals(full_domain: str, site_type: str, crawl_result: Optional[str]) -> SiteSignals:
+async def find_site_signals(full_domain: str, crawl_result: Optional[str], site_types: Optional[List[str]] = None) -> SiteSignals:
 
     # ---------------------------
     # Step 1: Ensure crawl exists
@@ -67,13 +90,24 @@ async def find_site_signals(full_domain: str, site_type: str, crawl_result: Opti
         )
 
     # ---------------------------
-    # Step 4: Determine validation types based on site_type
+    # Step 4: Determine validation types based on site_types
     # ---------------------------
-    validation_types = JSONLD_CATEGORIES.get(site_type, [])
-
-    if not validation_types:
+    validation_types = []
+    if site_types:
+        # For multiple site types, collect all validation types
+        jsonld_logger.info(f"Processing site_types: {site_types}")
+        for st in site_types:
+            types_for_site = JSONLD_CATEGORIES.get(st, [])
+            jsonld_logger.info(f"Types for {st}: {types_for_site}")
+            validation_types.extend(types_for_site)
+    else:
         # fallback to all known types
-        validation_types = list(JSONLD_VALIDATION_RULES.keys())
+        validation_types = ["brand"]
+        jsonld_logger.info("Using fallback validation types: ['brand']")
+
+    jsonld_logger.info(f"Final validation_types: {validation_types}")
+    jsonld_logger.info(f"Available JSONLD_CATEGORIES keys: {list(JSONLD_CATEGORIES.keys())}")
+    jsonld_logger.info(f"Available JSONLD_VALIDATION_RULES keys: {list(JSONLD_VALIDATION_RULES.keys())}")
 
     remaining_types = set(validation_types)
 
@@ -102,10 +136,29 @@ async def find_site_signals(full_domain: str, site_type: str, crawl_result: Opti
                 list(remaining_types)
             )
 
+            # Log detailed JSON-LD validation results
+            jsonld_logger.info(f"Processing page: {page.url}")
+            jsonld_logger.info(f"Remaining types to check: {list(remaining_types)}")
+            
+            for signal in jsonld_signal.jsonld_signals:
+                jsonld_logger.info(f"Schema Type: {signal.type_}")
+                jsonld_logger.info(f"Schema Exists: {signal.exists}")
+                jsonld_logger.info(f"Schema Valid: {signal.is_valid}")
+                
+                # Log validation rules for this type
+                rules = JSONLD_VALIDATION_RULES.get(signal.type_)
+                if rules:
+                    jsonld_logger.info(f"Validation rules for {signal.type_}: {rules}")
+                else:
+                    jsonld_logger.warning(f"No validation rules found for {signal.type_}")
+
             # Track found schemas
             for s in jsonld_signal.jsonld_signals:
                 if s.exists:
+                    jsonld_logger.info(f"Found schema: {s.type_} - removing from remaining types")
                     remaining_types.discard(s.type_)
+                else:
+                    jsonld_logger.info(f"Missing schema: {s.type_} - keeping in remaining types")
 
             site_signals.append(
                 SiteSignal(
@@ -166,11 +219,14 @@ if __name__ == '__main__':
 
         print(f"Crawl result saved to {crawl_file}")
 
-    result = asyncio.run(find_site_signals(full_domain, site_type, crawl_result))
+    domain_task = asyncio.create_task(find_domain_signals(full_domain, site_types))
+    site_task = asyncio.create_task(find_site_signals(full_domain, None, site_types))
+
+    result = asyncio.run(asyncio.gather(domain_task, site_task))
 
     # Write result to file
     output_file = "site_signals_result.json"
     with open(output_file, 'w') as f:
-        f.write(result.model_dump_json(indent=2))
+        f.write(result[1].model_dump_json(indent=2))
 
     print(f"Site signals result saved to {output_file}")

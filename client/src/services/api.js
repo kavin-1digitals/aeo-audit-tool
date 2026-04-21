@@ -80,13 +80,13 @@ export const auditApi = {
 };
 
 // New API method for getting comprehensive audit results
-export const getAuditResults = async (domain = 'https://www.aloyoga.com', brand = 'Alo Yoga', geo = 'United States', siteType = 'ecommerce') => {
-  console.log('Calling API with domain:', domain, 'brand:', brand, 'geo:', geo, 'siteType:', siteType);
+export const getAuditResults = async (domain = 'https://www.aloyoga.com', brand = 'Alo Yoga', geo = 'United States', siteTypes = ['ecommerce']) => {
+  console.log('Calling API with domain:', domain, 'brand:', brand, 'geo:', geo, 'siteTypes:', siteTypes);
   const response = await api.post('/audit', {
     domain: domain,
     brand: brand,
     geo: geo,
-    site_type: siteType.toLowerCase() // Pass site type to backend
+    site_types: siteTypes.map(type => type.toLowerCase()) // Pass array of site types to backend
   });
   
   console.log('Raw backend response:', response);

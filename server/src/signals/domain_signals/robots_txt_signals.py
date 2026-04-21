@@ -155,7 +155,7 @@ def build_crawler_group(data: dict[str, dict[str, bool]]) -> CrawlerAccessGroup:
 # -------------------------
 # Main function (UPDATED)
 # -------------------------
-async def find_robots_txt_signals(full_domain: str, site_type: str) -> RobotsTxtSignals:
+async def find_robots_txt_signals(full_domain: str, site_types: Optional[List[str]]) -> RobotsTxtSignals:
     logger.info(f"Starting robots.txt analysis for: {full_domain}")
 
     content, robots_meta = await fetch_robots_txt(full_domain)
@@ -172,7 +172,15 @@ async def find_robots_txt_signals(full_domain: str, site_type: str) -> RobotsTxt
             cause_of_issue="Fetch failed"
         )
 
-    patterns = CRITICAL_PATTERNS.get(site_type, {})
+    patterns = {}
+    if site_types:
+        # For multiple site types, collect all patterns
+        for st in site_types:
+            type_patterns = CRITICAL_PATTERNS.get(st, {})
+            for category, pattern_list in type_patterns.items():
+                patterns.setdefault(category, []).extend(pattern_list)
+    else:
+        patterns = CRITICAL_PATTERNS.get("ecommerce", {})  # fallback
 
     # -------------------------
     # Case 1: 404 → allow all
