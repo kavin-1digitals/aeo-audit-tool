@@ -28,21 +28,11 @@ async def calculate_canonical_score(site_signal: SiteSignal, site_types: Optiona
         # If canonical doesn't exist, no matching validation needed
         pass
     
-    # Rule 3: Canonical URL is clean (no query params)
-    # -------------------------
-    if site_types:
-        # For multiple site types, check if any type requires canonical validation
-        requires_canonical = any(
-            st in ['ecommerce', 'store', 'brand', 'product'] for st in site_types
-        )
-    else:
-        requires_canonical = False
     
-    if requires_canonical:
-        if canonical_signal.exists:
-            if canonical_signal.is_clean:
-                scores.append(Score(value=1.0, signal_name='canonical_clean', signal_path=['Site Signals', 'Canonical URLs'], remediation_plan=None, success_state=f'Canonical URL is clean (no query parameters) for {site_signal.url}'))
-            else:
-                scores.append(Score(value=-0.5, signal_name='canonical_clean', signal_path=['Site Signals', 'Canonical URLs'], remediation_plan=f'Remove query parameters from canonical URL for {site_signal.url}', success_state=None))
+    if canonical_signal.exists:
+        if canonical_signal.is_clean:
+            scores.append(Score(value=1.0, signal_name='canonical_clean', signal_path=['Site Signals', 'Canonical URLs'], remediation_plan=None, success_state=f'Canonical URL is clean (no query parameters) for {site_signal.url}'))
+        else:
+            scores.append(Score(value=-0.5, signal_name='canonical_clean', signal_path=['Site Signals', 'Canonical URLs'], remediation_plan=f'Remove query parameters from canonical URL for {site_signal.url}', success_state=None))
     
     return RawScoreCard(scores=scores)

@@ -94,16 +94,24 @@ def extract_sitemaps(content: str) -> SitemapInfo:
 # -------------------------
 # Generate test paths (UPDATED)
 # -------------------------
-def generate_test_paths(site_type: str) -> dict[str, list[str]]:
+def generate_test_paths(site_types: Optional[List[str]]) -> dict[str, list[str]]:
     test_paths: dict[str, list[str]] = {}
 
-    patterns_by_type = CRITICAL_PATTERNS.get(site_type, {})
+    patterns = {}
+    if site_types:
+        # For multiple site types, collect all patterns
+        for st in site_types:
+            type_patterns = CRITICAL_PATTERNS.get(st, {})
+            for category, pattern_list in type_patterns.items():
+                patterns.setdefault(category, []).extend(pattern_list)
+    else:
+        patterns = CRITICAL_PATTERNS.get("brand", {})
 
-    for category, patterns in patterns_by_type.items():
+    for category, pattern_list in patterns.items():
         paths: list[str] = []
-
-        for p in patterns:
-            clean = p.strip("/")
+        for pattern in pattern_list:
+            clean = pattern.strip("/")
+            paths.append(pattern)
             paths.append(f"/{clean}/")
             paths.append(f"/{clean}/test")
 
@@ -115,8 +123,8 @@ def generate_test_paths(site_type: str) -> dict[str, list[str]]:
 # -------------------------
 # Evaluate access (UPDATED)
 # -------------------------
-def evaluate_critical_access(rp: Protego, agents: list[str], site_type: str) -> CrawlerAccessGroup:
-    test_paths = generate_test_paths(site_type)
+def evaluate_critical_access(rp: Protego, agents: list[str], site_types: Optional[List[str]]) -> CrawlerAccessGroup:
+    test_paths = generate_test_paths(site_types)
     crawler_group = CrawlerAccessGroup(agents=[])
 
     for agent in agents:
@@ -217,8 +225,8 @@ async def find_robots_txt_signals(full_domain: str, site_types: Optional[List[st
 
     sitemap_info = extract_sitemaps(content)
 
-    ai_crawlers = evaluate_critical_access(rp, AI_CRAWLERS, site_type)
-    search_crawlers = evaluate_critical_access(rp, SEARCH_CRAWLERS, site_type)
+    ai_crawlers = evaluate_critical_access(rp, AI_CRAWLERS, site_types or ["brand"])
+    search_crawlers = evaluate_critical_access(rp, SEARCH_CRAWLERS, site_types or ["brand"])
 
     total_categories = len(patterns)
 
