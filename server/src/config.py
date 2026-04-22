@@ -15,15 +15,24 @@ AI_CRAWLERS = config['ai_crawlers']
 SEARCH_CRAWLERS = config['search_crawlers']
 CRITICAL_PATTERNS = config['critical_patterns']
 SITEMAP_PATTERNS = config['sitemap_patterns']
-SITEMAP_CATEGORY_PATTERNS = config['sitemap_category_patterns']
-SITEMAP_CATEGORY_COUNTS = config['sitemap_category_counts']
 JSONLD_CATEGORIES = config['jsonld_categories']
 JSONLD_VALIDATION_RULES = config['jsonld_validation_rules']
 
 LLM_PROVIDERS = config['llm']
+SCORING_WEIGHTS = config['scoring_weights']
+
+# Convert scoring weights from strings to floats for calculations
+def convert_weights_to_floats(weights_dict):
+    """Recursively convert all weight values from strings to floats"""
+    if isinstance(weights_dict, dict):
+        return {k: convert_weights_to_floats(v) for k, v in weights_dict.items()}
+    elif isinstance(weights_dict, (str, int)):
+        return float(weights_dict)
+    else:
+        return weights_dict
+
+# Apply conversion to scoring weights
+SCORING_WEIGHTS = convert_weights_to_floats(SCORING_WEIGHTS)
+
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 SCRAPERAPI_API_KEY = os.getenv('SCRAPERAPI_API_KEY')
-NUM_PROMPTS = config['num_prompts']
-NUM_COMPETITORS = config['num_competitors']
-CITATION_PROMPT_CLUSTERS = config['citation_prompt_clusters']
-

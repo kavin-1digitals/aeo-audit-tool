@@ -1,6 +1,6 @@
 from typing import Dict
 from pydantic import BaseModel
-
+from src.config import SCORING_WEIGHTS as weights_config
 
 class CategoryScoringResult(BaseModel):
     category_scores: Dict
@@ -9,7 +9,7 @@ class CategoryScoringResult(BaseModel):
     percentage_influence: float
 
 
-def calculate_category_scores(raw_scorecard, weights_config: Dict, brand: str = None) -> CategoryScoringResult:
+def calculate_category_scores(raw_scorecard, brand: str = None) -> CategoryScoringResult:
 
     # -----------------------------
     # STEP 1: GROUP BY signal_name ✅

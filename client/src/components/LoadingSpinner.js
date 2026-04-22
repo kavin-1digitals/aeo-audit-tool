@@ -138,9 +138,19 @@ export const LoadingSpinner = () => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // Calculate percentage based on completed analysis steps
-  const completedSteps = steps.filter(step => step.status === 'completed').length;
-  const progressPercentage = !isLoading && completedSteps === analysisSteps.length ? 100 : Math.min(95, Math.round((completedSteps / analysisSteps.length) * 100));
+  // Calculate percentage based on current step and progress within that step
+  const getProgressPercentage = () => {
+    if (!isLoading || currentStep >= progressSteps.length) return 100;
+    
+    // Base progress from completed steps
+    const baseProgress = (currentStep / progressSteps.length) * 100;
+    
+    // Add gradual progress within current step (0-15% of step value)
+    const stepProgress = currentStep < progressSteps.length ? 
+      Math.min(15, (timeElapsed % 150) / 150 * 15) : 0;
+    
+    return Math.round(Math.min(95, baseProgress + stepProgress));
+  };
 
   return (
     <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-md flex items-center justify-center z-50 p-4">
@@ -169,13 +179,13 @@ export const LoadingSpinner = () => {
                     strokeWidth="8"
                     fill="transparent"
                     strokeDasharray={377}
-                    strokeDashoffset={377 - (377 * progressPercentage) / 100}
+                    strokeDashoffset={377 - (377 * getProgressPercentage()) / 100}
                     className="text-blue-600 transition-all duration-1000 ease-out"
                     strokeLinecap="round"
                   />
                 </svg>
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-2xl font-bold text-slate-900">{progressPercentage}%</span>
+                  <span className="text-2xl font-bold text-slate-900">{getProgressPercentage()}%</span>
                 </div>
               </div>
 

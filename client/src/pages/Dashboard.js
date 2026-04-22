@@ -17,6 +17,8 @@ import QuickRemediationsSection from '../components/Dashboard/QuickRemediationsS
 import PDFReportGenerator from '../components/Dashboard/PDFReportGenerator';
 import DomainPanels from '../components/Dashboard/DomainPanels';
 import TopIssues from '../components/Dashboard/TopIssues';
+import CompetitorComparison from '../components/Dashboard/CompetitorComparison';
+import AuditHistory from '../components/Dashboard/AuditHistory';
 import { Summary } from '../components/Summary';
 import { ScoreOverview } from '../components/ScoreOverview';
 
@@ -343,10 +345,20 @@ const Dashboard = ({ auditData, onViewDetails, onNewAudit }) => {
         </div>
       )}
 
+      {/* Competitor Comparison */}
+      {llmSignals && llmMetrics?.market_comparison && (
+        <div id="competitor-comparison">
+          <CompetitorComparison
+            llmMetrics={llmMetrics}
+            audit_metadata={audit_metadata}
+          />
+        </div>
+      )}
+
       {/* LLM Signal Analysis */}
       {llmSignals && (
         <div id="llm-analysis">
-          <LLMAnalysisSection 
+          <LLMAnalysisSection
             llmSignals={llmSignals}
             audit_metadata={audit_metadata}
           />
@@ -380,6 +392,11 @@ const Dashboard = ({ auditData, onViewDetails, onNewAudit }) => {
       {/* Top Issues */}
       <div id="top-issues">
         <TopIssues categories={categories} pathScorecard={path_scorecard} />
+      </div>
+
+      {/* Audit History & Trends */}
+      <div id="audit-history">
+        <AuditHistory currentAuditData={auditData} />
       </div>
 
       {/* Summary Section */}

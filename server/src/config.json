@@ -11,42 +11,30 @@
   ],
   "critical_patterns": {
     "ecommerce": {
-      "product": ["product", "products", "p"],
-      "category": ["category", "collections", "c"],
-      "search": ["search", "query"]
+      "product": ["product", "products", "item"],
+      "category": ["category", "collections", "shop"]
     },
-
     "hospital": {
-      "service": ["treatment", "procedure", "services"],
-      "doctor": ["doctor", "physician", "consultant"],
-      "search": ["search"]
+      "service": ["treatment", "procedure", "services", "specialty"],
+      "doctor": ["doctor", "physician", "consultant"]
     },
-
     "saas": {
       "product": ["product", "features", "platform"],
       "pricing": ["pricing", "plans"],
-      "docs": ["docs", "documentation", "api"],
-      "blog": ["blog"]
+      "docs": ["docs", "documentation"]
     },
-
     "media": {
-      "article": ["news", "article", "story"],
-      "category": ["category", "topics"],
-      "search": ["search"],
-      "archive": ["archive"]
+      "article": ["news", "article", "story", "post"],
+      "category": ["category", "topics"]
+    },
+    "bank": {
+      "product": ["loans", "credit-card", "cards", "accounts", "savings", "mortgage"],
+      "rates": ["interest-rates", "rates", "fees"],
+      "branch": ["branch", "locations", "atm"],
+      "support": ["help", "support", "faq"]
     }
   },
   "sitemap_patterns": ["sitemap.xml", "sitemap_index.xml", "siteindex.xml"],
-  "sitemap_category_patterns": {
-    "product": ["product", "products", "pdp"],
-    "category": ["category", "collection", "collections", "shop"],
-    "content": ["blog", "article", "guide", "post"]
-  },
-  "sitemap_category_counts": {
-    "product": 5,
-    "category": 5,
-    "content": 5
-  },
   "jsonld_categories": {
     "ecommerce": [
       "Organization",
@@ -55,10 +43,7 @@
       "Offer",
       "AggregateRating",
       "Review",
-      "BreadcrumbList",
-      "ItemList",
-      "FAQPage",
-      "Article"
+      "FAQPage"
     ],
 
     "hospital": [
@@ -67,39 +52,43 @@
       "WebSite",
       "Physician",
       "MedicalProcedure",
-      "MedicalClinic",
       "Service",
-      "MedicalWebPage",
-      "HealthArticle",
-      "FAQPage",
-      "Article"
+      "FAQPage"
     ],
 
     "saas": [
       "Organization",
       "WebSite",
       "SoftwareApplication",
+      "Product",
       "Offer",
       "AggregateRating",
       "Review",
-      "FAQPage",
-      "Article",
-      "TechArticle"
+      "FAQPage"
     ],
 
     "media": [
       "Organization",
       "WebSite",
-      "NewsArticle",
       "Article",
-      "BlogPosting",
-      "ItemList"
+      "NewsArticle"
+    ],
+
+    "bank": [
+      "Organization",
+      "WebSite",
+      "FinancialService",
+      "Product",
+      "Offer",
+      "FAQPage"
     ]
   },
   "jsonld_validation_rules": {
+
     "Product": {
       "required": [
         "name",
+        "description",
         "image",
         "offers.price",
         "offers.availability"
@@ -110,32 +99,21 @@
       "required": [
         "price",
         "priceCurrency",
-        "availability"
+        "availability",
+        "url"
       ]
     },
 
     "AggregateRating": {
       "required": [
-        "ratingValue",
-        "reviewCount"
+        "ratingValue"
       ]
     },
 
     "Review": {
       "required": [
-        "reviewRating.ratingValue"
-      ]
-    },
-
-    "BreadcrumbList": {
-      "required": [
-        "itemListElement"
-      ]
-    },
-
-    "ItemList": {
-      "required": [
-        "itemListElement"
+        "reviewRating.ratingValue",
+        "author"
       ]
     },
 
@@ -147,38 +125,16 @@
 
     "Article": {
       "required": [
-        "headline"
+        "headline",
+        "author"
       ]
     },
 
     "NewsArticle": {
       "required": [
         "headline",
-        "datePublished"
-      ]
-    },
-
-    "BlogPosting": {
-      "required": [
-        "headline"
-      ]
-    },
-
-    "TechArticle": {
-      "required": [
-        "headline"
-      ]
-    },
-
-    "HealthArticle": {
-      "required": [
-        "headline"
-      ]
-    },
-
-    "MedicalWebPage": {
-      "required": [
-        "name"
+        "datePublished",
+        "author"
       ]
     },
 
@@ -203,20 +159,14 @@
 
     "Physician": {
       "required": [
-        "name"
+        "name",
+        "medicalSpecialty"
       ]
     },
 
     "MedicalProcedure": {
       "required": [
         "name"
-      ]
-    },
-
-    "MedicalClinic": {
-      "required": [
-        "name",
-        "address"
       ]
     },
 
@@ -229,22 +179,62 @@
     "SoftwareApplication": {
       "required": [
         "name",
-        "applicationCategory"
+        "applicationCategory",
+        "offers.price"
+      ]
+    },
+
+    "FinancialService": {
+      "required": [
+        "name"
       ]
     }
   },
   "llm": {
     "openai": "gpt-4o-mini"
   },
-  "num_prompts": 14,
-  "num_competitors": 8,
-  "citation_prompt_clusters": {
-    "Brand Discovery": 3,
-    "Brand Recommendation": 3,
-    "Brand Comparison": 3,
-    "Pricing & Value": 3,
-    "Quality & Durability": 3,
-    "Style / Trends": 3,
-    "Fit / Usability": 2
+  "scoring_weights": {
+    "llm_signals": {
+        "cluster_presence": "12",
+        "cluster_dominance": "12",
+        "prompt_citation": "16",
+
+        "total_weight": "40"
+    },
+
+    "domain_signals": {
+        "llms_txt_exists": "4",
+        "llms_txt_valid": "3",
+        "llms_txt_enriched": "3",
+
+        "robots_txt_exists": "3",
+
+        "sitemap_exists": "3",
+        "sitemap_type_valid": "3",
+        "sitemap_freshness": "3",
+
+        "ai_crawler_access": "4",
+        "search_crawler_access": "4",
+
+        "total_weight": "30"
+    },
+
+    "site_signals": {
+        "site_scrapable": "6",
+
+        "canonical_exists": "4",
+        "canonical_matches": "3",
+        "canonical_clean": "3",
+
+        "jsonld_exists": "3",
+        "jsonld_valid": "3",
+
+        "og_tags_exists": "3",
+        "og_tags_complete": "2",
+        "twitter_card_exists": "1",
+        "page_indexable": "2",
+
+        "total_weight": "30"
+    }
   }
 }

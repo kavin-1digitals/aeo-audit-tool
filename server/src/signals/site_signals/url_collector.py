@@ -65,7 +65,31 @@ def is_javascript_heavy(soup: BeautifulSoup) -> bool:
     if len(anchors) < 5:
         return True
 
+    # React / Next.js
     if soup.find(id="root") or soup.find(id="__next"):
+        return True
+
+    # Vue.js — look for #app mount point or data-v- scoped attributes
+    if soup.find(id="app"):
+        # Confirm it's Vue by checking for data-v- attributes or __vue__ references
+        app_el = soup.find(id="app")
+        attrs = " ".join(str(a) for a in (app_el.attrs or {}).keys())
+        if "data-v-" in attrs or not app_el.find_all():
+            return True
+
+    # Angular — ng-version attribute or _nghost- / ng-app
+    if soup.find(attrs={"ng-version": True}) or soup.find(attrs={"ng-app": True}):
+        return True
+    html_str = str(soup)[:5000]
+    if "_nghost-" in html_str or "ng-version" in html_str:
+        return True
+
+    # Nuxt.js
+    if "__nuxt" in html_str or "__NUXT__" in html_str:
+        return True
+
+    # SvelteKit
+    if "svelte-" in html_str or "__sveltekit" in html_str:
         return True
 
     if len(scripts) > len(anchors):

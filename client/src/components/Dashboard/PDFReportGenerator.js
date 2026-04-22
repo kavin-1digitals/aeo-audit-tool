@@ -40,6 +40,49 @@ const PrintableGatedMask = ({ children, isUngated, label = "Strategic Insights L
   );
 };
 
+// Component to mask specific sections with blurred content underneath
+const SectionMask = ({ children, sectionTitle, isUngated }) => {
+  const maskedSections = [
+    'Performance Benchmarks',
+    'Prioritized Remediation Strategy', 
+    'Technical Signal Compliance',
+    'Market Landscape Analysis',
+    'Audit Summary & Evaluation'
+  ];
+  
+  const shouldMask = maskedSections.includes(sectionTitle) && !isUngated;
+  
+  if (shouldMask) {
+    return (
+      <div className="relative">
+        {/* Show blurred content underneath with mask overlay */}
+        <div className="relative">
+          {/* Blurred background content - more professional blur */}
+          <div className="opacity-[0.08] blur-[8px] select-none pointer-events-none grayscale scale-[0.98] transition-all">
+            {children}
+          </div>
+          
+          {/* Professional mask overlay */}
+          <div className="absolute inset-0 flex items-center justify-center p-6">
+            <div className="bg-gradient-to-br from-white/96 to-white/92 backdrop-blur-sm border border-gray-200/50 px-10 py-6 rounded-xl shadow-2xl flex flex-col items-center text-center max-w-xs">
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-3 rounded-full mb-3 shadow-lg border border-blue-100">
+                <LockClosedIcon className="h-6 w-6 text-blue-600" />
+              </div>
+              <span className="text-xs font-bold uppercase tracking-wider text-blue-600 mb-1">Premium Content</span>
+              <h4 className="text-sm font-black text-gray-900 mb-2 uppercase tracking-tight">Analysis Locked</h4>
+              <p className="text-[10px] font-medium text-gray-500 leading-relaxed">
+                Upgrade to unlock detailed insights and strategic recommendations
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  
+  return children;
+};
+
 /**
  * THIN LAYER PRINT COMPONENTS
  * Standalone versions of dashboard components optimized for linear, structured PDF generation.
@@ -67,6 +110,100 @@ const formatSignalName = (signalName) => {
 
 const PrintableScorecards = ({ auditData, llmMetrics, llmSignals, audit_metadata }) => {
   const pathScorecard = auditData?.path_scorecard || {};
+
+  // Improved entity matching functions (same as LLMAnalysisSection and backend)
+  const normalizeEntity = (entity) => {
+    // Convert to lowercase
+    let normalized = entity.toLowerCase();
+    
+    // Handle common punctuation variations
+    normalized = normalized.replace(/&/g, ' and ');
+    normalized = normalized.replace(/\+/g, ' plus ');
+    normalized = normalized.replace(/@/g, ' at ');
+    normalized = normalized.replace(/#/g, ' number ');
+    
+    // Remove punctuation
+    normalized = normalized.replace(/[^\w\s]/g, '');
+    
+    // Remove extra spaces
+    normalized = normalized.replace(/\s+/g, ' ').trim();
+    
+    return normalized;
+  };
+
+  const isMentioned = (text, entity) => {
+    // Normalize both text and entity
+    const normalizedText = normalizeEntity(text);
+    const normalizedEntity = normalizeEntity(entity);
+    
+    // Handle plural/singular variations
+    const entityVariations = [normalizedEntity];
+    
+    // Add plural form (simple 's' addition)
+    if (!normalizedEntity.endsWith('s')) {
+      entityVariations.push(normalizedEntity + 's');
+    }
+    
+    // Remove trailing 's' for singular form
+    if (normalizedEntity.endsWith('s') && normalizedEntity.length > 1) {
+      entityVariations.push(normalizedEntity.slice(0, -1));
+    }
+    
+    // Check each variation with word boundaries
+    for (const variation of entityVariations) {
+      // Create regex pattern with word boundaries
+      const pattern = new RegExp(`\\b${variation}\\b`, 'i');
+      if (pattern.test(normalizedText)) {
+        return true;
+      }
+    }
+    
+    return false;
+  };
+
+  const highlightText = (text, brand, competitors) => {
+    let highlightedText = text;
+    
+    // Improved brand highlighting using the same logic as backend
+    if (isMentioned(highlightedText, brand)) {
+      // Create variations for highlighting
+      const brandVariations = [brand];
+      if (!brand.toLowerCase().endsWith('s')) {
+        brandVariations.push(brand + 's');
+      }
+      if (brand.toLowerCase().endsWith('s') && brand.length > 1) {
+        brandVariations.push(brand.slice(0, -1));
+      }
+      
+      // Highlight each variation with word boundaries
+      brandVariations.forEach(variation => {
+        const pattern = new RegExp(`\\b${variation}\\b`, 'gi');
+        highlightedText = highlightedText.replace(pattern, '<span style="background: linear-gradient(120deg, #D1FAE5 0%, #A7F3D0 100%); color: #065F46; font-weight: 700; padding: 2px 6px; border-radius: 4px; border: 1px solid #10B981;">$&</span>');
+      });
+    }
+    
+    // Improved competitor highlighting
+    competitors.forEach(competitor => {
+      if (isMentioned(highlightedText, competitor)) {
+        // Create variations for highlighting
+        const competitorVariations = [competitor];
+        if (!competitor.toLowerCase().endsWith('s')) {
+          competitorVariations.push(competitor + 's');
+        }
+        if (competitor.toLowerCase().endsWith('s') && competitor.length > 1) {
+          competitorVariations.push(competitor.slice(0, -1));
+        }
+        
+        // Highlight each variation with word boundaries
+        competitorVariations.forEach(variation => {
+          const pattern = new RegExp(`\\b${variation}\\b`, 'gi');
+          highlightedText = highlightedText.replace(pattern, '<span style="background: linear-gradient(120deg, #FEE2E2 0%, #FECACA 100%); color: #DC2626; font-weight: 700; padding: 2px 6px; border-radius: 4px; border: 1px solid #FCA5A5;">$&</span>');
+        });
+      }
+    });
+    
+    return highlightedText;
+  };
 
   const getTechnicalReadiness = () => {
     const domainSignals = Object.values(pathScorecard).filter(item => item.signal_path && item.signal_path[0] === 'Domain Signals');
@@ -162,7 +299,7 @@ const PrintableScorecards = ({ auditData, llmMetrics, llmSignals, audit_metadata
     return { score: coverage, clusters: coveredClusters, total: totalClusters };
   };
 
-  // Calculate total analyzes done from scorecard (same as ScorecardsSection)
+  // Calculate total Analysed done from scorecard (same as ScorecardsSection)
   const getTotalAnalyzesDone = () => {
     const scorecard = auditData?.scorecard || auditData?.signals?.scorecard || auditData?.signals?.aeo_scorecard;
     const maxPossibleScore = scorecard?.max_possible_score || 0;
@@ -176,7 +313,7 @@ const PrintableScorecards = ({ auditData, llmMetrics, llmSignals, audit_metadata
   const clusterScore = getClustersCovered();
 
   const primaryMetrics = [
-    { label: 'Total Analyzes Done', value: `${techScore.toFixed(0)}%`, num: techScore, color: '#3b82f6', desc: `Maximum possible score from weighted category analysis across all AEO signals` },
+    { label: 'Total Analyses Done', value: `${techScore.toFixed(0)}%`, num: techScore, color: '#3b82f6', desc: `Maximum possible score from weighted category analyses across all AEO signals` },
     { label: 'AI Prompt Visibility', value: `${visibility.score.toFixed(1)}%`, num: visibility.score, color: '#8b5cf6', desc: `Brand mentioned in ${visibility.citations} of ${visibility.prompts} AI prompts` },
     { label: 'Competitor Citation Score', value: `${compScore.score.toFixed(1)}%`, num: compScore.score, color: '#ef4444', desc: `Performance relative to top competing mentions in AI responses` },
     { label: 'Clusters Covered', value: `${clusterScore.score.toFixed(1)}%`, num: clusterScore.score, color: '#06b6d4', desc: `Brand presence across ${clusterScore.clusters} of ${clusterScore.total} user intent clusters` }
@@ -196,7 +333,7 @@ const PrintableScorecards = ({ auditData, llmMetrics, llmSignals, audit_metadata
   );
 
   const secondaryMetrics = [
-    { label: 'Pages Analyzed', value: auditData?.signals?.site_signals?.site_signals?.length || 0, desc: 'Website pages crawled for analysis' },
+    { label: 'Pages Analysed', value: auditData?.signals?.site_signals?.site_signals?.length || 0, desc: 'Website pages crawled for analysis' },
     { label: 'Prompts Used', value: visibility.prompts, desc: 'AI conversation prompts tested' },
     { 
       label: 'Competitors Identified', 
@@ -472,7 +609,8 @@ const PrintableScoreOverview = ({ audit_metadata, scorecard }) => {
   // Use the new percentage from scorecard (weighted percentage) with fallback to total_percentage
   const percentage = scorecard?.percentage || audit_metadata?.percentage || audit_metadata?.score_percentage || 0;
   const totalChecks = audit_metadata?.total_checks || 0;
-  const passedChecks = Math.round((percentage / 100) * totalChecks);
+  // Fix: Use total_score from audit_metadata like the dashboard does
+  const passedChecks = audit_metadata?.total_score || 0;
   const failedChecks = totalChecks - passedChecks;
 
   const getGrade = (p) => {
@@ -683,7 +821,7 @@ const PrintableExecutiveSummary = ({ audit_metadata, categories_count, critical_
                 <CheckCircleIcon className="h-5 w-5 text-gray-300 mr-3 mt-0.5 flex-shrink-0" />
                 <div>
                   <p className="text-[10px] font-bold text-gray-400 uppercase">Categories Tested</p>
-                  <p className="text-xs font-bold text-gray-800">{categories_count} analyzed</p>
+                  <p className="text-xs font-bold text-gray-800">{categories_count} categories analysed</p>
                 </div>
               </div>
               <div className="flex items-start">
@@ -733,6 +871,100 @@ const PrintableExecutiveSummary = ({ audit_metadata, categories_count, critical_
 };
 
 const PrintableLLMAnalysis = ({ llmSignals, brand, isUngated = true }) => {
+  // Improved entity matching functions (same as backend)
+  const normalizeEntity = (entity) => {
+    // Convert to lowercase
+    let normalized = entity.toLowerCase();
+    
+    // Handle common punctuation variations
+    normalized = normalized.replace(/&/g, ' and ');
+    normalized = normalized.replace(/\+/g, ' plus ');
+    normalized = normalized.replace(/@/g, ' at ');
+    normalized = normalized.replace(/#/g, ' number ');
+    
+    // Remove punctuation
+    normalized = normalized.replace(/[^\w\s]/g, '');
+    
+    // Remove extra spaces
+    normalized = normalized.replace(/\s+/g, ' ').trim();
+    
+    return normalized;
+  };
+
+  const isMentioned = (text, entity) => {
+    // Normalize both text and entity
+    const normalizedText = normalizeEntity(text);
+    const normalizedEntity = normalizeEntity(entity);
+    
+    // Handle plural/singular variations
+    const entityVariations = [normalizedEntity];
+    
+    // Add plural form (simple 's' addition)
+    if (!normalizedEntity.endsWith('s')) {
+      entityVariations.push(normalizedEntity + 's');
+    }
+    
+    // Remove trailing 's' for singular form
+    if (normalizedEntity.endsWith('s') && normalizedEntity.length > 1) {
+      entityVariations.push(normalizedEntity.slice(0, -1));
+    }
+    
+    // Check each variation with word boundaries
+    for (const variation of entityVariations) {
+      // Create regex pattern with word boundaries
+      const pattern = new RegExp(`\\b${variation}\\b`, 'i');
+      if (pattern.test(normalizedText)) {
+        return true;
+      }
+    }
+    
+    return false;
+  };
+
+  const highlightText = (text, brand, competitors) => {
+    let highlightedText = text;
+    
+    // Improved brand highlighting using the same logic as backend
+    if (isMentioned(highlightedText, brand)) {
+      // Create variations for highlighting
+      const brandVariations = [brand];
+      if (!brand.toLowerCase().endsWith('s')) {
+        brandVariations.push(brand + 's');
+      }
+      if (brand.toLowerCase().endsWith('s') && brand.length > 1) {
+        brandVariations.push(brand.slice(0, -1));
+      }
+      
+      // Highlight each variation with word boundaries
+      brandVariations.forEach(variation => {
+        const pattern = new RegExp(`\\b${variation}\\b`, 'gi');
+        highlightedText = highlightedText.replace(pattern, '<span style="background: linear-gradient(120deg, #D1FAE5 0%, #A7F3D0 100%); color: #065F46; font-weight: 700; padding: 2px 6px; border-radius: 4px; border: 1px solid #10B981;">$&</span>');
+      });
+    }
+    
+    // Improved competitor highlighting
+    competitors.forEach(competitor => {
+      if (isMentioned(highlightedText, competitor)) {
+        // Create variations for highlighting
+        const competitorVariations = [competitor];
+        if (!competitor.toLowerCase().endsWith('s')) {
+          competitorVariations.push(competitor + 's');
+        }
+        if (competitor.toLowerCase().endsWith('s') && competitor.length > 1) {
+          competitorVariations.push(competitor.slice(0, -1));
+        }
+        
+        // Highlight each variation with word boundaries
+        competitorVariations.forEach(variation => {
+          const pattern = new RegExp(`\\b${variation}\\b`, 'gi');
+          highlightedText = highlightedText.replace(pattern, '<span style="background: linear-gradient(120deg, #FEE2E2 0%, #FECACA 100%); color: #DC2626; font-weight: 700; padding: 2px 6px; border-radius: 4px; border: 1px solid #FCA5A5;">$&</span>');
+        });
+      }
+    });
+    
+    return highlightedText;
+  };
+
   // Use the same data access pattern as LLMAnalysisSection.js
   const citationData = llmSignals?.signals?.citation_prompt_answers?.root || llmSignals?.signals?.citation_prompt_answers;
   
@@ -784,13 +1016,17 @@ const PrintableLLMAnalysis = ({ llmSignals, brand, isUngated = true }) => {
                       {/* Web Search Response */}
                       <div className="bg-green-50 p-4 rounded-lg text-sm text-gray-600 leading-relaxed italic border-l-4 border-green-200 max-w-full overflow-hidden mb-3">
                         <div className="text-xs font-bold text-green-700 mb-2 uppercase tracking-wider">Web Search Response</div>
-                        "{prompt.web_answer}"
+                        <div dangerouslySetInnerHTML={{ 
+                          __html: `"${highlightText(prompt.web_answer || '', brand || '', llmSignals?.signals?.competitors || [])}"` 
+                        }} />
                       </div>
                       
                       {/* AI Response */}
                       <div className="bg-blue-50 p-4 rounded-lg text-sm text-gray-600 leading-relaxed italic border-l-4 border-blue-200 max-w-full overflow-hidden mb-3">
                         <div className="text-xs font-bold text-blue-700 mb-2 uppercase tracking-wider">AI Response</div>
-                        "{prompt.llm_answer}"
+                        <div dangerouslySetInnerHTML={{ 
+                          __html: `"${highlightText(prompt.llm_answer || '', brand || '', llmSignals?.signals?.competitors || [])}"` 
+                        }} />
                       </div>
                       
                       <div className="flex flex-wrap gap-2 mt-3">
@@ -1140,6 +1376,63 @@ const PrintableMarketComparison = ({ llmSignals, brand }) => {
   );
 };
 
+const PrintableCompetitorBenchmark = ({ llmSignals, brand }) => {
+  const market = llmSignals?.signals?.market_comparison_combined;
+  if (!market || market.length === 0) {
+    return (
+      <div className="p-6 bg-gray-50 rounded-lg text-center text-gray-400 text-sm">
+        No competitor data available for this audit.
+      </div>
+    );
+  }
+
+  const sorted = [...market].sort((a, b) => (b.sov || 0) - (a.sov || 0));
+
+  return (
+    <div>
+      <h2 className="text-xl font-bold text-gray-900 mb-1">Competitor Benchmark</h2>
+      <p className="text-sm text-gray-500 mb-5">AI citation share of voice across {sorted.length} brands</p>
+      <table className="w-full text-sm border-collapse">
+        <thead>
+          <tr className="bg-gray-50 border-b border-gray-200">
+            <th className="text-left py-2 px-3 text-gray-600 font-semibold">Rank</th>
+            <th className="text-left py-2 px-3 text-gray-600 font-semibold">Brand</th>
+            <th className="text-right py-2 px-3 text-gray-600 font-semibold">SOV %</th>
+            <th className="text-right py-2 px-3 text-gray-600 font-semibold">Citations</th>
+            <th className="text-right py-2 px-3 text-gray-600 font-semibold">Cluster Coverage</th>
+          </tr>
+        </thead>
+        <tbody>
+          {sorted.map((item, i) => {
+            const isBrand = item.entity === brand;
+            return (
+              <tr key={i} className={`border-b border-gray-100 ${isBrand ? 'bg-blue-50' : ''}`}>
+                <td className="py-2 px-3 text-gray-500">#{i + 1}</td>
+                <td className="py-2 px-3">
+                  <span className={`font-medium ${isBrand ? 'text-blue-700' : 'text-gray-800'}`}>
+                    {item.entity}
+                    {isBrand && <span className="ml-2 text-xs bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded font-bold">YOU</span>}
+                  </span>
+                </td>
+                <td className="py-2 px-3 text-right">
+                  <div className="flex items-center justify-end space-x-2">
+                    <div className="w-20 bg-gray-200 rounded-full h-1.5">
+                      <div className={`h-1.5 rounded-full ${isBrand ? 'bg-blue-500' : 'bg-gray-400'}`} style={{ width: `${Math.min((item.sov || 0), 100)}%` }} />
+                    </div>
+                    <span className={`font-bold w-10 text-right ${isBrand ? 'text-blue-700' : 'text-gray-700'}`}>{(item.sov || 0).toFixed(1)}%</span>
+                  </div>
+                </td>
+                <td className="py-2 px-3 text-right text-gray-600">{item.citations || 0}</td>
+                <td className="py-2 px-3 text-right text-gray-600">{(item.cluster_coverage || 0).toFixed(1)}%</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
 const PDFReportGenerator = ({ auditData, onGeneratePDF }) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -1151,7 +1444,40 @@ const PDFReportGenerator = ({ auditData, onGeneratePDF }) => {
     setProgress(0);
 
     try {
-      const pdf = new jsPDF('p', 'mm', 'a4');
+      // Helper to load image and convert to base64 data URL (required by jsPDF)
+      const loadImageAsBase64 = (url) => {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+          img.onload = () => {
+            try {
+              const canvas = document.createElement('canvas');
+              canvas.width = img.naturalWidth;
+              canvas.height = img.naturalHeight;
+              const ctx = canvas.getContext('2d');
+              ctx.drawImage(img, 0, 0);
+              const dataURL = canvas.toDataURL('image/png');
+              resolve({ dataURL, width: img.naturalWidth, height: img.naturalHeight });
+            } catch (e) {
+              console.error('Logo canvas conversion failed:', e);
+              resolve(null);
+            }
+          };
+          img.onerror = () => {
+            console.error('Logo image failed to load from:', url);
+            resolve(null);
+          };
+          img.src = url;
+        });
+      };
+
+      const logoData = await loadImageAsBase64(process.env.PUBLIC_URL + '/logo/1D_Logo.png');
+      const pdf = new jsPDF({
+        orientation: 'p',
+        unit: 'mm',
+        format: 'a4',
+        compress: true // Enable built-in PDF stream compression
+      });
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
       const margin = 20;
@@ -1187,16 +1513,23 @@ const PDFReportGenerator = ({ auditData, onGeneratePDF }) => {
         element.style.position = 'relative';
 
         const canvas = await html2canvas(element, {
-          scale: 2,
+          scale: 2, // 2x resolution (192 DPI)
           logging: false,
           useCORS: true,
-          backgroundColor: '#ffffff'
+          backgroundColor: '#ffffff',
+          allowTaint: true,
+          useCORS: true,
+          scrollX: 0,
+          scrollY: 0,
+          windowWidth: element.scrollWidth,
+          windowHeight: element.scrollHeight
         });
 
         element.style.display = originalDisplay;
         element.style.position = originalPosition;
 
-        const imgData = canvas.toDataURL('image/png');
+        // Use JPEG with 0.5 quality for maximum compression while maintaining readability
+        const imgData = canvas.toDataURL('image/jpeg', 0.5);
         const imgWidth = pageWidth - (margin * 2);
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
@@ -1224,12 +1557,8 @@ const PDFReportGenerator = ({ auditData, onGeneratePDF }) => {
             pdf.text(`${title.toUpperCase()} (CONTINUED)`, margin, 15);
           }
 
-          // Draw the image segment
-          // We use a negative 'y' to show only the current segment
-          // We also need to "hide" the parts that exceed the page height
-          // jspdf.addImage(imgData, 'PNG', x, y, width, height)
-          // The 'y' will be (headerSpace - position)
-          pdf.addImage(imgData, 'PNG', margin, headerSpace - position, imgWidth, imgHeight);
+          // Draw the image segment using JPEG format and 'FAST' compression
+          pdf.addImage(imgData, 'JPEG', margin, headerSpace - position, imgWidth, imgHeight, undefined, 'FAST');
 
           // Calculate space used on this page
           const usablePageHeight = pageHeight - headerSpace - 15; // 15 for bottom margin
@@ -1292,13 +1621,14 @@ const PDFReportGenerator = ({ auditData, onGeneratePDF }) => {
       pdf.text('AUDIT SCORE', margin + 25, 182, { align: 'center' });
 
       // SECTIONS
-      const roman = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII'];
+      const roman = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'];
       const rawSections = [
         { id: 'pdf-summary', title: 'Executive Summary' },
         { id: 'pdf-score-overview', title: 'Overall Audit Performance' },
         { id: 'pdf-scorecards', title: 'Performance Benchmarks' },
         { id: 'pdf-remediations', title: 'Prioritized Remediation Strategy' },
         { id: 'pdf-domain', title: 'Technical Signal Compliance' },
+        { id: 'pdf-competitor', title: 'Competitor Benchmark' },
         { id: 'pdf-market', title: 'Market Landscape Analysis' },
         { id: 'pdf-llm', title: 'AI Intent Cluster Analysis' },
         { id: 'pdf-audit-summary', title: 'Audit Summary & Evaluation' }
@@ -1318,6 +1648,16 @@ const PDFReportGenerator = ({ auditData, onGeneratePDF }) => {
       const totalPages = pdf.internal.getNumberOfPages();
       for (let i = 1; i <= totalPages; i++) {
         pdf.setPage(i);
+        
+        // Add Logo to top right of every page
+        if (logoData) {
+          const logoWidth = 22; // mm
+          const logoHeight = (logoData.height * logoWidth) / logoData.width;
+          const logoRightMargin = 8; // mm from right edge
+          const logoTopMargin = 6;   // mm from top edge
+          pdf.addImage(logoData.dataURL, 'PNG', pageWidth - logoRightMargin - logoWidth, logoTopMargin, logoWidth, logoHeight);
+        }
+
         pdf.setFontSize(8);
         pdf.setTextColor(148, 163, 184);
         pdf.text(`${auditData.audit_metadata?.brand} | AEO Technical Audit`, margin, pageHeight - 10);
@@ -1348,7 +1688,17 @@ const PDFReportGenerator = ({ auditData, onGeneratePDF }) => {
         <div id="pdf-summary" className="p-8 bg-white">
           <PrintableExecutiveSummary
             audit_metadata={auditData.audit_metadata}
-            categories_count={Object.keys(auditData.path_scorecard || {}).length}
+            categories_count={(() => {
+              // Group by main category like the dashboard does
+              const categories = {};
+              Object.entries(auditData.path_scorecard || {}).forEach(([pathKey, data]) => {
+                const mainCategory = pathKey.split(' -> ')[0];
+                if (!categories[mainCategory]) {
+                  categories[mainCategory] = true;
+                }
+              });
+              return Object.keys(categories).length;
+            })()}
             critical_issues={Object.values(auditData.path_scorecard || {}).flatMap(d => d.scores || []).filter(s => s.value < 0).length}
             llmMetrics={auditData.signals?.llm_signals}
             llmSignals={auditData.signals?.llm_signals}
@@ -1359,31 +1709,47 @@ const PDFReportGenerator = ({ auditData, onGeneratePDF }) => {
           <PrintableScoreOverview audit_metadata={auditData.audit_metadata} scorecard={auditData.scorecard} />
         </div>
         <div id="pdf-scorecards" className="p-8 bg-white">
-          <PrintableScorecards
-            auditData={auditData}
-            llmMetrics={auditData.signals?.llm_signals}
-            llmSignals={auditData.signals?.llm_signals}
-            audit_metadata={auditData.audit_metadata}
-          />
+          <SectionMask sectionTitle="Performance Benchmarks" isUngated={isUngated}>
+            <PrintableScorecards
+              auditData={auditData}
+              llmMetrics={auditData.signals?.llm_signals}
+              llmSignals={auditData.signals?.llm_signals}
+              audit_metadata={auditData.audit_metadata}
+            />
+          </SectionMask>
         </div>
         <div id="pdf-remediations" className="p-8 bg-white">
-          <PrintableRemediations
-            quickRemediations={auditData.quick_remediations}
-            currentScore={auditData.audit_metadata?.score_percentage || 0}
-            isUngated={isUngated}
-          />
+          <SectionMask sectionTitle="Prioritized Remediation Strategy" isUngated={isUngated}>
+            <PrintableRemediations
+              quickRemediations={auditData.quick_remediations}
+              currentScore={auditData.audit_metadata?.score_percentage || 0}
+              isUngated={isUngated}
+            />
+          </SectionMask>
         </div>
         <div id="pdf-domain" className="p-8 bg-white">
-          <PrintableDomainPanels
-            categories={auditData.path_scorecard || {}}
-            isUngated={isUngated}
-          />
+          <SectionMask sectionTitle="Technical Signal Compliance" isUngated={isUngated}>
+            <PrintableDomainPanels
+              categories={auditData.path_scorecard || {}}
+              isUngated={isUngated}
+            />
+          </SectionMask>
+        </div>
+        <div id="pdf-competitor" className="p-8 bg-white">
+          <SectionMask sectionTitle="Competitor Benchmark" isUngated={isUngated}>
+            <PrintableCompetitorBenchmark
+              llmSignals={auditData.signals?.llm_signals}
+              brand={auditData.audit_metadata?.brand}
+            />
+          </SectionMask>
         </div>
         <div id="pdf-market" className="p-8 bg-white">
-          <PrintableMarketComparison
-            llmSignals={auditData.signals?.llm_signals}
-            brand={auditData.audit_metadata?.brand}
-          />
+          <SectionMask sectionTitle="Market Landscape Analysis" isUngated={isUngated}>
+            <PrintableMarketComparison
+              llmSignals={auditData.signals?.llm_signals}
+              brand={auditData.audit_metadata?.brand}
+            />
+          </SectionMask>
         </div>
         <div id="pdf-llm" className="p-8 bg-white">
           <PrintableLLMAnalysis
@@ -1393,10 +1759,12 @@ const PDFReportGenerator = ({ auditData, onGeneratePDF }) => {
           />
         </div>
         <div id="pdf-audit-summary" className="p-8 bg-white">
-          <PrintableAuditSummary
-            summary={auditData.summary}
-            isUngated={isUngated}
-          />
+          <SectionMask sectionTitle="Audit Summary & Evaluation" isUngated={isUngated}>
+            <PrintableAuditSummary
+              summary={auditData.summary}
+              isUngated={isUngated}
+            />
+          </SectionMask>
         </div>
       </div>
 

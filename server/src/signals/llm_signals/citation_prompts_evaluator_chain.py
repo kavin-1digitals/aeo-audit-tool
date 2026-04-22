@@ -68,8 +68,58 @@ def format_prompts(prompts):
     ])
 
 
+import re
+import string
+
+def normalize_entity(entity: str) -> str:
+    """Normalize entity for matching: lowercase, remove punctuation, handle plural/singular, and common variations"""
+    # Convert to lowercase
+    normalized = entity.lower()
+    
+    # Handle common punctuation variations
+    replacements = {
+        '&': ' and ',
+        '+': ' plus ',
+        '@': ' at ',
+        '#': ' number ',
+    }
+    
+    for old, new in replacements.items():
+        normalized = normalized.replace(old, new)
+    
+    # Remove remaining punctuation
+    normalized = normalized.translate(str.maketrans('', '', string.punctuation))
+    
+    # Remove extra spaces
+    normalized = ' '.join(normalized.split())
+    
+    return normalized
+
 def is_mentioned(text: str, entity: str) -> bool:
-    return entity.lower() in text.lower()
+    """Improved entity matching with plural/singular normalization, punctuation removal, and word boundaries"""
+    # Normalize both text and entity
+    normalized_text = normalize_entity(text)
+    normalized_entity = normalize_entity(entity)
+    
+    # Handle plural/singular variations
+    entity_variations = [normalized_entity]
+    
+    # Add plural form (simple 's' addition)
+    if not normalized_entity.endswith('s'):
+        entity_variations.append(normalized_entity + 's')
+    
+    # Remove trailing 's' for singular form
+    if normalized_entity.endswith('s') and len(normalized_entity) > 1:
+        entity_variations.append(normalized_entity[:-1])
+    
+    # Check each variation with word boundaries
+    for variation in entity_variations:
+        # Create regex pattern with word boundaries
+        pattern = r'\b' + re.escape(variation) + r'\b'
+        if re.search(pattern, normalized_text):
+            return True
+    
+    return False
 
 
 # -----------------------------

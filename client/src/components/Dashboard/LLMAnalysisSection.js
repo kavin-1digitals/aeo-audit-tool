@@ -43,6 +43,56 @@ const LLMAnalysisSection = ({ llmSignals, audit_metadata }) => {
   const brand = audit_metadata.brand;
   const competitors = llmSignals.signals.competitors || [];
 
+  // Improved entity matching functions (same as backend)
+  const normalizeEntity = (entity) => {
+    // Convert to lowercase
+    let normalized = entity.toLowerCase();
+    
+    // Handle common punctuation variations
+    normalized = normalized.replace(/&/g, ' and ');
+    normalized = normalized.replace(/\+/g, ' plus ');
+    normalized = normalized.replace(/@/g, ' at ');
+    normalized = normalized.replace(/#/g, ' number ');
+    
+    // Remove punctuation
+    normalized = normalized.replace(/[^\w\s]/g, '');
+    
+    // Remove extra spaces
+    normalized = normalized.replace(/\s+/g, ' ').trim();
+    
+    return normalized;
+  };
+
+  const isMentioned = (text, entity) => {
+    // Normalize both text and entity
+    const normalizedText = normalizeEntity(text);
+    const normalizedEntity = normalizeEntity(entity);
+    
+    // Handle plural/singular variations
+    const entityVariations = [normalizedEntity];
+    
+    // Add plural form (simple 's' addition)
+    if (!normalizedEntity.endsWith('s')) {
+      entityVariations.push(normalizedEntity + 's');
+    }
+    
+    // Remove trailing 's' for singular form
+    if (normalizedEntity.endsWith('s') && normalizedEntity.length > 1) {
+      entityVariations.push(normalizedEntity.slice(0, -1));
+    }
+    
+    // Check each variation with word boundaries
+    for (const variation of entityVariations) {
+      // Create regex pattern with word boundaries
+      const pattern = new RegExp(`\\b${variation}\\b`, 'i');
+      if (pattern.test(normalizedText)) {
+        return true;
+      }
+    }
+    
+    return false;
+  };
+
   const highlightText = (text, brand, competitors) => {
     let highlightedText = text;
     
@@ -67,16 +117,42 @@ const LLMAnalysisSection = ({ llmSignals, audit_metadata }) => {
       highlightedText = highlightedText.replace(/(<li[^>]*>.*<\/li>\s*)+/gs, '<ul class="list-inside my-2 space-y-1 ml-4">$&</ul>');
     }
     
-    highlightedText = highlightedText.replace(
-      new RegExp(`\\b(${brand})\\b`, 'gi'), 
-      '<span class="brand-highlight">$1</span>'
-    );
+    // Improved brand highlighting using the same logic as backend
+    if (isMentioned(highlightedText, brand)) {
+      // Create variations for highlighting
+      const brandVariations = [brand];
+      if (!brand.toLowerCase().endsWith('s')) {
+        brandVariations.push(brand + 's');
+      }
+      if (brand.toLowerCase().endsWith('s') && brand.length > 1) {
+        brandVariations.push(brand.slice(0, -1));
+      }
+      
+      // Highlight each variation with word boundaries
+      brandVariations.forEach(variation => {
+        const pattern = new RegExp(`\\b${variation}\\b`, 'gi');
+        highlightedText = highlightedText.replace(pattern, '<span class="brand-highlight">$&</span>');
+      });
+    }
     
+    // Improved competitor highlighting
     competitors.forEach(competitor => {
-      highlightedText = highlightedText.replace(
-        new RegExp(`\\b(${competitor})\\b`, 'gi'),
-        '<span class="competitor-highlight">$1</span>'
-      );
+      if (isMentioned(highlightedText, competitor)) {
+        // Create variations for highlighting
+        const competitorVariations = [competitor];
+        if (!competitor.toLowerCase().endsWith('s')) {
+          competitorVariations.push(competitor + 's');
+        }
+        if (competitor.toLowerCase().endsWith('s') && competitor.length > 1) {
+          competitorVariations.push(competitor.slice(0, -1));
+        }
+        
+        // Highlight each variation with word boundaries
+        competitorVariations.forEach(variation => {
+          const pattern = new RegExp(`\\b${variation}\\b`, 'gi');
+          highlightedText = highlightedText.replace(pattern, '<span class="competitor-highlight">$&</span>');
+        });
+      }
     });
     
     return highlightedText;
@@ -484,13 +560,13 @@ const LLMAnalysisSection = ({ llmSignals, audit_metadata }) => {
 
       <style jsx>{`
         .brand-highlight {
-          background: linear-gradient(120deg, #DBEAFE 0%, #BFDBFE 100%);
-          color: #1E40AF;
+          background: linear-gradient(120deg, #D1FAE5 0%, #A7F3D0 100%);
+          color: #065F46;
           font-weight: 700;
           padding: 2px 6px;
           border-radius: 4px;
-          border: 1px solid #93C5FD;
-          box-shadow: 0 1px 2px rgba(59, 130, 246, 0.1);
+          border: 1px solid #10B981;
+          box-shadow: 0 1px 2px rgba(16, 185, 129, 0.2);
         }
         .competitor-highlight {
           background: linear-gradient(120deg, #FEE2E2 0%, #FECACA 100%);

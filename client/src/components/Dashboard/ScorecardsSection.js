@@ -8,7 +8,7 @@ const ScorecardsSection = ({ auditData, llmMetrics, llmSignals, audit_metadata }
   // Note: isScrapable is available for future use if needed
   // const isScrapable = auditData?.site_signals?.is_scrapable || false;
   
-  // Calculate total analyzes done from scorecard
+  // Calculate total Analysis done from scorecard
   const getTotalAnalyzesDone = () => {
     // Debug: Check the actual data structure
     console.log('ScorecardsSection Debug - auditData:', auditData);
@@ -189,9 +189,9 @@ const ScorecardsSection = ({ auditData, llmMetrics, llmSignals, audit_metadata }
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
       
-      {/* Total Analyzes Done */}
+      {/* Total Analysis Done */}
       <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
-        <h3 className="text-sm font-medium text-gray-600 mb-2">Total Analyzes Done</h3>
+        <h3 className="text-sm font-medium text-gray-600 mb-2">Total Analyses Done</h3>
         <div className="flex items-center justify-between mb-3">
           <div className="text-3xl font-bold text-blue-600">
             {totalAnalyzesDone.score}%
@@ -219,7 +219,7 @@ const ScorecardsSection = ({ auditData, llmMetrics, llmSignals, audit_metadata }
             </svg>
           </div>
         </div>
-        <p className="text-xs text-gray-600">Maximum possible score from weighted category analysis across all AEO signals</p>
+        <p className="text-xs text-gray-600">Maximum possible score from weighted category analyses across all AEO signals</p>
       </div>
 
       {/* AI Prompt Visibility */}
@@ -342,9 +342,9 @@ const ScorecardsSection = ({ auditData, llmMetrics, llmSignals, audit_metadata }
         </p>
       </div>
 
-      {/* Pages Analyzed */}
+      {/* Pages Analysed */}
       <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
-        <h3 className="text-sm font-medium text-gray-600 mb-2">Pages Analyzed</h3>
+        <h3 className="text-sm font-medium text-gray-600 mb-2">Pages Analysed</h3>
         <div className="text-3xl font-bold mb-3 text-gray-900">
           {pagesAnalyzed.score}
         </div>

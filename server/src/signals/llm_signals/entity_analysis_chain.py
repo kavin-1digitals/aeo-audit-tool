@@ -60,7 +60,7 @@ def build_prompt(entity: str, geo: str) -> str:
     return f"""
 You are a Competitive Intelligence Analyst.
 
-Analyze the entity "{entity}" in the market "{geo}".
+Analyse the entity "{entity}" in the market "{geo}".
 
 ════════════════════════════════════════════════════
 MANDATORY RESEARCH PHASE (DO THIS FIRST)

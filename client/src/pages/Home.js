@@ -90,7 +90,7 @@ export const Home = () => {
                 Optimize for Answer Engines & AI Search
               </p>
               <p className="text-gray-500 max-w-3xl text-lg">
-                Get comprehensive insights into your website's AI readiness. Analyze domain signals, 
+                Get comprehensive insights into your website's AI readiness. Analyse domain signals, 
                 site structure, and brand visibility across modern AI-powered search platforms.
               </p>
             </div>
@@ -98,65 +98,105 @@ export const Home = () => {
             {/* Audit Form */}
             <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <label htmlFor="domain" className="block text-sm font-semibold text-gray-900 mb-2">
-                    Website URL
-                  </label>
-                  <input
-                    type="url"
-                    id="domain"
-                    value={domain}
-                    onChange={(e) => setDomain(e.target.value)}
-                    placeholder="https://example.com"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500"
-                    required
-                  />
+                {/* First Row - Website URL and Site Type */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div className="relative group">
+                    <label htmlFor="domain" className="block text-sm font-semibold text-gray-900 mb-2">
+                      <span className="flex items-center">
+                        <i className="fas fa-globe text-blue-500 mr-2"></i>
+                        Website URL
+                      </span>
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="url"
+                        id="domain"
+                        value={domain}
+                        onChange={(e) => setDomain(e.target.value)}
+                        placeholder="https://example.com"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500"
+                        required
+                      />
+                      <div className="absolute top-full left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-gray-800 text-white text-xs rounded p-2 z-10 w-64 pointer-events-none mt-2">
+                        Enter the exact URL you want to analyse (e.g., https://example.com). Make sure it matches the specific website URL you intend to audit.
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="relative group">
+                    <label htmlFor="siteType" className="block text-sm font-semibold text-gray-900 mb-2">
+                      <span className="flex items-center">
+                        <i className="fas fa-store text-blue-500 mr-2"></i>
+                        Website Type
+                      </span>
+                    </label>
+                    <div className="relative">
+                      <select
+                        id="siteType"
+                        value={siteType}
+                        onChange={(e) => setSiteType(e.target.value)}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 appearance-none cursor-pointer"
+                      >
+                        <option value="ecommerce">E-commerce</option>
+                        <option value="hospital">Hospital</option>
+                        <option value="saas">SaaS</option>
+                        <option value="media">Media</option>
+                        <option value="bank">Bank</option>
+                      </select>
+                      <div className="absolute top-full left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-gray-800 text-white text-xs rounded p-2 z-10 w-64 pointer-events-none mt-2">
+                        Choose the category that best describes your website.
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                <div>
-                  <label htmlFor="brand" className="block text-sm font-semibold text-gray-900 mb-2">
-                    Brand Name
-                  </label>
-                  <input
-                    type="text"
-                    id="brand"
-                    value={brand}
-                    onChange={(e) => setBrand(e.target.value)}
-                    placeholder="e.g., Alo Yoga"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500"
-                    required
-                  />
-                </div>
+                {/* Second Row - Brand Name and Geography */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div className="relative group">
+                    <label htmlFor="brand" className="block text-sm font-semibold text-gray-900 mb-2">
+                      <span className="flex items-center">
+                        <i className="fas fa-trademark text-blue-500 mr-2"></i>
+                        Brand Name
+                      </span>
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        id="brand"
+                        value={brand}
+                        onChange={(e) => setBrand(e.target.value)}
+                        placeholder="e.g., Alo Yoga"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500"
+                        required
+                      />
+                      <div className="absolute top-full left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-gray-800 text-white text-xs rounded p-2 z-10 w-64 pointer-events-none mt-2">
+                        Enter the brand name in its correct and widely recognized format (e.g., "Alo Yoga", not "Aloyoga").
+                      </div>
+                    </div>
+                  </div>
 
-                <div>
-                  <label htmlFor="geo" className="block text-sm font-semibold text-gray-900 mb-2">
-                    Geography (Optional)
-                  </label>
-                  <input
-                    type="text"
-                    id="geo"
-                    value={geo}
-                    onChange={(e) => setGeo(e.target.value)}
-                    placeholder="e.g., United States"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="siteType" className="block text-sm font-semibold text-gray-900 mb-2">
-                    Site Type
-                  </label>
-                  <select
-                    id="siteType"
-                    value={siteType}
-                    onChange={(e) => setSiteType(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                  >
-                    <option value="ecommerce">E-commerce</option>
-                    <option value="hospital">Hospital</option>
-                    <option value="saas">SaaS</option>
-                    <option value="media">Media</option>
-                  </select>
+                  <div className="relative group">
+                    <label htmlFor="geo" className="block text-sm font-semibold text-gray-900 mb-2">
+                      <span className="flex items-center">
+                        <i className="fas fa-map-marker-alt text-blue-500 mr-2"></i>
+                        Brand Geography
+                      </span>
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        id="geo"
+                        value={geo}
+                        onChange={(e) => setGeo(e.target.value)}
+                        placeholder="e.g., United States"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500"
+                        required
+                      />
+                      <div className="absolute top-full left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-gray-800 text-white text-xs rounded p-2 z-10 w-64 pointer-events-none mt-2">
+                        Specify the primary region your brand serves (e.g., India, US, Global). Be as specific as possible.
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 <button
@@ -269,7 +309,7 @@ export const Home = () => {
               </div>
               <h4 className="text-lg font-semibold text-gray-900 mb-2">Site Structure</h4>
               <p className="text-gray-600 text-sm">
-                Analyzes canonical URLs, JSON-LD structured data, and technical SEO elements
+                Analysis canonical URLs, JSON-LD structured data, and technical SEO elements
               </p>
             </div>
 

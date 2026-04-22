@@ -19,9 +19,9 @@ const DomainPanels = ({ categories, calculateCategoryMetrics, onViewDetails, pro
     }
   };
 
-  const getProblemForCategory = (categoryName) => {
-    if (!problemCard || !problemCard.problems) return null;
-    return problemCard.problems.find(problem => 
+  const getProblemsForCategory = (categoryName) => {
+    if (!problemCard || !problemCard.problems) return [];
+    return problemCard.problems.filter(problem => 
       problem.signal_path && problem.signal_path[0] === categoryName
     );
   };
@@ -53,7 +53,7 @@ const DomainPanels = ({ categories, calculateCategoryMetrics, onViewDetails, pro
         const categoryData = categories[categoryName];
         const metrics = categoryData ? calculateCategoryMetrics(categoryName, categoryData.scores) : { totalChecks: 0, passedChecks: 0, failedChecks: 0, signalDetails: [] };
         const IconComponent = getCategoryIcon(categoryName);
-        const categoryProblem = getProblemForCategory(categoryName);
+        const categoryProblems = getProblemsForCategory(categoryName);
 
         return (
           <div key={categoryName} className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
@@ -164,7 +164,7 @@ const DomainPanels = ({ categories, calculateCategoryMetrics, onViewDetails, pro
               )}
 
               {/* Problems Table - Show only if there are problems */}
-              {categoryProblem && (
+              {categoryProblems && categoryProblems.length > 0 && (
                 <div className="mt-6">
                   <div className="mb-4">
                     <h4 className="text-sm font-semibold text-gray-900">Issues Detected</h4>
@@ -179,17 +179,19 @@ const DomainPanels = ({ categories, calculateCategoryMetrics, onViewDetails, pro
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-100">
-                        <tr className="hover:bg-gray-50">
-                          <td className="py-3 px-4">
-                            <div className="text-sm font-bold text-black">{categoryProblem.issue_found}</div>
-                          </td>
-                          <td className="py-3 px-4">
-                            <div className="text-sm text-gray-600">{categoryProblem.signal_names.join(', ')}</div>
-                          </td>
-                          <td className="py-3 px-4">
-                            <div className="text-sm text-red-600">{categoryProblem.cause_of_issue}</div>
-                          </td>
-                        </tr>
+                        {categoryProblems.map((problem, index) => (
+                          <tr key={index} className="hover:bg-gray-50">
+                            <td className="py-3 px-4">
+                              <div className="text-sm font-bold text-black">{problem.issue_found}</div>
+                            </td>
+                            <td className="py-3 px-4">
+                              <div className="text-sm text-gray-600">{problem.signal_names.join(', ')}</div>
+                            </td>
+                            <td className="py-3 px-4">
+                              <div className="text-sm text-red-600">{problem.cause_of_issue}</div>
+                            </td>
+                          </tr>
+                        ))}
                       </tbody>
                     </table>
                   </div>

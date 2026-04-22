@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from .url_collector import crawl_site
 from .canonical_signals import find_canonical_signal, CanonicalSignal
 from .jsonld_signals import find_jsonld_signal, JsonLdType
+from .meta_signals import find_meta_signal, MetaSignal
 from src.config import JSONLD_VALIDATION_RULES, JSONLD_CATEGORIES
 import asyncio
 import os
@@ -19,6 +20,7 @@ class SiteSignal(BaseModel):
     source: str
     final_url: Optional[str]
     canonical_signal: CanonicalSignal
+    meta_signal: Optional[MetaSignal] = None
 
 
 class SiteSignals(BaseModel):
@@ -107,6 +109,8 @@ async def find_site_signals(full_domain: str, site_type: str, crawl_result: Opti
                 if s.exists:
                     remaining_types.discard(s.type_)
 
+            meta_signal = find_meta_signal(page.url, page.content)
+
             site_signals.append(
                 SiteSignal(
                     url=page.url,
@@ -116,7 +120,8 @@ async def find_site_signals(full_domain: str, site_type: str, crawl_result: Opti
                     status_code=page.status_code,
                     source=page.source,
                     final_url=page.response_url,
-                    canonical_signal=canonical_signal
+                    canonical_signal=canonical_signal,
+                    meta_signal=meta_signal
                 )
             )
 
