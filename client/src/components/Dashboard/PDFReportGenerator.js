@@ -47,6 +47,7 @@ const SectionMask = ({ children, sectionTitle, isUngated }) => {
     'Prioritized Remediation Strategy', 
     'Technical Signal Compliance',
     'Market Landscape Analysis',
+    'Competitor Benchmark',
     'Audit Summary & Evaluation'
   ];
   
@@ -388,7 +389,7 @@ const PrintableRemediations = ({ quickRemediations, currentScore, isUngated = tr
   return (
     <div className="space-y-10 mb-10 mt-4">
       <div className="text-center mb-8">
-        <h3 className="text-2xl font-black text-gray-900 mb-2">Remediation Plans</h3>
+        <h3 className="text-2xl font-black text-gray-900 mb-2 tracking-wide">Remediation Plans</h3>
         <p className="text-sm font-bold text-gray-400">Strategic improvements to boost your score from {currentScore.toFixed(1)}% to near-perfect</p>
       </div>
 
