@@ -41,7 +41,7 @@ class ProblemCard(BaseModel):
     problems: List[Problem]
 
 
-async def create_aeo_scorecard(signals: Signals, brand: str = None, site_type: str = None):
+async def create_aeo_scorecard(signals: Signals, brand: str = None, site_types: Optional[List[str]] = None):
 
     from .domain_signals.llms_txt_signals import calculate_llms_txt_score
     from .domain_signals.robots_txt_signals import calculate_robots_txt_score
@@ -97,7 +97,7 @@ async def create_aeo_scorecard(signals: Signals, brand: str = None, site_type: s
 
             jsonld_signals = list(signals.site_signals.jsonld_signals)
             if jsonld_signals:
-                jsonld_scorecard = await calculate_jsonld_score(jsonld_signals, site_type)
+                jsonld_scorecard = await calculate_jsonld_score(jsonld_signals, site_types)
                 all_scores.extend(jsonld_scorecard.scores)
 
             meta_scorecard = await calculate_meta_score(signals.site_signals.site_signals)

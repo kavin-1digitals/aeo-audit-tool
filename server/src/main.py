@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 import uuid
 import asyncio
 import logging
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 from contextlib import asynccontextmanager
 
 from src.signals import find_signals
@@ -79,7 +79,7 @@ class AuditRequest(BaseModel):
     domain: HttpUrl
     brand: str
     geo: Optional[str] = "Not Specified"
-    site_type: Optional[str] = "ecommerce"  # Added site type field
+    site_types: Optional[List[str]] = None  # Changed from site_type to site_types
 
 
 class AuditResponse(BaseModel):
@@ -95,15 +95,16 @@ class AuditResponse(BaseModel):
     summary: Summary
     quick_remediations: Optional[Dict[str, Any]] = None
 
-def create_cache_key(domain: str, brand: Optional[str], geo: Optional[str], site_type: Optional[str] = None) -> str:
+def create_cache_key(domain: str, brand: Optional[str], geo: Optional[str], site_types: Optional[List[str]] = None) -> str:
     """Create a unique cache key based on audit parameters"""
     key_parts = [domain.lower()]
     if brand:
         key_parts.append(brand.lower())
     if geo:
         key_parts.append(geo.lower())
-    if site_type:
-        key_parts.append(site_type.lower())
+    if site_types:
+        # Join multiple site types with underscore for cache key
+        key_parts.append("_".join(sorted([st.lower() for st in site_types])))
     return "|".join(key_parts)
 
 # API Endpoints
@@ -137,7 +138,7 @@ async def start_audit(request: AuditRequest):
         logger.info(f"Starting audit task {task_id} for domain {domain_str}")
         
         # Create cache key
-        cache_key = create_cache_key(domain_str, request.brand, request.geo, request.site_type)
+        cache_key = create_cache_key(domain_str, request.brand, request.geo, request.site_types)
         
         # Check cache first
         cached_result = audit_cache.get(cache_key)
@@ -151,16 +152,16 @@ async def start_audit(request: AuditRequest):
             if request.brand:
                 logger.info(f"Running LLM signals analysis for brand: {request.brand}")
                 try:
-                    signals = await find_signals(domain_str, request.brand, request.geo, request.site_type)
+                    signals = await find_signals(domain_str, request.brand, request.geo, request.site_types)
                     logger.info("LLM signals analysis completed successfully")
                 except Exception as llm_error:
                     logger.warning(f"LLM signals failed, falling back to basic signals: {str(llm_error)}")
-                    signals = await find_signals(domain_str, site_type=request.site_type)
+                    signals = await find_signals(domain_str, site_types=request.site_types)
             else:
                 logger.info("Skipping LLM signals - no brand provided")
-                signals = await find_signals(domain_str, site_type=request.site_type)
+                signals = await find_signals(domain_str, site_types=request.site_types)
             
-            scorecard, problemcard = await create_aeo_scorecard(signals, request.brand, request.site_type)
+            scorecard, problemcard = await create_aeo_scorecard(signals, request.brand, request.site_types)
             
             # Generate quick remediations
             from src.services.quick_remediations_service import generate_quick_remediations

@@ -6,6 +6,7 @@ from .llms_txt_signals import LlmsTxtSignals, find_llm_txt_signals, LlmsTxtMeta,
 from .sitemap_signals import SiteMapSignals, find_sitemap_signals
 from pydantic import BaseModel
 import asyncio
+from typing import Optional, List
 
 logger = logging.getLogger(__name__)
 
@@ -14,7 +15,7 @@ class DomainSignals(BaseModel):
     llms_txt_signal: LlmsTxtSignals
     site_map_signal: SiteMapSignals
 
-async def find_domain_signals(full_domain: str, site_type: Optional[str] = None) -> DomainSignals:
+async def find_domain_signals(full_domain: str, site_types: Optional[List[str]] = None) -> DomainSignals:
     """
     Aggregate all domain-level signals for a given domain.
     
@@ -29,7 +30,7 @@ async def find_domain_signals(full_domain: str, site_type: Optional[str] = None)
     
     # First, fetch robots.txt and llm.txt signals in parallel
     logger.info("Fetching robots.txt and llm.txt signals in parallel...")
-    robots_txt_task = find_robots_txt_signals(full_domain, site_type or "ecommerce")
+    robots_txt_task = find_robots_txt_signals(full_domain, site_types or ["brand"])
     llms_txt_task = find_llm_txt_signals(full_domain)
     
     # Wait for robots.txt and llm.txt to complete

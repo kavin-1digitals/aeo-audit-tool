@@ -1,0 +1,1348 @@
+{
+  "critical_patterns": {
+    "accounting_service": {
+      "patterns": {
+        "services": ["services", "tax", "bookkeeping", "payroll", "audit"],
+        "info": ["about", "contact", "team"],
+        "resources": ["blog", "articles", "resources", "faq"]
+      }
+    },
+    "advertising_agency": {
+      "patterns": {
+        "services": ["services", "campaigns", "creative", "digital", "media"],
+        "portfolio": ["portfolio", "work", "case-studies", "clients"],
+        "info": ["about", "contact", "team"]
+      }
+    },
+    "amusement_park": {
+      "patterns": {
+        "attractions": ["rides", "attractions", "shows", "events"],
+        "tickets": ["tickets", "prices", "hours", "admission"],
+        "info": ["about", "contact", "directions", "map"]
+      }
+    },
+    "animal_shelter": {
+      "patterns": {
+        "animals": ["adopt", "pets", "dogs", "cats", "animals"],
+        "services": ["services", "spay", "neuter", "volunteer"],
+        "info": ["about", "contact", "donate", "events"]
+      }
+    },
+    "antique_store": {
+      "patterns": {
+        "inventory": ["antiques", "items", "collection", "furniture"],
+        "categories": ["vintage", "art", "jewelry", "collectibles"],
+        "info": ["about", "contact", "hours", "location"]
+      }
+    },
+    "apartment_complex": {
+      "patterns": {
+        "units": ["apartments", "floorplans", "availability", "units"],
+        "amenities": ["amenities", "features", "community"],
+        "info": ["about", "contact", "location", "tour"]
+      }
+    },
+    "appliance_repair": {
+      "patterns": {
+        "services": ["services", "repair", "appliances", "brands"],
+        "areas": ["locations", "service-area", "coverage"],
+        "info": ["about", "contact", "emergency"]
+      }
+    },
+    "aquarium": {
+      "patterns": {
+        "exhibits": ["exhibits", "animals", "species", "galleries"],
+        "visit": ["visit", "tickets", "hours", "admission"],
+        "info": ["about", "contact", "events", "education"]
+      }
+    },
+    "arcade": {
+      "patterns": {
+        "games": ["games", "attractions", "machines"],
+        "info": ["about", "contact", "hours", "prices", "location"]
+      }
+    },
+    "architect": {
+      "patterns": {
+        "services": ["services", "design", "residential", "commercial"],
+        "portfolio": ["portfolio", "projects", "work"],
+        "info": ["about", "contact", "team"]
+      }
+    },
+    "art_gallery": {
+      "patterns": {
+        "exhibitions": ["exhibitions", "artists", "collections", "gallery"],
+        "events": ["events", "openings", "shows"],
+        "info": ["about", "contact", "visit", "hours"]
+      }
+    },
+    "article": {
+      "patterns": {
+        "content": ["article", "post", "story", "news"],
+        "category": ["category", "topic", "section"],
+        "author": ["author", "writer"]
+      }
+    },
+    "attorney": {
+      "patterns": {
+        "practice": ["practice-areas", "services", "legal"],
+        "attorneys": ["attorneys", "team", "lawyers"],
+        "info": ["about", "contact", "consultation"]
+      }
+    },
+    "auto_body_shop": {
+      "patterns": {
+        "services": ["services", "repair", "collision", "paint", "body"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "auto_dealer": {
+      "patterns": {
+        "inventory": ["inventory", "vehicles", "cars", "trucks", "suv"],
+        "new": ["new", "new-vehicles"],
+        "used": ["used", "pre-owned", "certified"],
+        "services": ["service", "parts", "maintenance"],
+        "info": ["about", "contact", "hours", "location"]
+      }
+    },
+    "auto_parts_store": {
+      "patterns": {
+        "products": ["parts", "products", "accessories"],
+        "categories": ["engine", "brakes", "electrical", "filters"],
+        "brands": ["brands"],
+        "info": ["about", "contact", "locations", "hours"]
+      }
+    },
+    "auto_repair": {
+      "patterns": {
+        "services": ["services", "repair", "maintenance", "diagnostics"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "auto_wash": {
+      "patterns": {
+        "services": ["services", "packages", "wash", "detail"],
+        "info": ["about", "contact", "locations", "hours"]
+      }
+    },
+    "bakery": {
+      "patterns": {
+        "menu": ["menu", "products", "bread", "cakes", "pastries"],
+        "services": ["catering", "custom", "orders"],
+        "info": ["about", "contact", "hours", "location"]
+      }
+    },
+    "bank": {
+      "patterns": {
+        "products": ["products", "accounts", "loans", "mortgage", "credit"],
+        "services": ["services", "business", "personal"],
+        "locations": ["locations", "branches", "atm"],
+        "info": ["about", "contact", "rates"]
+      }
+    },
+    "bar": {
+      "patterns": {
+        "menu": ["menu", "drinks", "cocktails", "beer", "wine"],
+        "events": ["events", "entertainment", "live-music"],
+        "info": ["about", "contact", "hours", "location"]
+      }
+    },
+    "beauty_salon": {
+      "patterns": {
+        "services": ["services", "hair", "nails", "makeup", "spa"],
+        "info": ["about", "contact", "hours", "location", "book"]
+      }
+    },
+    "bed_breakfast": {
+      "patterns": {
+        "rooms": ["rooms", "accommodations", "suites"],
+        "amenities": ["amenities", "breakfast", "facilities"],
+        "info": ["about", "contact", "location", "rates"]
+      }
+    },
+    "bike_store": {
+      "patterns": {
+        "products": ["bikes", "bicycles", "products", "accessories"],
+        "categories": ["mountain", "road", "electric", "kids"],
+        "services": ["repair", "service", "tune-up"],
+        "brands": ["brands"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "blog": {
+      "patterns": {
+        "posts": ["post", "article", "blog"],
+        "categories": ["category", "topic", "tag"],
+        "info": ["about", "contact", "author"]
+      }
+    },
+    "book_store": {
+      "patterns": {
+        "products": ["books", "products"],
+        "categories": ["fiction", "non-fiction", "genre", "category"],
+        "authors": ["author", "authors"],
+        "info": ["about", "contact", "events", "hours", "location"]
+      }
+    },
+    "bowling_alley": {
+      "patterns": {
+        "info": ["about", "contact", "hours", "location", "prices"],
+        "events": ["events", "leagues", "parties"],
+        "services": ["food", "bar", "arcade"]
+      }
+    },
+    "brand": {
+      "patterns": {
+        "products": ["products", "collections"],
+        "story": ["about", "story", "mission"],
+        "info": ["contact", "locations", "retailers"]
+      }
+    },
+    "brewery": {
+      "patterns": {
+        "beers": ["beers", "menu", "taproom", "brews"],
+        "events": ["events", "tours", "tastings"],
+        "info": ["about", "contact", "hours", "location", "visit"]
+      }
+    },
+    "buddhist_temple": {
+      "patterns": {
+        "services": ["services", "meditation", "teachings", "events"],
+        "info": ["about", "contact", "hours", "location", "visit"]
+      }
+    },
+    "cafe": {
+      "patterns": {
+        "menu": ["menu", "coffee", "food", "drinks"],
+        "info": ["about", "contact", "hours", "location"]
+      }
+    },
+    "campground": {
+      "patterns": {
+        "sites": ["sites", "camping", "rv", "cabins"],
+        "amenities": ["amenities", "facilities", "activities"],
+        "info": ["about", "contact", "rates", "location", "directions"]
+      }
+    },
+    "car_rental": {
+      "patterns": {
+        "vehicles": ["vehicles", "cars", "fleet"],
+        "locations": ["locations", "branches"],
+        "info": ["about", "contact", "rates"]
+      }
+    },
+    "casino": {
+      "patterns": {
+        "gaming": ["gaming", "slots", "tables", "poker"],
+        "dining": ["dining", "restaurants", "food"],
+        "entertainment": ["entertainment", "events", "shows"],
+        "hotel": ["hotel", "rooms", "accommodations"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "cemetery": {
+      "patterns": {
+        "services": ["services", "burial", "cremation", "memorial"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "childcare": {
+      "patterns": {
+        "programs": ["programs", "curriculum", "ages", "classes"],
+        "info": ["about", "contact", "enroll", "tour"]
+      }
+    },
+    "chiropractor": {
+      "patterns": {
+        "services": ["services", "treatment", "chiropractic", "therapy"],
+        "conditions": ["conditions", "pain", "injuries"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "church": {
+      "patterns": {
+        "services": ["services", "worship", "sunday", "mass"],
+        "ministries": ["ministries", "groups", "programs"],
+        "events": ["events", "calendar"],
+        "info": ["about", "contact", "location", "times"]
+      }
+    },
+    "civic_structure": {
+      "patterns": {
+        "info": ["about", "contact", "location", "hours", "visit"]
+      }
+    },
+    "cleaning_service": {
+      "patterns": {
+        "services": ["services", "cleaning", "residential", "commercial"],
+        "areas": ["service-area", "locations"],
+        "info": ["about", "contact", "quote"]
+      }
+    },
+    "clinic": {
+      "patterns": {
+        "services": ["services", "treatment", "medical", "care"],
+        "providers": ["providers", "doctors", "staff"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "clothing_store": {
+      "patterns": {
+        "products": ["products", "clothing", "apparel"],
+        "categories": ["men", "women", "kids", "category"],
+        "collections": ["collection", "new-arrivals", "sale"],
+        "brands": ["brands"],
+        "info": ["about", "contact", "locations", "hours"]
+      }
+    },
+    "college_university": {
+      "patterns": {
+        "programs": ["programs", "degrees", "majors", "courses"],
+        "admissions": ["admissions", "apply", "visit"],
+        "campus": ["campus", "facilities", "life"],
+        "info": ["about", "contact", "directions"]
+      }
+    },
+    "comedy_club": {
+      "patterns": {
+        "shows": ["shows", "events", "calendar", "comedians"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "community_center": {
+      "patterns": {
+        "programs": ["programs", "activities", "classes", "events"],
+        "facilities": ["facilities", "rooms", "amenities"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "computer_store": {
+      "patterns": {
+        "products": ["products", "computers", "laptops", "desktops"],
+        "categories": ["category", "accessories", "components"],
+        "services": ["repair", "service", "support"],
+        "brands": ["brands"],
+        "info": ["about", "contact", "locations", "hours"]
+      }
+    },
+    "conference_center": {
+      "patterns": {
+        "facilities": ["facilities", "rooms", "spaces", "venues"],
+        "services": ["services", "catering", "av", "events"],
+        "info": ["about", "contact", "location"]
+      }
+    },
+    "consulting_company": {
+      "patterns": {
+        "services": ["services", "consulting", "solutions"],
+        "industries": ["industries", "sectors"],
+        "info": ["about", "contact", "team", "careers"]
+      }
+    },
+    "convenience_store": {
+      "patterns": {
+        "products": ["products", "menu", "services"],
+        "info": ["about", "contact", "locations", "hours"]
+      }
+    },
+    "corporation": {
+      "patterns": {
+        "about": ["about", "company", "mission", "history"],
+        "products": ["products", "services", "solutions"],
+        "news": ["news", "press", "media"],
+        "investors": ["investors", "financial"],
+        "careers": ["careers", "jobs"],
+        "info": ["contact", "locations"]
+      }
+    },
+    "cosmetics_store": {
+      "patterns": {
+        "products": ["products", "makeup", "skincare", "beauty"],
+        "categories": ["category", "brands"],
+        "info": ["about", "contact", "locations", "hours"]
+      }
+    },
+    "courier_service": {
+      "patterns": {
+        "services": ["services", "shipping", "delivery", "courier"],
+        "coverage": ["coverage", "locations", "areas"],
+        "info": ["about", "contact", "quote"]
+      }
+    },
+    "course": {
+      "patterns": {
+        "course": ["course", "class", "program", "training"],
+        "curriculum": ["curriculum", "lessons", "modules"],
+        "info": ["about", "instructor", "enroll"]
+      }
+    },
+    "day_spa": {
+      "patterns": {
+        "services": ["services", "treatments", "massage", "facial", "spa"],
+        "packages": ["packages", "specials"],
+        "info": ["about", "contact", "location", "hours", "book"]
+      }
+    },
+    "dentist": {
+      "patterns": {
+        "services": ["services", "dental", "cosmetic", "orthodontics"],
+        "team": ["team", "dentists", "staff"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "diagnostic_lab": {
+      "patterns": {
+        "services": ["services", "tests", "lab", "diagnostics"],
+        "info": ["about", "contact", "locations", "hours"]
+      }
+    },
+    "dry_cleaning_laundry": {
+      "patterns": {
+        "services": ["services", "dry-cleaning", "laundry", "alterations"],
+        "info": ["about", "contact", "locations", "hours"]
+      }
+    },
+    "ecommerce": {
+      "patterns": {
+        "product": ["product", "item", "p"],
+        "category": ["category", "collection", "shop"],
+        "brand": ["brand"],
+        "info": ["about", "contact", "shipping", "returns"]
+      }
+    },
+    "educational_organization": {
+      "patterns": {
+        "programs": ["programs", "courses", "classes", "training"],
+        "admissions": ["admissions", "enroll", "apply"],
+        "info": ["about", "contact", "location"]
+      }
+    },
+    "eldercare_facility": {
+      "patterns": {
+        "services": ["services", "care", "assisted-living", "memory"],
+        "amenities": ["amenities", "facilities", "activities"],
+        "info": ["about", "contact", "location", "tour"]
+      }
+    },
+    "electrician": {
+      "patterns": {
+        "services": ["services", "electrical", "repair", "installation"],
+        "areas": ["service-area", "locations"],
+        "info": ["about", "contact", "emergency"]
+      }
+    },
+    "electronics_store": {
+      "patterns": {
+        "products": ["products", "electronics", "tv", "audio", "appliances"],
+        "categories": ["category"],
+        "brands": ["brands"],
+        "info": ["about", "contact", "locations", "hours"]
+      }
+    },
+    "elementary_school": {
+      "patterns": {
+        "programs": ["programs", "curriculum", "academics"],
+        "admissions": ["admissions", "enroll"],
+        "info": ["about", "contact", "location", "calendar"]
+      }
+    },
+    "emergency_service": {
+      "patterns": {
+        "services": ["services", "emergency"],
+        "info": ["about", "contact", "location"]
+      }
+    },
+    "employment_agency": {
+      "patterns": {
+        "jobs": ["jobs", "positions", "openings"],
+        "services": ["services", "staffing", "recruitment"],
+        "info": ["about", "contact"]
+      }
+    },
+    "entertainment_business": {
+      "patterns": {
+        "events": ["events", "shows", "entertainment"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "event": {
+      "patterns": {
+        "event": ["event", "events", "calendar"],
+        "info": ["about", "contact", "location", "tickets"]
+      }
+    },
+    "event_venue": {
+      "patterns": {
+        "events": ["events", "calendar", "shows"],
+        "spaces": ["spaces", "rooms", "venues"],
+        "info": ["about", "contact", "location", "book"]
+      }
+    },
+    "exercise_gym": {
+      "patterns": {
+        "classes": ["classes", "programs", "training"],
+        "membership": ["membership", "pricing", "join"],
+        "facilities": ["facilities", "amenities"],
+        "info": ["about", "contact", "locations", "hours"]
+      }
+    },
+    "faq_page": {
+      "patterns": {
+        "faq": ["faq", "questions", "help"]
+      }
+    },
+    "fast_food_restaurant": {
+      "patterns": {
+        "menu": ["menu", "food", "items"],
+        "info": ["about", "contact", "locations", "hours"]
+      }
+    },
+    "financial_service": {
+      "patterns": {
+        "services": ["services", "financial", "planning", "investment"],
+        "info": ["about", "contact", "team"]
+      }
+    },
+    "fire_station": {
+      "patterns": {
+        "services": ["services", "fire", "emergency"],
+        "info": ["about", "contact", "location"]
+      }
+    },
+    "fitness_center": {
+      "patterns": {
+        "classes": ["classes", "programs", "training"],
+        "membership": ["membership", "pricing"],
+        "info": ["about", "contact", "locations", "hours"]
+      }
+    },
+    "florist": {
+      "patterns": {
+        "products": ["flowers", "arrangements", "products"],
+        "occasions": ["wedding", "funeral", "occasion"],
+        "info": ["about", "contact", "location", "hours", "delivery"]
+      }
+    },
+    "food_establishment": {
+      "patterns": {
+        "menu": ["menu", "food"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "funeral_home": {
+      "patterns": {
+        "services": ["services", "funeral", "cremation", "burial"],
+        "info": ["about", "contact", "location"]
+      }
+    },
+    "furniture_store": {
+      "patterns": {
+        "products": ["products", "furniture"],
+        "categories": ["category", "living", "bedroom", "dining", "office"],
+        "info": ["about", "contact", "locations", "hours", "delivery"]
+      }
+    },
+    "garden_store": {
+      "patterns": {
+        "products": ["products", "plants", "garden", "supplies"],
+        "categories": ["category"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "gas_station": {
+      "patterns": {
+        "services": ["services", "fuel", "convenience"],
+        "info": ["about", "contact", "locations", "hours"]
+      }
+    },
+    "general_contractor": {
+      "patterns": {
+        "services": ["services", "construction", "remodeling", "renovation"],
+        "projects": ["projects", "portfolio", "gallery"],
+        "info": ["about", "contact", "areas"]
+      }
+    },
+    "golf_course": {
+      "patterns": {
+        "course": ["course", "holes", "layout"],
+        "rates": ["rates", "fees", "pricing"],
+        "info": ["about", "contact", "location", "book"]
+      }
+    },
+    "government_organization": {
+      "patterns": {
+        "services": ["services", "departments"],
+        "info": ["about", "contact", "locations", "hours"]
+      }
+    },
+    "graphic_designer": {
+      "patterns": {
+        "services": ["services", "design", "branding", "graphics"],
+        "portfolio": ["portfolio", "work", "projects"],
+        "info": ["about", "contact"]
+      }
+    },
+    "hair_salon": {
+      "patterns": {
+        "services": ["services", "hair", "cuts", "color", "styling"],
+        "info": ["about", "contact", "location", "hours", "book"]
+      }
+    },
+    "hardware_store": {
+      "patterns": {
+        "products": ["products", "tools", "hardware", "supplies"],
+        "categories": ["category"],
+        "info": ["about", "contact", "locations", "hours"]
+      }
+    },
+    "high_school": {
+      "patterns": {
+        "academics": ["academics", "programs", "curriculum"],
+        "admissions": ["admissions", "enroll"],
+        "athletics": ["athletics", "sports"],
+        "info": ["about", "contact", "location", "calendar"]
+      }
+    },
+    "hindu_temple": {
+      "patterns": {
+        "services": ["services", "worship", "puja", "events"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "home_and_construction_business": {
+      "patterns": {
+        "services": ["services", "construction", "remodeling", "repair"],
+        "info": ["about", "contact", "areas"]
+      }
+    },
+    "home_service_business": {
+      "patterns": {
+        "services": ["services", "home", "repair", "maintenance"],
+        "info": ["about", "contact", "areas"]
+      }
+    },
+    "hospital": {
+      "patterns": {
+        "services": ["services", "departments", "specialties", "medical"],
+        "providers": ["providers", "doctors", "physicians"],
+        "locations": ["locations", "facilities"],
+        "info": ["about", "contact", "directions"]
+      }
+    },
+    "hospital_emergency": {
+      "patterns": {
+        "emergency": ["emergency", "er", "urgent"],
+        "info": ["about", "contact", "location", "directions"]
+      }
+    },
+    "hostel": {
+      "patterns": {
+        "rooms": ["rooms", "dorms", "accommodations"],
+        "amenities": ["amenities", "facilities"],
+        "info": ["about", "contact", "location"]
+      }
+    },
+    "hotel": {
+      "patterns": {
+        "rooms": ["rooms", "suites", "accommodations"],
+        "amenities": ["amenities", "facilities", "pool", "spa"],
+        "dining": ["dining", "restaurant", "bar"],
+        "events": ["events", "meetings", "weddings"],
+        "info": ["about", "contact", "location", "directions"]
+      }
+    },
+    "house_painter": {
+      "patterns": {
+        "services": ["services", "painting", "interior", "exterior"],
+        "info": ["about", "contact", "areas"]
+      }
+    },
+    "how_to": {
+      "patterns": {
+        "guide": ["how-to", "guide", "tutorial", "instructions"]
+      }
+    },
+    "hvac_business": {
+      "patterns": {
+        "services": ["services", "hvac", "heating", "cooling", "repair"],
+        "info": ["about", "contact", "areas", "emergency"]
+      }
+    },
+    "ice_cream_shop": {
+      "patterns": {
+        "menu": ["menu", "flavors", "ice-cream"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "insurance_agency": {
+      "patterns": {
+        "products": ["products", "insurance", "auto", "home", "life", "business"],
+        "info": ["about", "contact", "quote"]
+      }
+    },
+    "interior_designer": {
+      "patterns": {
+        "services": ["services", "design", "interior", "residential", "commercial"],
+        "portfolio": ["portfolio", "projects", "work"],
+        "info": ["about", "contact"]
+      }
+    },
+    "jewelry_store": {
+      "patterns": {
+        "products": ["products", "jewelry", "rings", "necklaces", "watches"],
+        "categories": ["category", "engagement", "wedding"],
+        "brands": ["brands"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "job_posting": {
+      "patterns": {
+        "jobs": ["job", "jobs", "careers", "positions", "openings"]
+      }
+    },
+    "landscaper": {
+      "patterns": {
+        "services": ["services", "landscaping", "design", "maintenance"],
+        "portfolio": ["portfolio", "projects", "gallery"],
+        "info": ["about", "contact", "areas"]
+      }
+    },
+    "library": {
+      "patterns": {
+        "catalog": ["catalog", "books", "materials"],
+        "services": ["services", "programs", "events"],
+        "info": ["about", "contact", "locations", "hours"]
+      }
+    },
+    "liquor_store": {
+      "patterns": {
+        "products": ["products", "wine", "beer", "spirits", "liquor"],
+        "categories": ["category"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "local_business": {
+      "patterns": {
+        "services": ["services"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "locksmith": {
+      "patterns": {
+        "services": ["services", "locksmith", "locks", "keys", "security"],
+        "info": ["about", "contact", "areas", "emergency"]
+      }
+    },
+    "marketing_agency": {
+      "patterns": {
+        "services": ["services", "marketing", "digital", "seo", "advertising"],
+        "portfolio": ["portfolio", "work", "case-studies"],
+        "info": ["about", "contact", "team"]
+      }
+    },
+    "marketplace": {
+      "patterns": {
+        "listings": ["listings", "items", "products"],
+        "categories": ["category", "categories"],
+        "sellers": ["sellers", "vendors"],
+        "info": ["about", "contact", "help"]
+      }
+    },
+    "medical_organization": {
+      "patterns": {
+        "services": ["services", "medical", "care", "specialties"],
+        "providers": ["providers", "doctors"],
+        "locations": ["locations"],
+        "info": ["about", "contact"]
+      }
+    },
+    "mental_health_service": {
+      "patterns": {
+        "services": ["services", "therapy", "counseling", "treatment"],
+        "providers": ["providers", "therapists"],
+        "info": ["about", "contact", "location"]
+      }
+    },
+    "middle_school": {
+      "patterns": {
+        "academics": ["academics", "programs", "curriculum"],
+        "admissions": ["admissions", "enroll"],
+        "info": ["about", "contact", "location", "calendar"]
+      }
+    },
+    "mosque": {
+      "patterns": {
+        "services": ["services", "prayer", "times", "events"],
+        "info": ["about", "contact", "location"]
+      }
+    },
+    "motel": {
+      "patterns": {
+        "rooms": ["rooms", "accommodations"],
+        "amenities": ["amenities"],
+        "info": ["about", "contact", "location"]
+      }
+    },
+    "motorcycle_dealer": {
+      "patterns": {
+        "inventory": ["inventory", "motorcycles", "bikes"],
+        "new": ["new"],
+        "used": ["used", "pre-owned"],
+        "services": ["service", "parts"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "motorcycle_repair": {
+      "patterns": {
+        "services": ["services", "repair", "maintenance", "motorcycle"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "movie_theater": {
+      "patterns": {
+        "showtimes": ["showtimes", "movies", "now-playing"],
+        "info": ["about", "contact", "location"]
+      }
+    },
+    "moving_company": {
+      "patterns": {
+        "services": ["services", "moving", "storage", "packing"],
+        "areas": ["areas", "locations"],
+        "info": ["about", "contact", "quote"]
+      }
+    },
+    "museum": {
+      "patterns": {
+        "exhibitions": ["exhibitions", "exhibits", "collections"],
+        "events": ["events", "programs"],
+        "visit": ["visit", "hours", "admission", "tickets"],
+        "info": ["about", "contact", "location"]
+      }
+    },
+    "music_store": {
+      "patterns": {
+        "products": ["products", "instruments", "music", "accessories"],
+        "categories": ["category", "guitar", "piano", "drums"],
+        "services": ["lessons", "repair"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "music_venue": {
+      "patterns": {
+        "events": ["events", "shows", "concerts", "calendar"],
+        "info": ["about", "contact", "location", "tickets"]
+      }
+    },
+    "nail_salon": {
+      "patterns": {
+        "services": ["services", "nails", "manicure", "pedicure"],
+        "info": ["about", "contact", "location", "hours", "book"]
+      }
+    },
+    "news_article": {
+      "patterns": {
+        "articles": ["article", "news", "story"],
+        "categories": ["category", "section"],
+        "info": ["about", "contact"]
+      }
+    },
+    "news_media_organization": {
+      "patterns": {
+        "news": ["news", "articles", "stories"],
+        "sections": ["section", "category"],
+        "info": ["about", "contact", "team"]
+      }
+    },
+    "ngo": {
+      "patterns": {
+        "mission": ["about", "mission", "causes"],
+        "programs": ["programs", "projects", "initiatives"],
+        "info": ["contact", "donate", "volunteer"]
+      }
+    },
+    "night_club": {
+      "patterns": {
+        "events": ["events", "parties", "calendar"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "notary": {
+      "patterns": {
+        "services": ["services", "notary", "notarization"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "online_course": {
+      "patterns": {
+        "courses": ["courses", "classes", "programs"],
+        "curriculum": ["curriculum", "lessons"],
+        "info": ["about", "instructor", "enroll"]
+      }
+    },
+    "optical_store": {
+      "patterns": {
+        "products": ["products", "glasses", "contacts", "eyewear"],
+        "services": ["services", "exams", "eye-care"],
+        "brands": ["brands"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "optician": {
+      "patterns": {
+        "services": ["services", "eye-exams", "glasses", "contacts"],
+        "products": ["products", "eyewear", "frames"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "organization": {
+      "patterns": {
+        "about": ["about", "mission", "team"],
+        "info": ["contact", "locations"]
+      }
+    },
+    "parking_facility": {
+      "patterns": {
+        "info": ["about", "contact", "location", "rates", "hours"]
+      }
+    },
+    "pawn_shop": {
+      "patterns": {
+        "services": ["services", "pawn", "buy", "sell"],
+        "inventory": ["inventory", "items"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "performing_group": {
+      "patterns": {
+        "performances": ["performances", "shows", "events"],
+        "info": ["about", "contact", "members"]
+      }
+    },
+    "pest_control_service": {
+      "patterns": {
+        "services": ["services", "pest-control", "exterminator", "treatment"],
+        "info": ["about", "contact", "areas"]
+      }
+    },
+    "pet_store": {
+      "patterns": {
+        "products": ["products", "pets", "supplies", "food"],
+        "categories": ["category", "dogs", "cats", "fish", "birds"],
+        "services": ["services", "grooming"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "pharmacy": {
+      "patterns": {
+        "services": ["services", "pharmacy", "prescriptions", "immunizations"],
+        "info": ["about", "contact", "locations", "hours"]
+      }
+    },
+    "photographer": {
+      "patterns": {
+        "services": ["services", "photography", "wedding", "portrait"],
+        "portfolio": ["portfolio", "gallery", "work"],
+        "info": ["about", "contact"]
+      }
+    },
+    "physical_therapist": {
+      "patterns": {
+        "services": ["services", "therapy", "treatment", "rehabilitation"],
+        "conditions": ["conditions", "injuries"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "physician": {
+      "patterns": {
+        "services": ["services", "medical", "care", "specialties"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "plumber": {
+      "patterns": {
+        "services": ["services", "plumbing", "repair", "installation"],
+        "info": ["about", "contact", "areas", "emergency"]
+      }
+    },
+    "podiatrist": {
+      "patterns": {
+        "services": ["services", "podiatry", "foot", "ankle"],
+        "conditions": ["conditions", "treatment"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "police_station": {
+      "patterns": {
+        "services": ["services", "police", "community"],
+        "info": ["about", "contact", "location"]
+      }
+    },
+    "pool_service": {
+      "patterns": {
+        "services": ["services", "pool", "cleaning", "maintenance", "repair"],
+        "info": ["about", "contact", "areas"]
+      }
+    },
+    "preschool": {
+      "patterns": {
+        "programs": ["programs", "curriculum"],
+        "admissions": ["admissions", "enroll"],
+        "info": ["about", "contact", "location", "tour"]
+      }
+    },
+    "printing_service": {
+      "patterns": {
+        "services": ["services", "printing", "design", "signs"],
+        "products": ["products"],
+        "info": ["about", "contact", "location"]
+      }
+    },
+    "product": {
+      "patterns": {
+        "product": ["product", "item", "p"],
+        "category": ["category"],
+        "brand": ["brand"]
+      }
+    },
+    "professional_service": {
+      "patterns": {
+        "services": ["services"],
+        "info": ["about", "contact", "team"]
+      }
+    },
+    "project": {
+      "patterns": {
+        "project": ["project", "projects"],
+        "info": ["about", "team"]
+      }
+    },
+    "public_swimming_pool": {
+      "patterns": {
+        "info": ["about", "contact", "location", "hours", "rates"]
+      }
+    },
+    "radio_station": {
+      "patterns": {
+        "shows": ["shows", "programs", "schedule"],
+        "info": ["about", "contact", "team"]
+      }
+    },
+    "real_estate_agency": {
+      "patterns": {
+        "listings": ["listings", "properties", "homes"],
+        "agents": ["agents", "team"],
+        "info": ["about", "contact"]
+      }
+    },
+    "real_estate_agent": {
+      "patterns": {
+        "listings": ["listings", "properties", "homes"],
+        "info": ["about", "contact"]
+      }
+    },
+    "recipe": {
+      "patterns": {
+        "recipe": ["recipe", "recipes"],
+        "category": ["category", "cuisine"]
+      }
+    },
+    "recreation_center": {
+      "patterns": {
+        "facilities": ["facilities", "amenities"],
+        "programs": ["programs", "activities", "classes"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "recycling_center": {
+      "patterns": {
+        "services": ["services", "recycling", "materials"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "religious_organization": {
+      "patterns": {
+        "services": ["services", "worship", "events"],
+        "info": ["about", "contact", "location", "times"]
+      }
+    },
+    "research_organization": {
+      "patterns": {
+        "research": ["research", "projects", "publications"],
+        "info": ["about", "contact", "team"]
+      }
+    },
+    "residence": {
+      "patterns": {
+        "info": ["about", "contact", "location"]
+      }
+    },
+    "resort": {
+      "patterns": {
+        "accommodations": ["accommodations", "rooms", "suites", "villas"],
+        "amenities": ["amenities", "spa", "pool", "beach"],
+        "dining": ["dining", "restaurants", "bars"],
+        "activities": ["activities", "recreation"],
+        "info": ["about", "contact", "location", "directions"]
+      }
+    },
+    "restaurant": {
+      "patterns": {
+        "menu": ["menu", "food", "dining"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "roofing_contractor": {
+      "patterns": {
+        "services": ["services", "roofing", "repair", "replacement"],
+        "info": ["about", "contact", "areas"]
+      }
+    },
+    "rv_park": {
+      "patterns": {
+        "sites": ["sites", "rv", "camping"],
+        "amenities": ["amenities", "facilities"],
+        "info": ["about", "contact", "rates", "location"]
+      }
+    },
+    "saas": {
+      "patterns": {
+        "features": ["features", "product", "solutions"],
+        "pricing": ["pricing", "plans"],
+        "resources": ["resources", "blog", "docs", "help"],
+        "info": ["about", "contact"]
+      }
+    },
+    "school": {
+      "patterns": {
+        "academics": ["academics", "programs", "curriculum"],
+        "admissions": ["admissions", "enroll"],
+        "info": ["about", "contact", "location"]
+      }
+    },
+    "self_storage": {
+      "patterns": {
+        "units": ["units", "storage", "sizes"],
+        "info": ["about", "contact", "location", "rates"]
+      }
+    },
+    "service": {
+      "patterns": {
+        "services": ["services"],
+        "info": ["about", "contact"]
+      }
+    },
+    "shopping_center": {
+      "patterns": {
+        "stores": ["stores", "directory", "shops"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "ski_resort": {
+      "patterns": {
+        "trails": ["trails", "runs", "terrain", "lifts"],
+        "conditions": ["conditions", "snow", "weather"],
+        "tickets": ["tickets", "passes", "rates"],
+        "accommodations": ["lodging", "hotels"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "software_application": {
+      "patterns": {
+        "features": ["features", "product"],
+        "pricing": ["pricing", "plans"],
+        "docs": ["docs", "documentation", "help"],
+        "info": ["about", "contact"]
+      }
+    },
+    "sporting_goods_store": {
+      "patterns": {
+        "products": ["products", "sports", "equipment", "gear"],
+        "categories": ["category"],
+        "brands": ["brands"],
+        "info": ["about", "contact", "locations", "hours"]
+      }
+    },
+    "sports_activity_location": {
+      "patterns": {
+        "facilities": ["facilities", "activities"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "sports_club": {
+      "patterns": {
+        "teams": ["teams", "leagues"],
+        "membership": ["membership", "join"],
+        "info": ["about", "contact", "location"]
+      }
+    },
+    "sports_organization": {
+      "patterns": {
+        "teams": ["teams", "athletes"],
+        "info": ["about", "contact"]
+      }
+    },
+    "sports_team": {
+      "patterns": {
+        "roster": ["roster", "players", "team"],
+        "schedule": ["schedule", "games", "calendar"],
+        "info": ["about", "contact"]
+      }
+    },
+    "stadium": {
+      "patterns": {
+        "events": ["events", "schedule", "calendar"],
+        "info": ["about", "contact", "location", "directions"]
+      }
+    },
+    "store": {
+      "patterns": {
+        "products": ["products"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "subscription_service": {
+      "patterns": {
+        "plans": ["plans", "pricing", "subscription"],
+        "features": ["features"],
+        "info": ["about", "contact"]
+      }
+    },
+    "synagogue": {
+      "patterns": {
+        "services": ["services", "worship", "events"],
+        "info": ["about", "contact", "location", "times"]
+      }
+    },
+    "tattoo_parlor": {
+      "patterns": {
+        "artists": ["artists", "portfolio", "gallery"],
+        "services": ["services", "tattoos", "piercing"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "tax_service": {
+      "patterns": {
+        "services": ["services", "tax", "preparation", "filing"],
+        "info": ["about", "contact"]
+      }
+    },
+    "taxi_service": {
+      "patterns": {
+        "services": ["services", "rates", "coverage"],
+        "info": ["about", "contact"]
+      }
+    },
+    "telemedicine": {
+      "patterns": {
+        "services": ["services", "telemedicine", "virtual", "care"],
+        "providers": ["providers", "doctors"],
+        "info": ["about", "contact"]
+      }
+    },
+    "television_station": {
+      "patterns": {
+        "shows": ["shows", "programs", "schedule"],
+        "news": ["news"],
+        "info": ["about", "contact", "team"]
+      }
+    },
+    "tennis_complex": {
+      "patterns": {
+        "courts": ["courts", "facilities"],
+        "programs": ["programs", "lessons"],
+        "info": ["about", "contact", "location", "rates"]
+      }
+    },
+    "tire_shop": {
+      "patterns": {
+        "products": ["tires", "products", "brands"],
+        "services": ["services", "installation", "alignment"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "tourist_attraction": {
+      "patterns": {
+        "attractions": ["attractions", "exhibits"],
+        "visit": ["visit", "tickets", "hours"],
+        "info": ["about", "contact", "location", "directions"]
+      }
+    },
+    "toy_store": {
+      "patterns": {
+        "products": ["products", "toys", "games"],
+        "categories": ["category"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "travel_agency": {
+      "patterns": {
+        "destinations": ["destinations", "packages", "tours"],
+        "services": ["services", "travel"],
+        "info": ["about", "contact"]
+      }
+    },
+    "veterinary": {
+      "patterns": {
+        "services": ["services", "veterinary", "care", "surgery"],
+        "team": ["team", "vets", "staff"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "video_game_store": {
+      "patterns": {
+        "products": ["products", "games", "consoles", "accessories"],
+        "categories": ["category", "platforms"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "video_object": {
+      "patterns": {
+        "video": ["video", "videos", "watch"]
+      }
+    },
+    "web_page": {
+      "patterns": {
+        "pages": ["page"]
+      }
+    },
+    "website": {
+      "patterns": {
+        "info": ["about", "contact", "home"]
+      }
+    },
+    "wedding_venue": {
+      "patterns": {
+        "venue": ["venue", "spaces", "packages"],
+        "services": ["services", "catering", "events"],
+        "info": ["about", "contact", "location", "tour"]
+      }
+    },
+    "wellness_center": {
+      "patterns": {
+        "services": ["services", "wellness", "treatments"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "winery": {
+      "patterns": {
+        "wines": ["wines", "varietals", "tasting"],
+        "events": ["events", "tours"],
+        "info": ["about", "contact", "location", "hours", "visit"]
+      }
+    },
+    "yoga_studio": {
+      "patterns": {
+        "classes": ["classes", "schedule", "yoga"],
+        "teachers": ["teachers", "instructors"],
+        "info": ["about", "contact", "location", "hours"]
+      }
+    },
+    "zoo": {
+      "patterns": {
+        "animals": ["animals", "exhibits", "species"],
+        "visit": ["visit", "tickets", "hours", "admission"],
+        "info": ["about", "contact", "location", "events"]
+      }
+    }
+  }
+}

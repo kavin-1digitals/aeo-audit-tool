@@ -6,17 +6,29 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Load configuration from JSON file
-config_path = os.path.join(os.path.dirname(__file__), 'config.json')
+config_path = os.path.join(os.path.dirname(__file__), 'config','config.json')
+jsonld_categories_path = os.path.join(os.path.dirname(__file__), 'config','jsonld_categories.json')
+jsonld_validation_rules_path = os.path.join(os.path.dirname(__file__), 'config','jsonld_validation_rules.json')
+critical_patterns_path = os.path.join(os.path.dirname(__file__), 'config','critical_patterns.json')
 
 with open(config_path, 'r') as f:
     config = json.load(f)
 
+with open(jsonld_categories_path, 'r') as f:
+    jsonld_categories_config = json.load(f)
+
+with open(jsonld_validation_rules_path, 'r') as f:
+    jsonld_validation_rules_config = json.load(f)
+
+with open(critical_patterns_path, 'r') as f:
+    critical_patterns_config = json.load(f)
+
 AI_CRAWLERS = config['ai_crawlers']
 SEARCH_CRAWLERS = config['search_crawlers']
-CRITICAL_PATTERNS = config['critical_patterns']
+CRITICAL_PATTERNS = critical_patterns_config['critical_patterns']
 SITEMAP_PATTERNS = config['sitemap_patterns']
-JSONLD_CATEGORIES = config['jsonld_categories']
-JSONLD_VALIDATION_RULES = config['jsonld_validation_rules']
+JSONLD_CATEGORIES = jsonld_categories_config['jsonld_categories']
+JSONLD_VALIDATION_RULES = jsonld_validation_rules_config['jsonld_validation_rules']
 
 LLM_PROVIDERS = config['llm']
 SCORING_WEIGHTS = config['scoring_weights']

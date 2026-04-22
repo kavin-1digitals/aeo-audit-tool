@@ -4,7 +4,7 @@ Signal processing utilities for AEO audit tool
 
 import logging
 import asyncio
-from typing import Optional
+from typing import Optional, List
 from .domain_signals import DomainSignals, find_domain_signals
 from .site_signals import SiteSignals, find_site_signals
 from .llm_signals import LlmSignals, find_llm_signals
@@ -24,7 +24,7 @@ async def find_signals(
     full_domain: str,
     brand: Optional[str] = None,
     geo: Optional[str] = "United States",
-    site_type: Optional[str] = None
+    site_types: Optional[List[str]] = None
 ) -> Signals:
 
     logger.info(f"Starting signals analysis for domain: {full_domain}")
@@ -33,8 +33,8 @@ async def find_signals(
     # -----------------------------
     # Create tasks
     # -----------------------------
-    domain_task = asyncio.create_task(find_domain_signals(full_domain, site_type))
-    site_task = asyncio.create_task(find_site_signals(full_domain, site_type, None))
+    domain_task = asyncio.create_task(find_domain_signals(full_domain, site_types))
+    site_task = asyncio.create_task(find_site_signals(full_domain, None, site_types))
 
     tasks = [domain_task, site_task]
 

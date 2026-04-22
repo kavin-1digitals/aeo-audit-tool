@@ -5,7 +5,7 @@ from src.scorecard import Score, RawScoreCard
 
 from typing import Optional, List
 
-async def calculate_canonical_score(site_signal: SiteSignal):
+async def calculate_canonical_score(site_signal: SiteSignal, site_types: Optional[List[str]] = None):
     scores = []
     canonical_signal = site_signal.canonical_signal
     
@@ -28,7 +28,7 @@ async def calculate_canonical_score(site_signal: SiteSignal):
         # If canonical doesn't exist, no matching validation needed
         pass
     
-    # Rule 3: Canonical URL is clean (no query params)
+    
     if canonical_signal.exists:
         if canonical_signal.is_clean:
             scores.append(Score(value=1.0, signal_name='canonical_clean', signal_path=['Site Signals', 'Canonical URLs'], remediation_plan=None, success_state=f'Canonical URL is clean (no query parameters) for {site_signal.url}'))

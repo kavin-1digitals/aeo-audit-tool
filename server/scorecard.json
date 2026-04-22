@@ -1,0 +1,4482 @@
+{
+  "scorecard": {
+    "raw_scorecard": {
+      "scores": [
+        {
+          "value": -1,
+          "signal_name": "llms_txt_exists",
+          "signal_path": [
+            "Domain Signals",
+            "LLMs.txt"
+          ],
+          "remediation_plan": "Create a /llms.txt file at your root domain (e.g., https://yourdomain.com/llms.txt). This file should contain structured information about your brand, content priorities, AI interaction guidelines, and key business information. Use plain text or markdown format with clear sections like \"Brand Information\", \"Content Priorities\", and \"AI Guidelines\". This file is essential for proper AI crawler understanding and representation.",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "llms_txt_valid",
+          "signal_path": [
+            "Domain Signals",
+            "LLMs.txt"
+          ],
+          "remediation_plan": "Fix your /llms.txt file to return plain text or markdown content instead of HTML. Check your web server configuration to ensure the file is served with correct MIME type (text/plain or text/markdown) and not redirected to an HTML error page. Remove any HTML markup and ensure the file contains only structured text content that AI crawlers can easily parse.",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "llms_txt_enriched",
+          "signal_path": [
+            "Domain Signals",
+            "LLMs.txt"
+          ],
+          "remediation_plan": "Restructure your llms.txt file with proper Markdown formatting to make it more useful for AI systems. Add hierarchical headings (# Main Title, ## Section Title), bullet points (- item) for lists, bold text (**key term**) for emphasis, and use colons for structured information (Brand: Company Name). This structured approach helps AI crawlers better understand your content priorities, brand information, and AI interaction guidelines, leading to improved AI representation and search visibility.",
+          "success_state": null
+        },
+        {
+          "value": 1,
+          "signal_name": "robots_txt_exists",
+          "signal_path": [
+            "Domain Signals",
+            "Robots.txt File"
+          ],
+          "remediation_plan": null,
+          "success_state": "Robots.txt file successfully found and accessible. This file helps search engines and AI crawlers understand which parts of your site to crawl and index."
+        },
+        {
+          "value": 1,
+          "signal_name": "sitemap_exists",
+          "signal_path": [
+            "Domain Signals",
+            "Robots.txt File"
+          ],
+          "remediation_plan": null,
+          "success_state": "Sitemap URL successfully found in robots.txt. This helps search engines discover and index all your important pages efficiently."
+        },
+        {
+          "value": 1,
+          "signal_name": "ai_crawler_access",
+          "signal_path": [
+            "Domain Signals",
+            "Robots.txt File"
+          ],
+          "remediation_plan": null,
+          "success_state": "AI crawler GPTBot successfully allowed to access patterns. This enables proper AI model training and content discovery for this section."
+        },
+        {
+          "value": 1,
+          "signal_name": "ai_crawler_access",
+          "signal_path": [
+            "Domain Signals",
+            "Robots.txt File"
+          ],
+          "remediation_plan": null,
+          "success_state": "AI crawler Google-Extended successfully allowed to access patterns. This enables proper AI model training and content discovery for this section."
+        },
+        {
+          "value": 1,
+          "signal_name": "ai_crawler_access",
+          "signal_path": [
+            "Domain Signals",
+            "Robots.txt File"
+          ],
+          "remediation_plan": null,
+          "success_state": "AI crawler ClaudeBot successfully allowed to access patterns. This enables proper AI model training and content discovery for this section."
+        },
+        {
+          "value": 1,
+          "signal_name": "ai_crawler_access",
+          "signal_path": [
+            "Domain Signals",
+            "Robots.txt File"
+          ],
+          "remediation_plan": null,
+          "success_state": "AI crawler PerplexityBot successfully allowed to access patterns. This enables proper AI model training and content discovery for this section."
+        },
+        {
+          "value": 1,
+          "signal_name": "search_crawler_access",
+          "signal_path": [
+            "Domain Signals",
+            "Robots.txt File"
+          ],
+          "remediation_plan": null,
+          "success_state": "Search crawler Googlebot successfully allowed to access patterns. This ensures proper indexing and visibility in search results for this content section."
+        },
+        {
+          "value": 1,
+          "signal_name": "search_crawler_access",
+          "signal_path": [
+            "Domain Signals",
+            "Robots.txt File"
+          ],
+          "remediation_plan": null,
+          "success_state": "Search crawler Bingbot successfully allowed to access patterns. This ensures proper indexing and visibility in search results for this content section."
+        },
+        {
+          "value": 1,
+          "signal_name": "sitemap_exists",
+          "signal_path": [
+            "Domain Signals",
+            "Sitemap"
+          ],
+          "remediation_plan": null,
+          "success_state": "Sitemap file successfully found and accessible. This helps search engines discover all your important pages and understand your website structure for better indexing."
+        },
+        {
+          "value": 1,
+          "signal_name": "sitemap_type_valid",
+          "signal_path": [
+            "Domain Signals",
+            "Sitemap"
+          ],
+          "remediation_plan": null,
+          "success_state": "Sitemap has valid structure with type: sitemapindex. This ensures search engines can properly parse and process your sitemap for efficient indexing."
+        },
+        {
+          "value": 1,
+          "signal_name": "sitemap_freshness",
+          "signal_path": [
+            "Domain Signals",
+            "Sitemap"
+          ],
+          "remediation_plan": null,
+          "success_state": "Sitemap updated recently: 2026-04-22"
+        },
+        {
+          "value": 1,
+          "signal_name": "site_scrapable",
+          "signal_path": [
+            "Site Signals",
+            "Scrapability"
+          ],
+          "remediation_plan": null,
+          "success_state": "Website is scrapable"
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_exists",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical tag successfully found on https://www.aloyoga.com. This helps prevent duplicate content issues and consolidates ranking signals to your preferred URL."
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_matches",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical URL matches page URL for https://www.aloyoga.com"
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_clean",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical URL is clean (no query parameters) for https://www.aloyoga.com"
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_exists",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical tag successfully found on https://www.aloyoga.com/en-in/pages/reviews. This helps prevent duplicate content issues and consolidates ranking signals to your preferred URL."
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_matches",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical URL matches page URL for https://www.aloyoga.com/en-in/pages/reviews"
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_clean",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical URL is clean (no query parameters) for https://www.aloyoga.com/en-in/pages/reviews"
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_exists",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical tag successfully found on https://www.aloyoga.com/pages/new-to-alo#for-him. This helps prevent duplicate content issues and consolidates ranking signals to your preferred URL."
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_matches",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical URL matches page URL for https://www.aloyoga.com/pages/new-to-alo#for-him"
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_clean",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical URL is clean (no query parameters) for https://www.aloyoga.com/pages/new-to-alo#for-him"
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_exists",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical tag successfully found on https://www.aloyoga.com/en-in/pages/orders-and-shipping-support. This helps prevent duplicate content issues and consolidates ranking signals to your preferred URL."
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_matches",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical URL matches page URL for https://www.aloyoga.com/en-in/pages/orders-and-shipping-support"
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_clean",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical URL is clean (no query parameters) for https://www.aloyoga.com/en-in/pages/orders-and-shipping-support"
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_exists",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical tag successfully found on https://www.aloyoga.com/en-in/blogs/alo-blog. This helps prevent duplicate content issues and consolidates ranking signals to your preferred URL."
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_matches",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical URL matches page URL for https://www.aloyoga.com/en-in/blogs/alo-blog"
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_clean",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical URL is clean (no query parameters) for https://www.aloyoga.com/en-in/blogs/alo-blog"
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_exists",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical tag successfully found on https://www.aloyoga.com/en-in/pages/studios. This helps prevent duplicate content issues and consolidates ranking signals to your preferred URL."
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_matches",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical URL matches page URL for https://www.aloyoga.com/en-in/pages/studios"
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_clean",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical URL is clean (no query parameters) for https://www.aloyoga.com/en-in/pages/studios"
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_exists",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical tag successfully found on https://www.aloyoga.com/en-in/pages/returns-support. This helps prevent duplicate content issues and consolidates ranking signals to your preferred URL."
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_matches",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical URL matches page URL for https://www.aloyoga.com/en-in/pages/returns-support"
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_clean",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical URL is clean (no query parameters) for https://www.aloyoga.com/en-in/pages/returns-support"
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_exists",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical tag successfully found on https://www.aloyoga.com/cart. This helps prevent duplicate content issues and consolidates ranking signals to your preferred URL."
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_matches",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical URL matches page URL for https://www.aloyoga.com/cart"
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_clean",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical URL is clean (no query parameters) for https://www.aloyoga.com/cart"
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_exists",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical tag successfully found on https://www.aloyoga.com/pages/privacy-policy. This helps prevent duplicate content issues and consolidates ranking signals to your preferred URL."
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_matches",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical URL matches page URL for https://www.aloyoga.com/pages/privacy-policy"
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_clean",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical URL is clean (no query parameters) for https://www.aloyoga.com/pages/privacy-policy"
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_exists",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical tag successfully found on https://www.aloyoga.com/en-in/account/addresses. This helps prevent duplicate content issues and consolidates ranking signals to your preferred URL."
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_matches",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical URL matches page URL for https://www.aloyoga.com/en-in/account/addresses"
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_clean",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical URL is clean (no query parameters) for https://www.aloyoga.com/en-in/account/addresses"
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_exists",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical tag successfully found on https://www.aloyoga.com/en-in/pages/alo-gives. This helps prevent duplicate content issues and consolidates ranking signals to your preferred URL."
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_matches",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical URL matches page URL for https://www.aloyoga.com/en-in/pages/alo-gives"
+        },
+        {
+          "value": 1,
+          "signal_name": "canonical_clean",
+          "signal_path": [
+            "Site Signals",
+            "Canonical URLs"
+          ],
+          "remediation_plan": null,
+          "success_state": "Canonical URL is clean (no query parameters) for https://www.aloyoga.com/en-in/pages/alo-gives"
+        },
+        {
+          "value": 1,
+          "signal_name": "jsonld_exists",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": null,
+          "success_state": "JSON-LD schema Organization found"
+        },
+        {
+          "value": 1,
+          "signal_name": "jsonld_exists",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": null,
+          "success_state": "JSON-LD schema Brand found"
+        },
+        {
+          "value": 1,
+          "signal_name": "jsonld_exists",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": null,
+          "success_state": "JSON-LD schema WebSite found"
+        },
+        {
+          "value": 1,
+          "signal_name": "jsonld_exists",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": null,
+          "success_state": "JSON-LD schema Product found"
+        },
+        {
+          "value": 1,
+          "signal_name": "jsonld_exists",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": null,
+          "success_state": "JSON-LD schema Offer found"
+        },
+        {
+          "value": 1,
+          "signal_name": "jsonld_exists",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": null,
+          "success_state": "JSON-LD schema AggregateRating found"
+        },
+        {
+          "value": 1,
+          "signal_name": "jsonld_exists",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": null,
+          "success_state": "JSON-LD schema Review found"
+        },
+        {
+          "value": 1,
+          "signal_name": "jsonld_exists",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": null,
+          "success_state": "JSON-LD schema BreadcrumbList found"
+        },
+        {
+          "value": 1,
+          "signal_name": "jsonld_exists",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": null,
+          "success_state": "JSON-LD schema SearchAction found"
+        },
+        {
+          "value": 1,
+          "signal_name": "jsonld_exists",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": null,
+          "success_state": "JSON-LD schema FAQPage found"
+        },
+        {
+          "value": 1,
+          "signal_name": "jsonld_exists",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": null,
+          "success_state": "JSON-LD schema ItemList found"
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema SearchAction validation issues on https://www.aloyoga.com",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema AggregateRating validation issues on https://www.aloyoga.com",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Brand validation issues on https://www.aloyoga.com",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Offer validation issues on https://www.aloyoga.com",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Product validation issues on https://www.aloyoga.com",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Review validation issues on https://www.aloyoga.com",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema WebSite validation issues on https://www.aloyoga.com",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema FAQPage validation issues on https://www.aloyoga.com",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema ItemList validation issues on https://www.aloyoga.com",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema BreadcrumbList validation issues on https://www.aloyoga.com",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Organization validation issues on https://www.aloyoga.com",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema SearchAction validation issues on https://www.aloyoga.com/en-in/pages/reviews",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema AggregateRating validation issues on https://www.aloyoga.com/en-in/pages/reviews",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Brand validation issues on https://www.aloyoga.com/en-in/pages/reviews",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Offer validation issues on https://www.aloyoga.com/en-in/pages/reviews",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Product validation issues on https://www.aloyoga.com/en-in/pages/reviews",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Review validation issues on https://www.aloyoga.com/en-in/pages/reviews",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema FAQPage validation issues on https://www.aloyoga.com/en-in/pages/reviews",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema ItemList validation issues on https://www.aloyoga.com/en-in/pages/reviews",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema BreadcrumbList validation issues on https://www.aloyoga.com/en-in/pages/reviews",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema SearchAction validation issues on https://www.aloyoga.com/pages/new-to-alo#for-him",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema AggregateRating validation issues on https://www.aloyoga.com/pages/new-to-alo#for-him",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Brand validation issues on https://www.aloyoga.com/pages/new-to-alo#for-him",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Offer validation issues on https://www.aloyoga.com/pages/new-to-alo#for-him",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Product validation issues on https://www.aloyoga.com/pages/new-to-alo#for-him",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Review validation issues on https://www.aloyoga.com/pages/new-to-alo#for-him",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema FAQPage validation issues on https://www.aloyoga.com/pages/new-to-alo#for-him",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema ItemList validation issues on https://www.aloyoga.com/pages/new-to-alo#for-him",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema BreadcrumbList validation issues on https://www.aloyoga.com/pages/new-to-alo#for-him",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema SearchAction validation issues on https://www.aloyoga.com/en-in/pages/orders-and-shipping-support",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema AggregateRating validation issues on https://www.aloyoga.com/en-in/pages/orders-and-shipping-support",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Brand validation issues on https://www.aloyoga.com/en-in/pages/orders-and-shipping-support",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Offer validation issues on https://www.aloyoga.com/en-in/pages/orders-and-shipping-support",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Product validation issues on https://www.aloyoga.com/en-in/pages/orders-and-shipping-support",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Review validation issues on https://www.aloyoga.com/en-in/pages/orders-and-shipping-support",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema FAQPage validation issues on https://www.aloyoga.com/en-in/pages/orders-and-shipping-support",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema ItemList validation issues on https://www.aloyoga.com/en-in/pages/orders-and-shipping-support",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema BreadcrumbList validation issues on https://www.aloyoga.com/en-in/pages/orders-and-shipping-support",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema SearchAction validation issues on https://www.aloyoga.com/en-in/blogs/alo-blog",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema AggregateRating validation issues on https://www.aloyoga.com/en-in/blogs/alo-blog",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Brand validation issues on https://www.aloyoga.com/en-in/blogs/alo-blog",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Offer validation issues on https://www.aloyoga.com/en-in/blogs/alo-blog",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Product validation issues on https://www.aloyoga.com/en-in/blogs/alo-blog",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Review validation issues on https://www.aloyoga.com/en-in/blogs/alo-blog",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema FAQPage validation issues on https://www.aloyoga.com/en-in/blogs/alo-blog",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema ItemList validation issues on https://www.aloyoga.com/en-in/blogs/alo-blog",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema BreadcrumbList validation issues on https://www.aloyoga.com/en-in/blogs/alo-blog",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema SearchAction validation issues on https://www.aloyoga.com/en-in/pages/studios",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema AggregateRating validation issues on https://www.aloyoga.com/en-in/pages/studios",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Brand validation issues on https://www.aloyoga.com/en-in/pages/studios",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Offer validation issues on https://www.aloyoga.com/en-in/pages/studios",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Product validation issues on https://www.aloyoga.com/en-in/pages/studios",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Review validation issues on https://www.aloyoga.com/en-in/pages/studios",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema FAQPage validation issues on https://www.aloyoga.com/en-in/pages/studios",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema ItemList validation issues on https://www.aloyoga.com/en-in/pages/studios",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema BreadcrumbList validation issues on https://www.aloyoga.com/en-in/pages/studios",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema SearchAction validation issues on https://www.aloyoga.com/en-in/pages/returns-support",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema AggregateRating validation issues on https://www.aloyoga.com/en-in/pages/returns-support",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Brand validation issues on https://www.aloyoga.com/en-in/pages/returns-support",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Offer validation issues on https://www.aloyoga.com/en-in/pages/returns-support",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Product validation issues on https://www.aloyoga.com/en-in/pages/returns-support",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Review validation issues on https://www.aloyoga.com/en-in/pages/returns-support",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema FAQPage validation issues on https://www.aloyoga.com/en-in/pages/returns-support",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema ItemList validation issues on https://www.aloyoga.com/en-in/pages/returns-support",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema BreadcrumbList validation issues on https://www.aloyoga.com/en-in/pages/returns-support",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema SearchAction validation issues on https://www.aloyoga.com/cart",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema AggregateRating validation issues on https://www.aloyoga.com/cart",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Brand validation issues on https://www.aloyoga.com/cart",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Offer validation issues on https://www.aloyoga.com/cart",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Product validation issues on https://www.aloyoga.com/cart",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Review validation issues on https://www.aloyoga.com/cart",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema FAQPage validation issues on https://www.aloyoga.com/cart",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema ItemList validation issues on https://www.aloyoga.com/cart",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema BreadcrumbList validation issues on https://www.aloyoga.com/cart",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema SearchAction validation issues on https://www.aloyoga.com/pages/privacy-policy",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema AggregateRating validation issues on https://www.aloyoga.com/pages/privacy-policy",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Brand validation issues on https://www.aloyoga.com/pages/privacy-policy",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Offer validation issues on https://www.aloyoga.com/pages/privacy-policy",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Product validation issues on https://www.aloyoga.com/pages/privacy-policy",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Review validation issues on https://www.aloyoga.com/pages/privacy-policy",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema FAQPage validation issues on https://www.aloyoga.com/pages/privacy-policy",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema ItemList validation issues on https://www.aloyoga.com/pages/privacy-policy",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema BreadcrumbList validation issues on https://www.aloyoga.com/pages/privacy-policy",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema SearchAction validation issues on https://www.aloyoga.com/en-in/account/addresses",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema AggregateRating validation issues on https://www.aloyoga.com/en-in/account/addresses",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Brand validation issues on https://www.aloyoga.com/en-in/account/addresses",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Offer validation issues on https://www.aloyoga.com/en-in/account/addresses",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Product validation issues on https://www.aloyoga.com/en-in/account/addresses",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Review validation issues on https://www.aloyoga.com/en-in/account/addresses",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema FAQPage validation issues on https://www.aloyoga.com/en-in/account/addresses",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema ItemList validation issues on https://www.aloyoga.com/en-in/account/addresses",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema BreadcrumbList validation issues on https://www.aloyoga.com/en-in/account/addresses",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema SearchAction validation issues on https://www.aloyoga.com/en-in/pages/alo-gives",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema AggregateRating validation issues on https://www.aloyoga.com/en-in/pages/alo-gives",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Brand validation issues on https://www.aloyoga.com/en-in/pages/alo-gives",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Offer validation issues on https://www.aloyoga.com/en-in/pages/alo-gives",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Product validation issues on https://www.aloyoga.com/en-in/pages/alo-gives",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema Review validation issues on https://www.aloyoga.com/en-in/pages/alo-gives",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema FAQPage validation issues on https://www.aloyoga.com/en-in/pages/alo-gives",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema ItemList validation issues on https://www.aloyoga.com/en-in/pages/alo-gives",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "jsonld_valid",
+          "signal_path": [
+            "Site Signals",
+            "Structured Data"
+          ],
+          "remediation_plan": "Fix JSON-LD schema BreadcrumbList validation issues on https://www.aloyoga.com/en-in/pages/alo-gives",
+          "success_state": null
+        },
+        {
+          "value": 1,
+          "signal_name": "og_tags_exists",
+          "signal_path": [
+            "Site Signals",
+            "Social & Meta"
+          ],
+          "remediation_plan": null,
+          "success_state": "Open Graph tags found"
+        },
+        {
+          "value": 1,
+          "signal_name": "og_tags_complete",
+          "signal_path": [
+            "Site Signals",
+            "Social & Meta"
+          ],
+          "remediation_plan": null,
+          "success_state": "Open Graph tags are complete (title, description, image, type, url)"
+        },
+        {
+          "value": 1,
+          "signal_name": "twitter_card_exists",
+          "signal_path": [
+            "Site Signals",
+            "Social & Meta"
+          ],
+          "remediation_plan": null,
+          "success_state": "Twitter Card tag found: summary_large_image"
+        },
+        {
+          "value": 1,
+          "signal_name": "page_indexable",
+          "signal_path": [
+            "Site Signals",
+            "Indexability"
+          ],
+          "remediation_plan": null,
+          "success_state": "Page https://www.aloyoga.com is indexable"
+        },
+        {
+          "value": 1,
+          "signal_name": "page_indexable",
+          "signal_path": [
+            "Site Signals",
+            "Indexability"
+          ],
+          "remediation_plan": null,
+          "success_state": "Page https://www.aloyoga.com/en-in/pages/reviews is indexable"
+        },
+        {
+          "value": 1,
+          "signal_name": "page_indexable",
+          "signal_path": [
+            "Site Signals",
+            "Indexability"
+          ],
+          "remediation_plan": null,
+          "success_state": "Page https://www.aloyoga.com/pages/new-to-alo#for-him is indexable"
+        },
+        {
+          "value": 1,
+          "signal_name": "page_indexable",
+          "signal_path": [
+            "Site Signals",
+            "Indexability"
+          ],
+          "remediation_plan": null,
+          "success_state": "Page https://www.aloyoga.com/en-in/pages/orders-and-shipping-support is indexable"
+        },
+        {
+          "value": 1,
+          "signal_name": "page_indexable",
+          "signal_path": [
+            "Site Signals",
+            "Indexability"
+          ],
+          "remediation_plan": null,
+          "success_state": "Page https://www.aloyoga.com/en-in/blogs/alo-blog is indexable"
+        },
+        {
+          "value": 1,
+          "signal_name": "page_indexable",
+          "signal_path": [
+            "Site Signals",
+            "Indexability"
+          ],
+          "remediation_plan": null,
+          "success_state": "Page https://www.aloyoga.com/en-in/pages/studios is indexable"
+        },
+        {
+          "value": 1,
+          "signal_name": "page_indexable",
+          "signal_path": [
+            "Site Signals",
+            "Indexability"
+          ],
+          "remediation_plan": null,
+          "success_state": "Page https://www.aloyoga.com/en-in/pages/returns-support is indexable"
+        },
+        {
+          "value": 1,
+          "signal_name": "page_indexable",
+          "signal_path": [
+            "Site Signals",
+            "Indexability"
+          ],
+          "remediation_plan": null,
+          "success_state": "Page https://www.aloyoga.com/cart is indexable"
+        },
+        {
+          "value": 1,
+          "signal_name": "page_indexable",
+          "signal_path": [
+            "Site Signals",
+            "Indexability"
+          ],
+          "remediation_plan": null,
+          "success_state": "Page https://www.aloyoga.com/pages/privacy-policy is indexable"
+        },
+        {
+          "value": 1,
+          "signal_name": "page_indexable",
+          "signal_path": [
+            "Site Signals",
+            "Indexability"
+          ],
+          "remediation_plan": null,
+          "success_state": "Page https://www.aloyoga.com/en-in/account/addresses is indexable"
+        },
+        {
+          "value": 1,
+          "signal_name": "page_indexable",
+          "signal_path": [
+            "Site Signals",
+            "Indexability"
+          ],
+          "remediation_plan": null,
+          "success_state": "Page https://www.aloyoga.com/en-in/pages/alo-gives is indexable"
+        },
+        {
+          "value": 1,
+          "signal_name": "cluster_presence",
+          "signal_path": [
+            "LLM Brand Analysis",
+            "Cluster Presence"
+          ],
+          "remediation_plan": null,
+          "success_state": "Brand \"Alo Yoga\" is present in \"Breathability & Fabric\" cluster."
+        },
+        {
+          "value": -1,
+          "signal_name": "cluster_dominance",
+          "signal_path": [
+            "LLM Brand Analysis",
+            "Cluster Dominance"
+          ],
+          "remediation_plan": "Brand not dominant. Losing to: Lululemon (3)",
+          "success_state": null
+        },
+        {
+          "value": 1,
+          "signal_name": "prompt_citation",
+          "signal_path": [
+            "LLM Brand Analysis",
+            "Breathability & Fabric"
+          ],
+          "remediation_plan": null,
+          "success_state": "Brand mentioned for prompt: \"I'm looking for high-quality yoga pants that are breathable and comfortable for hot yoga classes—any recommendations?\""
+        },
+        {
+          "value": -1,
+          "signal_name": "prompt_citation",
+          "signal_path": [
+            "LLM Brand Analysis",
+            "Breathability & Fabric"
+          ],
+          "remediation_plan": "Brand missing for prompt: \"I need a pair of leggings that won't feel suffocating during my workouts, especially in the summer heat. What brands should I consider?\"",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "prompt_citation",
+          "signal_path": [
+            "LLM Brand Analysis",
+            "Breathability & Fabric"
+          ],
+          "remediation_plan": "Brand missing for prompt: \"Can you suggest some athletic wear brands that use lightweight, breathable fabrics for intense workouts?\"",
+          "success_state": null
+        },
+        {
+          "value": 1,
+          "signal_name": "cluster_presence",
+          "signal_path": [
+            "LLM Brand Analysis",
+            "Cluster Presence"
+          ],
+          "remediation_plan": null,
+          "success_state": "Brand \"Alo Yoga\" is present in \"Everyday Versatility\" cluster."
+        },
+        {
+          "value": 1,
+          "signal_name": "cluster_dominance",
+          "signal_path": [
+            "LLM Brand Analysis",
+            "Cluster Dominance"
+          ],
+          "remediation_plan": null,
+          "success_state": "Brand dominates \"Everyday Versatility\". Lululemon: 3, Vuori: 1, Athleta: 1, Beyond Yoga: 3"
+        },
+        {
+          "value": 1,
+          "signal_name": "prompt_citation",
+          "signal_path": [
+            "LLM Brand Analysis",
+            "Everyday Versatility"
+          ],
+          "remediation_plan": null,
+          "success_state": "Brand mentioned for prompt: \"I want activewear that I can wear both to the gym and while running errands. Which brands offer versatile options?\""
+        },
+        {
+          "value": 1,
+          "signal_name": "prompt_citation",
+          "signal_path": [
+            "LLM Brand Analysis",
+            "Everyday Versatility"
+          ],
+          "remediation_plan": null,
+          "success_state": "Brand mentioned for prompt: \"I'm searching for stylish athleisure that I can easily transition from a workout to a casual outing—any suggestions?\""
+        },
+        {
+          "value": 1,
+          "signal_name": "prompt_citation",
+          "signal_path": [
+            "LLM Brand Analysis",
+            "Everyday Versatility"
+          ],
+          "remediation_plan": null,
+          "success_state": "Brand mentioned for prompt: \"What are some brands that make activewear suitable for both fitness activities and everyday wear?\""
+        },
+        {
+          "value": 1,
+          "signal_name": "cluster_presence",
+          "signal_path": [
+            "LLM Brand Analysis",
+            "Cluster Presence"
+          ],
+          "remediation_plan": null,
+          "success_state": "Brand \"Alo Yoga\" is present in \"Price vs Quality\" cluster."
+        },
+        {
+          "value": 1,
+          "signal_name": "cluster_dominance",
+          "signal_path": [
+            "LLM Brand Analysis",
+            "Cluster Dominance"
+          ],
+          "remediation_plan": null,
+          "success_state": "Brand dominates \"Price vs Quality\". Lululemon: 1, Vuori: 0, Athleta: 1, Beyond Yoga: 1"
+        },
+        {
+          "value": -1,
+          "signal_name": "prompt_citation",
+          "signal_path": [
+            "LLM Brand Analysis",
+            "Price vs Quality"
+          ],
+          "remediation_plan": "Brand missing for prompt: \"I'm on a budget but still want durable and stylish activewear. Which brands offer the best quality for the price?\"",
+          "success_state": null
+        },
+        {
+          "value": 1,
+          "signal_name": "prompt_citation",
+          "signal_path": [
+            "LLM Brand Analysis",
+            "Price vs Quality"
+          ],
+          "remediation_plan": null,
+          "success_state": "Brand mentioned for prompt: \"I want to invest in premium yoga apparel, but I’m worried about overspending. What brands provide good value?\""
+        },
+        {
+          "value": -1,
+          "signal_name": "prompt_citation",
+          "signal_path": [
+            "LLM Brand Analysis",
+            "Price vs Quality"
+          ],
+          "remediation_plan": "Brand missing for prompt: \"Can you recommend some athletic brands that balance quality and affordability without compromising on style?\"",
+          "success_state": null
+        },
+        {
+          "value": 1,
+          "signal_name": "cluster_presence",
+          "signal_path": [
+            "LLM Brand Analysis",
+            "Cluster Presence"
+          ],
+          "remediation_plan": null,
+          "success_state": "Brand \"Alo Yoga\" is present in \"Fit Consistency\" cluster."
+        },
+        {
+          "value": -1,
+          "signal_name": "cluster_dominance",
+          "signal_path": [
+            "LLM Brand Analysis",
+            "Cluster Dominance"
+          ],
+          "remediation_plan": "Brand not dominant. Losing to: Lululemon (3), Athleta (2), Beyond Yoga (3)",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "prompt_citation",
+          "signal_path": [
+            "LLM Brand Analysis",
+            "Fit Consistency"
+          ],
+          "remediation_plan": "Brand missing for prompt: \"I've had issues with sizing in the past. Which activewear brands are known for their consistent fit?\"",
+          "success_state": null
+        },
+        {
+          "value": 1,
+          "signal_name": "prompt_citation",
+          "signal_path": [
+            "LLM Brand Analysis",
+            "Fit Consistency"
+          ],
+          "remediation_plan": null,
+          "success_state": "Brand mentioned for prompt: \"I'm looking for a brand that offers reliable sizing for yoga clothes, as I want to avoid returns—any recommendations?\""
+        },
+        {
+          "value": -1,
+          "signal_name": "prompt_citation",
+          "signal_path": [
+            "LLM Brand Analysis",
+            "Fit Consistency"
+          ],
+          "remediation_plan": "Brand missing for prompt: \"What are some athletic apparel brands that have a reputation for true-to-size fit?\"",
+          "success_state": null
+        },
+        {
+          "value": 1,
+          "signal_name": "cluster_presence",
+          "signal_path": [
+            "LLM Brand Analysis",
+            "Cluster Presence"
+          ],
+          "remediation_plan": null,
+          "success_state": "Brand \"Alo Yoga\" is present in \"Wellness Lifestyle\" cluster."
+        },
+        {
+          "value": 1,
+          "signal_name": "cluster_dominance",
+          "signal_path": [
+            "LLM Brand Analysis",
+            "Cluster Dominance"
+          ],
+          "remediation_plan": null,
+          "success_state": "Brand dominates \"Wellness Lifestyle\". Lululemon: 2, Vuori: 0, Athleta: 0, Beyond Yoga: 3"
+        },
+        {
+          "value": 1,
+          "signal_name": "prompt_citation",
+          "signal_path": [
+            "LLM Brand Analysis",
+            "Wellness Lifestyle"
+          ],
+          "remediation_plan": null,
+          "success_state": "Brand mentioned for prompt: \"I'm trying to embrace a wellness lifestyle and need brands that align with that philosophy—what do you suggest?\""
+        },
+        {
+          "value": 1,
+          "signal_name": "prompt_citation",
+          "signal_path": [
+            "LLM Brand Analysis",
+            "Wellness Lifestyle"
+          ],
+          "remediation_plan": null,
+          "success_state": "Brand mentioned for prompt: \"Can you recommend some activewear brands that focus on mindfulness and wellness in their marketing?\""
+        },
+        {
+          "value": 1,
+          "signal_name": "prompt_citation",
+          "signal_path": [
+            "LLM Brand Analysis",
+            "Wellness Lifestyle"
+          ],
+          "remediation_plan": null,
+          "success_state": "Brand mentioned for prompt: \"I'm interested in brands that not only sell yoga apparel but also promote a holistic wellness lifestyle—any ideas?\""
+        },
+        {
+          "value": -1,
+          "signal_name": "cluster_presence",
+          "signal_path": [
+            "LLM Brand Analysis",
+            "Cluster Presence"
+          ],
+          "remediation_plan": "Brand \"Alo Yoga\" is missing in \"Sustainability Practices\" cluster.",
+          "success_state": null
+        },
+        {
+          "value": 1,
+          "signal_name": "cluster_dominance",
+          "signal_path": [
+            "LLM Brand Analysis",
+            "Cluster Dominance"
+          ],
+          "remediation_plan": null,
+          "success_state": "Brand dominates \"Sustainability Practices\". Lululemon: 0, Vuori: 0, Athleta: 0, Beyond Yoga: 0"
+        },
+        {
+          "value": -1,
+          "signal_name": "prompt_citation",
+          "signal_path": [
+            "LLM Brand Analysis",
+            "Sustainability Practices"
+          ],
+          "remediation_plan": "Brand missing for prompt: \"I'm looking for athletic brands that prioritize sustainability in their materials and production—what are my options?\"",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "prompt_citation",
+          "signal_path": [
+            "LLM Brand Analysis",
+            "Sustainability Practices"
+          ],
+          "remediation_plan": "Brand missing for prompt: \"Which activewear brands are known for their eco-friendly practices and sustainable fabrics?\"",
+          "success_state": null
+        },
+        {
+          "value": -1,
+          "signal_name": "prompt_citation",
+          "signal_path": [
+            "LLM Brand Analysis",
+            "Sustainability Practices"
+          ],
+          "remediation_plan": "Brand missing for prompt: \"Can you suggest some companies that make premium yoga apparel while also being environmentally conscious?\"",
+          "success_state": null
+        }
+      ]
+    },
+    "path_scorecard": {
+      "Domain Signals -> LLMs.txt": {
+        "signal_path": [
+          "Domain Signals",
+          "LLMs.txt"
+        ],
+        "scores": [
+          {
+            "value": -1,
+            "signal_name": "llms_txt_exists",
+            "signal_path": [
+              "Domain Signals",
+              "LLMs.txt"
+            ],
+            "remediation_plan": "Create a /llms.txt file at your root domain (e.g., https://yourdomain.com/llms.txt). This file should contain structured information about your brand, content priorities, AI interaction guidelines, and key business information. Use plain text or markdown format with clear sections like \"Brand Information\", \"Content Priorities\", and \"AI Guidelines\". This file is essential for proper AI crawler understanding and representation.",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "llms_txt_valid",
+            "signal_path": [
+              "Domain Signals",
+              "LLMs.txt"
+            ],
+            "remediation_plan": "Fix your /llms.txt file to return plain text or markdown content instead of HTML. Check your web server configuration to ensure the file is served with correct MIME type (text/plain or text/markdown) and not redirected to an HTML error page. Remove any HTML markup and ensure the file contains only structured text content that AI crawlers can easily parse.",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "llms_txt_enriched",
+            "signal_path": [
+              "Domain Signals",
+              "LLMs.txt"
+            ],
+            "remediation_plan": "Restructure your llms.txt file with proper Markdown formatting to make it more useful for AI systems. Add hierarchical headings (# Main Title, ## Section Title), bullet points (- item) for lists, bold text (**key term**) for emphasis, and use colons for structured information (Brand: Company Name). This structured approach helps AI crawlers better understand your content priorities, brand information, and AI interaction guidelines, leading to improved AI representation and search visibility.",
+            "success_state": null
+          }
+        ],
+        "total_checks": 3,
+        "total_positive_score": 0,
+        "total_percentage": 0
+      },
+      "Domain Signals -> Robots.txt File": {
+        "signal_path": [
+          "Domain Signals",
+          "Robots.txt File"
+        ],
+        "scores": [
+          {
+            "value": 1,
+            "signal_name": "robots_txt_exists",
+            "signal_path": [
+              "Domain Signals",
+              "Robots.txt File"
+            ],
+            "remediation_plan": null,
+            "success_state": "Robots.txt file successfully found and accessible. This file helps search engines and AI crawlers understand which parts of your site to crawl and index."
+          },
+          {
+            "value": 1,
+            "signal_name": "sitemap_exists",
+            "signal_path": [
+              "Domain Signals",
+              "Robots.txt File"
+            ],
+            "remediation_plan": null,
+            "success_state": "Sitemap URL successfully found in robots.txt. This helps search engines discover and index all your important pages efficiently."
+          },
+          {
+            "value": 1,
+            "signal_name": "ai_crawler_access",
+            "signal_path": [
+              "Domain Signals",
+              "Robots.txt File"
+            ],
+            "remediation_plan": null,
+            "success_state": "AI crawler GPTBot successfully allowed to access patterns. This enables proper AI model training and content discovery for this section."
+          },
+          {
+            "value": 1,
+            "signal_name": "ai_crawler_access",
+            "signal_path": [
+              "Domain Signals",
+              "Robots.txt File"
+            ],
+            "remediation_plan": null,
+            "success_state": "AI crawler Google-Extended successfully allowed to access patterns. This enables proper AI model training and content discovery for this section."
+          },
+          {
+            "value": 1,
+            "signal_name": "ai_crawler_access",
+            "signal_path": [
+              "Domain Signals",
+              "Robots.txt File"
+            ],
+            "remediation_plan": null,
+            "success_state": "AI crawler ClaudeBot successfully allowed to access patterns. This enables proper AI model training and content discovery for this section."
+          },
+          {
+            "value": 1,
+            "signal_name": "ai_crawler_access",
+            "signal_path": [
+              "Domain Signals",
+              "Robots.txt File"
+            ],
+            "remediation_plan": null,
+            "success_state": "AI crawler PerplexityBot successfully allowed to access patterns. This enables proper AI model training and content discovery for this section."
+          },
+          {
+            "value": 1,
+            "signal_name": "search_crawler_access",
+            "signal_path": [
+              "Domain Signals",
+              "Robots.txt File"
+            ],
+            "remediation_plan": null,
+            "success_state": "Search crawler Googlebot successfully allowed to access patterns. This ensures proper indexing and visibility in search results for this content section."
+          },
+          {
+            "value": 1,
+            "signal_name": "search_crawler_access",
+            "signal_path": [
+              "Domain Signals",
+              "Robots.txt File"
+            ],
+            "remediation_plan": null,
+            "success_state": "Search crawler Bingbot successfully allowed to access patterns. This ensures proper indexing and visibility in search results for this content section."
+          }
+        ],
+        "total_checks": 8,
+        "total_positive_score": 8,
+        "total_percentage": 100
+      },
+      "Domain Signals -> Sitemap": {
+        "signal_path": [
+          "Domain Signals",
+          "Sitemap"
+        ],
+        "scores": [
+          {
+            "value": 1,
+            "signal_name": "sitemap_exists",
+            "signal_path": [
+              "Domain Signals",
+              "Sitemap"
+            ],
+            "remediation_plan": null,
+            "success_state": "Sitemap file successfully found and accessible. This helps search engines discover all your important pages and understand your website structure for better indexing."
+          },
+          {
+            "value": 1,
+            "signal_name": "sitemap_type_valid",
+            "signal_path": [
+              "Domain Signals",
+              "Sitemap"
+            ],
+            "remediation_plan": null,
+            "success_state": "Sitemap has valid structure with type: sitemapindex. This ensures search engines can properly parse and process your sitemap for efficient indexing."
+          },
+          {
+            "value": 1,
+            "signal_name": "sitemap_freshness",
+            "signal_path": [
+              "Domain Signals",
+              "Sitemap"
+            ],
+            "remediation_plan": null,
+            "success_state": "Sitemap updated recently: 2026-04-22"
+          }
+        ],
+        "total_checks": 3,
+        "total_positive_score": 3,
+        "total_percentage": 100
+      },
+      "Site Signals -> Scrapability": {
+        "signal_path": [
+          "Site Signals",
+          "Scrapability"
+        ],
+        "scores": [
+          {
+            "value": 1,
+            "signal_name": "site_scrapable",
+            "signal_path": [
+              "Site Signals",
+              "Scrapability"
+            ],
+            "remediation_plan": null,
+            "success_state": "Website is scrapable"
+          }
+        ],
+        "total_checks": 1,
+        "total_positive_score": 1,
+        "total_percentage": 100
+      },
+      "Site Signals -> Canonical URLs": {
+        "signal_path": [
+          "Site Signals",
+          "Canonical URLs"
+        ],
+        "scores": [
+          {
+            "value": 1,
+            "signal_name": "canonical_exists",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical tag successfully found on https://www.aloyoga.com. This helps prevent duplicate content issues and consolidates ranking signals to your preferred URL."
+          },
+          {
+            "value": 1,
+            "signal_name": "canonical_matches",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical URL matches page URL for https://www.aloyoga.com"
+          },
+          {
+            "value": 1,
+            "signal_name": "canonical_clean",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical URL is clean (no query parameters) for https://www.aloyoga.com"
+          },
+          {
+            "value": 1,
+            "signal_name": "canonical_exists",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical tag successfully found on https://www.aloyoga.com/en-in/pages/reviews. This helps prevent duplicate content issues and consolidates ranking signals to your preferred URL."
+          },
+          {
+            "value": 1,
+            "signal_name": "canonical_matches",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical URL matches page URL for https://www.aloyoga.com/en-in/pages/reviews"
+          },
+          {
+            "value": 1,
+            "signal_name": "canonical_clean",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical URL is clean (no query parameters) for https://www.aloyoga.com/en-in/pages/reviews"
+          },
+          {
+            "value": 1,
+            "signal_name": "canonical_exists",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical tag successfully found on https://www.aloyoga.com/pages/new-to-alo#for-him. This helps prevent duplicate content issues and consolidates ranking signals to your preferred URL."
+          },
+          {
+            "value": 1,
+            "signal_name": "canonical_matches",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical URL matches page URL for https://www.aloyoga.com/pages/new-to-alo#for-him"
+          },
+          {
+            "value": 1,
+            "signal_name": "canonical_clean",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical URL is clean (no query parameters) for https://www.aloyoga.com/pages/new-to-alo#for-him"
+          },
+          {
+            "value": 1,
+            "signal_name": "canonical_exists",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical tag successfully found on https://www.aloyoga.com/en-in/pages/orders-and-shipping-support. This helps prevent duplicate content issues and consolidates ranking signals to your preferred URL."
+          },
+          {
+            "value": 1,
+            "signal_name": "canonical_matches",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical URL matches page URL for https://www.aloyoga.com/en-in/pages/orders-and-shipping-support"
+          },
+          {
+            "value": 1,
+            "signal_name": "canonical_clean",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical URL is clean (no query parameters) for https://www.aloyoga.com/en-in/pages/orders-and-shipping-support"
+          },
+          {
+            "value": 1,
+            "signal_name": "canonical_exists",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical tag successfully found on https://www.aloyoga.com/en-in/blogs/alo-blog. This helps prevent duplicate content issues and consolidates ranking signals to your preferred URL."
+          },
+          {
+            "value": 1,
+            "signal_name": "canonical_matches",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical URL matches page URL for https://www.aloyoga.com/en-in/blogs/alo-blog"
+          },
+          {
+            "value": 1,
+            "signal_name": "canonical_clean",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical URL is clean (no query parameters) for https://www.aloyoga.com/en-in/blogs/alo-blog"
+          },
+          {
+            "value": 1,
+            "signal_name": "canonical_exists",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical tag successfully found on https://www.aloyoga.com/en-in/pages/studios. This helps prevent duplicate content issues and consolidates ranking signals to your preferred URL."
+          },
+          {
+            "value": 1,
+            "signal_name": "canonical_matches",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical URL matches page URL for https://www.aloyoga.com/en-in/pages/studios"
+          },
+          {
+            "value": 1,
+            "signal_name": "canonical_clean",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical URL is clean (no query parameters) for https://www.aloyoga.com/en-in/pages/studios"
+          },
+          {
+            "value": 1,
+            "signal_name": "canonical_exists",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical tag successfully found on https://www.aloyoga.com/en-in/pages/returns-support. This helps prevent duplicate content issues and consolidates ranking signals to your preferred URL."
+          },
+          {
+            "value": 1,
+            "signal_name": "canonical_matches",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical URL matches page URL for https://www.aloyoga.com/en-in/pages/returns-support"
+          },
+          {
+            "value": 1,
+            "signal_name": "canonical_clean",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical URL is clean (no query parameters) for https://www.aloyoga.com/en-in/pages/returns-support"
+          },
+          {
+            "value": 1,
+            "signal_name": "canonical_exists",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical tag successfully found on https://www.aloyoga.com/cart. This helps prevent duplicate content issues and consolidates ranking signals to your preferred URL."
+          },
+          {
+            "value": 1,
+            "signal_name": "canonical_matches",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical URL matches page URL for https://www.aloyoga.com/cart"
+          },
+          {
+            "value": 1,
+            "signal_name": "canonical_clean",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical URL is clean (no query parameters) for https://www.aloyoga.com/cart"
+          },
+          {
+            "value": 1,
+            "signal_name": "canonical_exists",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical tag successfully found on https://www.aloyoga.com/pages/privacy-policy. This helps prevent duplicate content issues and consolidates ranking signals to your preferred URL."
+          },
+          {
+            "value": 1,
+            "signal_name": "canonical_matches",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical URL matches page URL for https://www.aloyoga.com/pages/privacy-policy"
+          },
+          {
+            "value": 1,
+            "signal_name": "canonical_clean",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical URL is clean (no query parameters) for https://www.aloyoga.com/pages/privacy-policy"
+          },
+          {
+            "value": 1,
+            "signal_name": "canonical_exists",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical tag successfully found on https://www.aloyoga.com/en-in/account/addresses. This helps prevent duplicate content issues and consolidates ranking signals to your preferred URL."
+          },
+          {
+            "value": 1,
+            "signal_name": "canonical_matches",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical URL matches page URL for https://www.aloyoga.com/en-in/account/addresses"
+          },
+          {
+            "value": 1,
+            "signal_name": "canonical_clean",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical URL is clean (no query parameters) for https://www.aloyoga.com/en-in/account/addresses"
+          },
+          {
+            "value": 1,
+            "signal_name": "canonical_exists",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical tag successfully found on https://www.aloyoga.com/en-in/pages/alo-gives. This helps prevent duplicate content issues and consolidates ranking signals to your preferred URL."
+          },
+          {
+            "value": 1,
+            "signal_name": "canonical_matches",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical URL matches page URL for https://www.aloyoga.com/en-in/pages/alo-gives"
+          },
+          {
+            "value": 1,
+            "signal_name": "canonical_clean",
+            "signal_path": [
+              "Site Signals",
+              "Canonical URLs"
+            ],
+            "remediation_plan": null,
+            "success_state": "Canonical URL is clean (no query parameters) for https://www.aloyoga.com/en-in/pages/alo-gives"
+          }
+        ],
+        "total_checks": 33,
+        "total_positive_score": 33,
+        "total_percentage": 100
+      },
+      "Site Signals -> Structured Data": {
+        "signal_path": [
+          "Site Signals",
+          "Structured Data"
+        ],
+        "scores": [
+          {
+            "value": 1,
+            "signal_name": "jsonld_exists",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": null,
+            "success_state": "JSON-LD schema Organization found"
+          },
+          {
+            "value": 1,
+            "signal_name": "jsonld_exists",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": null,
+            "success_state": "JSON-LD schema Brand found"
+          },
+          {
+            "value": 1,
+            "signal_name": "jsonld_exists",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": null,
+            "success_state": "JSON-LD schema WebSite found"
+          },
+          {
+            "value": 1,
+            "signal_name": "jsonld_exists",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": null,
+            "success_state": "JSON-LD schema Product found"
+          },
+          {
+            "value": 1,
+            "signal_name": "jsonld_exists",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": null,
+            "success_state": "JSON-LD schema Offer found"
+          },
+          {
+            "value": 1,
+            "signal_name": "jsonld_exists",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": null,
+            "success_state": "JSON-LD schema AggregateRating found"
+          },
+          {
+            "value": 1,
+            "signal_name": "jsonld_exists",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": null,
+            "success_state": "JSON-LD schema Review found"
+          },
+          {
+            "value": 1,
+            "signal_name": "jsonld_exists",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": null,
+            "success_state": "JSON-LD schema BreadcrumbList found"
+          },
+          {
+            "value": 1,
+            "signal_name": "jsonld_exists",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": null,
+            "success_state": "JSON-LD schema SearchAction found"
+          },
+          {
+            "value": 1,
+            "signal_name": "jsonld_exists",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": null,
+            "success_state": "JSON-LD schema FAQPage found"
+          },
+          {
+            "value": 1,
+            "signal_name": "jsonld_exists",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": null,
+            "success_state": "JSON-LD schema ItemList found"
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema SearchAction validation issues on https://www.aloyoga.com",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema AggregateRating validation issues on https://www.aloyoga.com",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Brand validation issues on https://www.aloyoga.com",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Offer validation issues on https://www.aloyoga.com",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Product validation issues on https://www.aloyoga.com",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Review validation issues on https://www.aloyoga.com",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema WebSite validation issues on https://www.aloyoga.com",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema FAQPage validation issues on https://www.aloyoga.com",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema ItemList validation issues on https://www.aloyoga.com",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema BreadcrumbList validation issues on https://www.aloyoga.com",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Organization validation issues on https://www.aloyoga.com",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema SearchAction validation issues on https://www.aloyoga.com/en-in/pages/reviews",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema AggregateRating validation issues on https://www.aloyoga.com/en-in/pages/reviews",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Brand validation issues on https://www.aloyoga.com/en-in/pages/reviews",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Offer validation issues on https://www.aloyoga.com/en-in/pages/reviews",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Product validation issues on https://www.aloyoga.com/en-in/pages/reviews",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Review validation issues on https://www.aloyoga.com/en-in/pages/reviews",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema FAQPage validation issues on https://www.aloyoga.com/en-in/pages/reviews",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema ItemList validation issues on https://www.aloyoga.com/en-in/pages/reviews",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema BreadcrumbList validation issues on https://www.aloyoga.com/en-in/pages/reviews",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema SearchAction validation issues on https://www.aloyoga.com/pages/new-to-alo#for-him",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema AggregateRating validation issues on https://www.aloyoga.com/pages/new-to-alo#for-him",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Brand validation issues on https://www.aloyoga.com/pages/new-to-alo#for-him",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Offer validation issues on https://www.aloyoga.com/pages/new-to-alo#for-him",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Product validation issues on https://www.aloyoga.com/pages/new-to-alo#for-him",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Review validation issues on https://www.aloyoga.com/pages/new-to-alo#for-him",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema FAQPage validation issues on https://www.aloyoga.com/pages/new-to-alo#for-him",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema ItemList validation issues on https://www.aloyoga.com/pages/new-to-alo#for-him",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema BreadcrumbList validation issues on https://www.aloyoga.com/pages/new-to-alo#for-him",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema SearchAction validation issues on https://www.aloyoga.com/en-in/pages/orders-and-shipping-support",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema AggregateRating validation issues on https://www.aloyoga.com/en-in/pages/orders-and-shipping-support",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Brand validation issues on https://www.aloyoga.com/en-in/pages/orders-and-shipping-support",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Offer validation issues on https://www.aloyoga.com/en-in/pages/orders-and-shipping-support",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Product validation issues on https://www.aloyoga.com/en-in/pages/orders-and-shipping-support",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Review validation issues on https://www.aloyoga.com/en-in/pages/orders-and-shipping-support",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema FAQPage validation issues on https://www.aloyoga.com/en-in/pages/orders-and-shipping-support",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema ItemList validation issues on https://www.aloyoga.com/en-in/pages/orders-and-shipping-support",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema BreadcrumbList validation issues on https://www.aloyoga.com/en-in/pages/orders-and-shipping-support",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema SearchAction validation issues on https://www.aloyoga.com/en-in/blogs/alo-blog",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema AggregateRating validation issues on https://www.aloyoga.com/en-in/blogs/alo-blog",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Brand validation issues on https://www.aloyoga.com/en-in/blogs/alo-blog",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Offer validation issues on https://www.aloyoga.com/en-in/blogs/alo-blog",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Product validation issues on https://www.aloyoga.com/en-in/blogs/alo-blog",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Review validation issues on https://www.aloyoga.com/en-in/blogs/alo-blog",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema FAQPage validation issues on https://www.aloyoga.com/en-in/blogs/alo-blog",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema ItemList validation issues on https://www.aloyoga.com/en-in/blogs/alo-blog",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema BreadcrumbList validation issues on https://www.aloyoga.com/en-in/blogs/alo-blog",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema SearchAction validation issues on https://www.aloyoga.com/en-in/pages/studios",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema AggregateRating validation issues on https://www.aloyoga.com/en-in/pages/studios",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Brand validation issues on https://www.aloyoga.com/en-in/pages/studios",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Offer validation issues on https://www.aloyoga.com/en-in/pages/studios",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Product validation issues on https://www.aloyoga.com/en-in/pages/studios",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Review validation issues on https://www.aloyoga.com/en-in/pages/studios",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema FAQPage validation issues on https://www.aloyoga.com/en-in/pages/studios",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema ItemList validation issues on https://www.aloyoga.com/en-in/pages/studios",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema BreadcrumbList validation issues on https://www.aloyoga.com/en-in/pages/studios",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema SearchAction validation issues on https://www.aloyoga.com/en-in/pages/returns-support",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema AggregateRating validation issues on https://www.aloyoga.com/en-in/pages/returns-support",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Brand validation issues on https://www.aloyoga.com/en-in/pages/returns-support",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Offer validation issues on https://www.aloyoga.com/en-in/pages/returns-support",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Product validation issues on https://www.aloyoga.com/en-in/pages/returns-support",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Review validation issues on https://www.aloyoga.com/en-in/pages/returns-support",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema FAQPage validation issues on https://www.aloyoga.com/en-in/pages/returns-support",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema ItemList validation issues on https://www.aloyoga.com/en-in/pages/returns-support",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema BreadcrumbList validation issues on https://www.aloyoga.com/en-in/pages/returns-support",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema SearchAction validation issues on https://www.aloyoga.com/cart",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema AggregateRating validation issues on https://www.aloyoga.com/cart",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Brand validation issues on https://www.aloyoga.com/cart",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Offer validation issues on https://www.aloyoga.com/cart",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Product validation issues on https://www.aloyoga.com/cart",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Review validation issues on https://www.aloyoga.com/cart",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema FAQPage validation issues on https://www.aloyoga.com/cart",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema ItemList validation issues on https://www.aloyoga.com/cart",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema BreadcrumbList validation issues on https://www.aloyoga.com/cart",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema SearchAction validation issues on https://www.aloyoga.com/pages/privacy-policy",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema AggregateRating validation issues on https://www.aloyoga.com/pages/privacy-policy",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Brand validation issues on https://www.aloyoga.com/pages/privacy-policy",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Offer validation issues on https://www.aloyoga.com/pages/privacy-policy",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Product validation issues on https://www.aloyoga.com/pages/privacy-policy",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Review validation issues on https://www.aloyoga.com/pages/privacy-policy",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema FAQPage validation issues on https://www.aloyoga.com/pages/privacy-policy",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema ItemList validation issues on https://www.aloyoga.com/pages/privacy-policy",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema BreadcrumbList validation issues on https://www.aloyoga.com/pages/privacy-policy",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema SearchAction validation issues on https://www.aloyoga.com/en-in/account/addresses",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema AggregateRating validation issues on https://www.aloyoga.com/en-in/account/addresses",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Brand validation issues on https://www.aloyoga.com/en-in/account/addresses",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Offer validation issues on https://www.aloyoga.com/en-in/account/addresses",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Product validation issues on https://www.aloyoga.com/en-in/account/addresses",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Review validation issues on https://www.aloyoga.com/en-in/account/addresses",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema FAQPage validation issues on https://www.aloyoga.com/en-in/account/addresses",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema ItemList validation issues on https://www.aloyoga.com/en-in/account/addresses",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema BreadcrumbList validation issues on https://www.aloyoga.com/en-in/account/addresses",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema SearchAction validation issues on https://www.aloyoga.com/en-in/pages/alo-gives",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema AggregateRating validation issues on https://www.aloyoga.com/en-in/pages/alo-gives",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Brand validation issues on https://www.aloyoga.com/en-in/pages/alo-gives",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Offer validation issues on https://www.aloyoga.com/en-in/pages/alo-gives",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Product validation issues on https://www.aloyoga.com/en-in/pages/alo-gives",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema Review validation issues on https://www.aloyoga.com/en-in/pages/alo-gives",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema FAQPage validation issues on https://www.aloyoga.com/en-in/pages/alo-gives",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema ItemList validation issues on https://www.aloyoga.com/en-in/pages/alo-gives",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "jsonld_valid",
+            "signal_path": [
+              "Site Signals",
+              "Structured Data"
+            ],
+            "remediation_plan": "Fix JSON-LD schema BreadcrumbList validation issues on https://www.aloyoga.com/en-in/pages/alo-gives",
+            "success_state": null
+          }
+        ],
+        "total_checks": 112,
+        "total_positive_score": 11,
+        "total_percentage": 9.821428571428571
+      },
+      "Site Signals -> Social & Meta": {
+        "signal_path": [
+          "Site Signals",
+          "Social & Meta"
+        ],
+        "scores": [
+          {
+            "value": 1,
+            "signal_name": "og_tags_exists",
+            "signal_path": [
+              "Site Signals",
+              "Social & Meta"
+            ],
+            "remediation_plan": null,
+            "success_state": "Open Graph tags found"
+          },
+          {
+            "value": 1,
+            "signal_name": "og_tags_complete",
+            "signal_path": [
+              "Site Signals",
+              "Social & Meta"
+            ],
+            "remediation_plan": null,
+            "success_state": "Open Graph tags are complete (title, description, image, type, url)"
+          },
+          {
+            "value": 1,
+            "signal_name": "twitter_card_exists",
+            "signal_path": [
+              "Site Signals",
+              "Social & Meta"
+            ],
+            "remediation_plan": null,
+            "success_state": "Twitter Card tag found: summary_large_image"
+          }
+        ],
+        "total_checks": 3,
+        "total_positive_score": 3,
+        "total_percentage": 100
+      },
+      "Site Signals -> Indexability": {
+        "signal_path": [
+          "Site Signals",
+          "Indexability"
+        ],
+        "scores": [
+          {
+            "value": 1,
+            "signal_name": "page_indexable",
+            "signal_path": [
+              "Site Signals",
+              "Indexability"
+            ],
+            "remediation_plan": null,
+            "success_state": "Page https://www.aloyoga.com is indexable"
+          },
+          {
+            "value": 1,
+            "signal_name": "page_indexable",
+            "signal_path": [
+              "Site Signals",
+              "Indexability"
+            ],
+            "remediation_plan": null,
+            "success_state": "Page https://www.aloyoga.com/en-in/pages/reviews is indexable"
+          },
+          {
+            "value": 1,
+            "signal_name": "page_indexable",
+            "signal_path": [
+              "Site Signals",
+              "Indexability"
+            ],
+            "remediation_plan": null,
+            "success_state": "Page https://www.aloyoga.com/pages/new-to-alo#for-him is indexable"
+          },
+          {
+            "value": 1,
+            "signal_name": "page_indexable",
+            "signal_path": [
+              "Site Signals",
+              "Indexability"
+            ],
+            "remediation_plan": null,
+            "success_state": "Page https://www.aloyoga.com/en-in/pages/orders-and-shipping-support is indexable"
+          },
+          {
+            "value": 1,
+            "signal_name": "page_indexable",
+            "signal_path": [
+              "Site Signals",
+              "Indexability"
+            ],
+            "remediation_plan": null,
+            "success_state": "Page https://www.aloyoga.com/en-in/blogs/alo-blog is indexable"
+          },
+          {
+            "value": 1,
+            "signal_name": "page_indexable",
+            "signal_path": [
+              "Site Signals",
+              "Indexability"
+            ],
+            "remediation_plan": null,
+            "success_state": "Page https://www.aloyoga.com/en-in/pages/studios is indexable"
+          },
+          {
+            "value": 1,
+            "signal_name": "page_indexable",
+            "signal_path": [
+              "Site Signals",
+              "Indexability"
+            ],
+            "remediation_plan": null,
+            "success_state": "Page https://www.aloyoga.com/en-in/pages/returns-support is indexable"
+          },
+          {
+            "value": 1,
+            "signal_name": "page_indexable",
+            "signal_path": [
+              "Site Signals",
+              "Indexability"
+            ],
+            "remediation_plan": null,
+            "success_state": "Page https://www.aloyoga.com/cart is indexable"
+          },
+          {
+            "value": 1,
+            "signal_name": "page_indexable",
+            "signal_path": [
+              "Site Signals",
+              "Indexability"
+            ],
+            "remediation_plan": null,
+            "success_state": "Page https://www.aloyoga.com/pages/privacy-policy is indexable"
+          },
+          {
+            "value": 1,
+            "signal_name": "page_indexable",
+            "signal_path": [
+              "Site Signals",
+              "Indexability"
+            ],
+            "remediation_plan": null,
+            "success_state": "Page https://www.aloyoga.com/en-in/account/addresses is indexable"
+          },
+          {
+            "value": 1,
+            "signal_name": "page_indexable",
+            "signal_path": [
+              "Site Signals",
+              "Indexability"
+            ],
+            "remediation_plan": null,
+            "success_state": "Page https://www.aloyoga.com/en-in/pages/alo-gives is indexable"
+          }
+        ],
+        "total_checks": 11,
+        "total_positive_score": 11,
+        "total_percentage": 100
+      },
+      "LLM Brand Analysis -> Cluster Presence": {
+        "signal_path": [
+          "LLM Brand Analysis",
+          "Cluster Presence"
+        ],
+        "scores": [
+          {
+            "value": 1,
+            "signal_name": "cluster_presence",
+            "signal_path": [
+              "LLM Brand Analysis",
+              "Cluster Presence"
+            ],
+            "remediation_plan": null,
+            "success_state": "Brand \"Alo Yoga\" is present in \"Breathability & Fabric\" cluster."
+          },
+          {
+            "value": 1,
+            "signal_name": "cluster_presence",
+            "signal_path": [
+              "LLM Brand Analysis",
+              "Cluster Presence"
+            ],
+            "remediation_plan": null,
+            "success_state": "Brand \"Alo Yoga\" is present in \"Everyday Versatility\" cluster."
+          },
+          {
+            "value": 1,
+            "signal_name": "cluster_presence",
+            "signal_path": [
+              "LLM Brand Analysis",
+              "Cluster Presence"
+            ],
+            "remediation_plan": null,
+            "success_state": "Brand \"Alo Yoga\" is present in \"Price vs Quality\" cluster."
+          },
+          {
+            "value": 1,
+            "signal_name": "cluster_presence",
+            "signal_path": [
+              "LLM Brand Analysis",
+              "Cluster Presence"
+            ],
+            "remediation_plan": null,
+            "success_state": "Brand \"Alo Yoga\" is present in \"Fit Consistency\" cluster."
+          },
+          {
+            "value": 1,
+            "signal_name": "cluster_presence",
+            "signal_path": [
+              "LLM Brand Analysis",
+              "Cluster Presence"
+            ],
+            "remediation_plan": null,
+            "success_state": "Brand \"Alo Yoga\" is present in \"Wellness Lifestyle\" cluster."
+          },
+          {
+            "value": -1,
+            "signal_name": "cluster_presence",
+            "signal_path": [
+              "LLM Brand Analysis",
+              "Cluster Presence"
+            ],
+            "remediation_plan": "Brand \"Alo Yoga\" is missing in \"Sustainability Practices\" cluster.",
+            "success_state": null
+          }
+        ],
+        "total_checks": 6,
+        "total_positive_score": 5,
+        "total_percentage": 83.33333333333334
+      },
+      "LLM Brand Analysis -> Cluster Dominance": {
+        "signal_path": [
+          "LLM Brand Analysis",
+          "Cluster Dominance"
+        ],
+        "scores": [
+          {
+            "value": -1,
+            "signal_name": "cluster_dominance",
+            "signal_path": [
+              "LLM Brand Analysis",
+              "Cluster Dominance"
+            ],
+            "remediation_plan": "Brand not dominant. Losing to: Lululemon (3)",
+            "success_state": null
+          },
+          {
+            "value": 1,
+            "signal_name": "cluster_dominance",
+            "signal_path": [
+              "LLM Brand Analysis",
+              "Cluster Dominance"
+            ],
+            "remediation_plan": null,
+            "success_state": "Brand dominates \"Everyday Versatility\". Lululemon: 3, Vuori: 1, Athleta: 1, Beyond Yoga: 3"
+          },
+          {
+            "value": 1,
+            "signal_name": "cluster_dominance",
+            "signal_path": [
+              "LLM Brand Analysis",
+              "Cluster Dominance"
+            ],
+            "remediation_plan": null,
+            "success_state": "Brand dominates \"Price vs Quality\". Lululemon: 1, Vuori: 0, Athleta: 1, Beyond Yoga: 1"
+          },
+          {
+            "value": -1,
+            "signal_name": "cluster_dominance",
+            "signal_path": [
+              "LLM Brand Analysis",
+              "Cluster Dominance"
+            ],
+            "remediation_plan": "Brand not dominant. Losing to: Lululemon (3), Athleta (2), Beyond Yoga (3)",
+            "success_state": null
+          },
+          {
+            "value": 1,
+            "signal_name": "cluster_dominance",
+            "signal_path": [
+              "LLM Brand Analysis",
+              "Cluster Dominance"
+            ],
+            "remediation_plan": null,
+            "success_state": "Brand dominates \"Wellness Lifestyle\". Lululemon: 2, Vuori: 0, Athleta: 0, Beyond Yoga: 3"
+          },
+          {
+            "value": 1,
+            "signal_name": "cluster_dominance",
+            "signal_path": [
+              "LLM Brand Analysis",
+              "Cluster Dominance"
+            ],
+            "remediation_plan": null,
+            "success_state": "Brand dominates \"Sustainability Practices\". Lululemon: 0, Vuori: 0, Athleta: 0, Beyond Yoga: 0"
+          }
+        ],
+        "total_checks": 6,
+        "total_positive_score": 4,
+        "total_percentage": 66.66666666666666
+      },
+      "LLM Brand Analysis -> Breathability & Fabric": {
+        "signal_path": [
+          "LLM Brand Analysis",
+          "Breathability & Fabric"
+        ],
+        "scores": [
+          {
+            "value": 1,
+            "signal_name": "prompt_citation",
+            "signal_path": [
+              "LLM Brand Analysis",
+              "Breathability & Fabric"
+            ],
+            "remediation_plan": null,
+            "success_state": "Brand mentioned for prompt: \"I'm looking for high-quality yoga pants that are breathable and comfortable for hot yoga classes—any recommendations?\""
+          },
+          {
+            "value": -1,
+            "signal_name": "prompt_citation",
+            "signal_path": [
+              "LLM Brand Analysis",
+              "Breathability & Fabric"
+            ],
+            "remediation_plan": "Brand missing for prompt: \"I need a pair of leggings that won't feel suffocating during my workouts, especially in the summer heat. What brands should I consider?\"",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "prompt_citation",
+            "signal_path": [
+              "LLM Brand Analysis",
+              "Breathability & Fabric"
+            ],
+            "remediation_plan": "Brand missing for prompt: \"Can you suggest some athletic wear brands that use lightweight, breathable fabrics for intense workouts?\"",
+            "success_state": null
+          }
+        ],
+        "total_checks": 3,
+        "total_positive_score": 1,
+        "total_percentage": 33.33333333333333
+      },
+      "LLM Brand Analysis -> Everyday Versatility": {
+        "signal_path": [
+          "LLM Brand Analysis",
+          "Everyday Versatility"
+        ],
+        "scores": [
+          {
+            "value": 1,
+            "signal_name": "prompt_citation",
+            "signal_path": [
+              "LLM Brand Analysis",
+              "Everyday Versatility"
+            ],
+            "remediation_plan": null,
+            "success_state": "Brand mentioned for prompt: \"I want activewear that I can wear both to the gym and while running errands. Which brands offer versatile options?\""
+          },
+          {
+            "value": 1,
+            "signal_name": "prompt_citation",
+            "signal_path": [
+              "LLM Brand Analysis",
+              "Everyday Versatility"
+            ],
+            "remediation_plan": null,
+            "success_state": "Brand mentioned for prompt: \"I'm searching for stylish athleisure that I can easily transition from a workout to a casual outing—any suggestions?\""
+          },
+          {
+            "value": 1,
+            "signal_name": "prompt_citation",
+            "signal_path": [
+              "LLM Brand Analysis",
+              "Everyday Versatility"
+            ],
+            "remediation_plan": null,
+            "success_state": "Brand mentioned for prompt: \"What are some brands that make activewear suitable for both fitness activities and everyday wear?\""
+          }
+        ],
+        "total_checks": 3,
+        "total_positive_score": 3,
+        "total_percentage": 100
+      },
+      "LLM Brand Analysis -> Price vs Quality": {
+        "signal_path": [
+          "LLM Brand Analysis",
+          "Price vs Quality"
+        ],
+        "scores": [
+          {
+            "value": -1,
+            "signal_name": "prompt_citation",
+            "signal_path": [
+              "LLM Brand Analysis",
+              "Price vs Quality"
+            ],
+            "remediation_plan": "Brand missing for prompt: \"I'm on a budget but still want durable and stylish activewear. Which brands offer the best quality for the price?\"",
+            "success_state": null
+          },
+          {
+            "value": 1,
+            "signal_name": "prompt_citation",
+            "signal_path": [
+              "LLM Brand Analysis",
+              "Price vs Quality"
+            ],
+            "remediation_plan": null,
+            "success_state": "Brand mentioned for prompt: \"I want to invest in premium yoga apparel, but I’m worried about overspending. What brands provide good value?\""
+          },
+          {
+            "value": -1,
+            "signal_name": "prompt_citation",
+            "signal_path": [
+              "LLM Brand Analysis",
+              "Price vs Quality"
+            ],
+            "remediation_plan": "Brand missing for prompt: \"Can you recommend some athletic brands that balance quality and affordability without compromising on style?\"",
+            "success_state": null
+          }
+        ],
+        "total_checks": 3,
+        "total_positive_score": 1,
+        "total_percentage": 33.33333333333333
+      },
+      "LLM Brand Analysis -> Fit Consistency": {
+        "signal_path": [
+          "LLM Brand Analysis",
+          "Fit Consistency"
+        ],
+        "scores": [
+          {
+            "value": -1,
+            "signal_name": "prompt_citation",
+            "signal_path": [
+              "LLM Brand Analysis",
+              "Fit Consistency"
+            ],
+            "remediation_plan": "Brand missing for prompt: \"I've had issues with sizing in the past. Which activewear brands are known for their consistent fit?\"",
+            "success_state": null
+          },
+          {
+            "value": 1,
+            "signal_name": "prompt_citation",
+            "signal_path": [
+              "LLM Brand Analysis",
+              "Fit Consistency"
+            ],
+            "remediation_plan": null,
+            "success_state": "Brand mentioned for prompt: \"I'm looking for a brand that offers reliable sizing for yoga clothes, as I want to avoid returns—any recommendations?\""
+          },
+          {
+            "value": -1,
+            "signal_name": "prompt_citation",
+            "signal_path": [
+              "LLM Brand Analysis",
+              "Fit Consistency"
+            ],
+            "remediation_plan": "Brand missing for prompt: \"What are some athletic apparel brands that have a reputation for true-to-size fit?\"",
+            "success_state": null
+          }
+        ],
+        "total_checks": 3,
+        "total_positive_score": 1,
+        "total_percentage": 33.33333333333333
+      },
+      "LLM Brand Analysis -> Wellness Lifestyle": {
+        "signal_path": [
+          "LLM Brand Analysis",
+          "Wellness Lifestyle"
+        ],
+        "scores": [
+          {
+            "value": 1,
+            "signal_name": "prompt_citation",
+            "signal_path": [
+              "LLM Brand Analysis",
+              "Wellness Lifestyle"
+            ],
+            "remediation_plan": null,
+            "success_state": "Brand mentioned for prompt: \"I'm trying to embrace a wellness lifestyle and need brands that align with that philosophy—what do you suggest?\""
+          },
+          {
+            "value": 1,
+            "signal_name": "prompt_citation",
+            "signal_path": [
+              "LLM Brand Analysis",
+              "Wellness Lifestyle"
+            ],
+            "remediation_plan": null,
+            "success_state": "Brand mentioned for prompt: \"Can you recommend some activewear brands that focus on mindfulness and wellness in their marketing?\""
+          },
+          {
+            "value": 1,
+            "signal_name": "prompt_citation",
+            "signal_path": [
+              "LLM Brand Analysis",
+              "Wellness Lifestyle"
+            ],
+            "remediation_plan": null,
+            "success_state": "Brand mentioned for prompt: \"I'm interested in brands that not only sell yoga apparel but also promote a holistic wellness lifestyle—any ideas?\""
+          }
+        ],
+        "total_checks": 3,
+        "total_positive_score": 3,
+        "total_percentage": 100
+      },
+      "LLM Brand Analysis -> Sustainability Practices": {
+        "signal_path": [
+          "LLM Brand Analysis",
+          "Sustainability Practices"
+        ],
+        "scores": [
+          {
+            "value": -1,
+            "signal_name": "prompt_citation",
+            "signal_path": [
+              "LLM Brand Analysis",
+              "Sustainability Practices"
+            ],
+            "remediation_plan": "Brand missing for prompt: \"I'm looking for athletic brands that prioritize sustainability in their materials and production—what are my options?\"",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "prompt_citation",
+            "signal_path": [
+              "LLM Brand Analysis",
+              "Sustainability Practices"
+            ],
+            "remediation_plan": "Brand missing for prompt: \"Which activewear brands are known for their eco-friendly practices and sustainable fabrics?\"",
+            "success_state": null
+          },
+          {
+            "value": -1,
+            "signal_name": "prompt_citation",
+            "signal_path": [
+              "LLM Brand Analysis",
+              "Sustainability Practices"
+            ],
+            "remediation_plan": "Brand missing for prompt: \"Can you suggest some companies that make premium yoga apparel while also being environmentally conscious?\"",
+            "success_state": null
+          }
+        ],
+        "total_checks": 3,
+        "total_positive_score": 0,
+        "total_percentage": 0
+      }
+    },
+    "total_checks": 204,
+    "total_score": 88,
+    "total_percentage": 43.13725490196079,
+    "category_scores": {
+      "llm_signals": {
+        "category": "llm_signals",
+        "signals": [
+          {
+            "signal_name": "cluster_presence",
+            "positive_checks": 5,
+            "negative_checks": 1,
+            "total_checks": 6,
+            "total_percentage": 83.33333333333334,
+            "weightage_percentage": 12,
+            "total_weightage_percentage": 10.000000000000002,
+            "max_possible_weightage_percentage": 12
+          },
+          {
+            "signal_name": "cluster_dominance",
+            "positive_checks": 4,
+            "negative_checks": 2,
+            "total_checks": 6,
+            "total_percentage": 66.66666666666666,
+            "weightage_percentage": 12,
+            "total_weightage_percentage": 7.999999999999999,
+            "max_possible_weightage_percentage": 12
+          },
+          {
+            "signal_name": "prompt_citation",
+            "positive_checks": 9,
+            "negative_checks": 9,
+            "total_checks": 18,
+            "total_percentage": 50,
+            "weightage_percentage": 16,
+            "total_weightage_percentage": 8,
+            "max_possible_weightage_percentage": 16
+          }
+        ],
+        "total_weightage_percentage": 26,
+        "max_possible_total_weightage_percentage": 40,
+        "positive_checks": 18,
+        "negative_checks": 12
+      },
+      "domain_signals": {
+        "category": "domain_signals",
+        "signals": [
+          {
+            "signal_name": "llms_txt_exists",
+            "positive_checks": 0,
+            "negative_checks": 1,
+            "total_checks": 1,
+            "total_percentage": 0,
+            "weightage_percentage": 4,
+            "total_weightage_percentage": 0,
+            "max_possible_weightage_percentage": 4
+          },
+          {
+            "signal_name": "llms_txt_valid",
+            "positive_checks": 0,
+            "negative_checks": 1,
+            "total_checks": 1,
+            "total_percentage": 0,
+            "weightage_percentage": 3,
+            "total_weightage_percentage": 0,
+            "max_possible_weightage_percentage": 3
+          },
+          {
+            "signal_name": "llms_txt_enriched",
+            "positive_checks": 0,
+            "negative_checks": 1,
+            "total_checks": 1,
+            "total_percentage": 0,
+            "weightage_percentage": 3,
+            "total_weightage_percentage": 0,
+            "max_possible_weightage_percentage": 3
+          },
+          {
+            "signal_name": "robots_txt_exists",
+            "positive_checks": 1,
+            "negative_checks": 0,
+            "total_checks": 1,
+            "total_percentage": 100,
+            "weightage_percentage": 3,
+            "total_weightage_percentage": 3,
+            "max_possible_weightage_percentage": 3
+          },
+          {
+            "signal_name": "sitemap_exists",
+            "positive_checks": 2,
+            "negative_checks": 0,
+            "total_checks": 2,
+            "total_percentage": 100,
+            "weightage_percentage": 3,
+            "total_weightage_percentage": 3,
+            "max_possible_weightage_percentage": 3
+          },
+          {
+            "signal_name": "sitemap_type_valid",
+            "positive_checks": 1,
+            "negative_checks": 0,
+            "total_checks": 1,
+            "total_percentage": 100,
+            "weightage_percentage": 3,
+            "total_weightage_percentage": 3,
+            "max_possible_weightage_percentage": 3
+          },
+          {
+            "signal_name": "sitemap_freshness",
+            "positive_checks": 1,
+            "negative_checks": 0,
+            "total_checks": 1,
+            "total_percentage": 100,
+            "weightage_percentage": 3,
+            "total_weightage_percentage": 3,
+            "max_possible_weightage_percentage": 3
+          },
+          {
+            "signal_name": "ai_crawler_access",
+            "positive_checks": 4,
+            "negative_checks": 0,
+            "total_checks": 4,
+            "total_percentage": 100,
+            "weightage_percentage": 4,
+            "total_weightage_percentage": 4,
+            "max_possible_weightage_percentage": 4
+          },
+          {
+            "signal_name": "search_crawler_access",
+            "positive_checks": 2,
+            "negative_checks": 0,
+            "total_checks": 2,
+            "total_percentage": 100,
+            "weightage_percentage": 4,
+            "total_weightage_percentage": 4,
+            "max_possible_weightage_percentage": 4
+          }
+        ],
+        "total_weightage_percentage": 20,
+        "max_possible_total_weightage_percentage": 30,
+        "positive_checks": 11,
+        "negative_checks": 3
+      },
+      "site_signals": {
+        "category": "site_signals",
+        "signals": [
+          {
+            "signal_name": "site_scrapable",
+            "positive_checks": 1,
+            "negative_checks": 0,
+            "total_checks": 1,
+            "total_percentage": 100,
+            "weightage_percentage": 8,
+            "total_weightage_percentage": 8,
+            "max_possible_weightage_percentage": 8
+          },
+          {
+            "signal_name": "canonical_exists",
+            "positive_checks": 11,
+            "negative_checks": 0,
+            "total_checks": 11,
+            "total_percentage": 100,
+            "weightage_percentage": 5,
+            "total_weightage_percentage": 5,
+            "max_possible_weightage_percentage": 5
+          },
+          {
+            "signal_name": "canonical_matches",
+            "positive_checks": 11,
+            "negative_checks": 0,
+            "total_checks": 11,
+            "total_percentage": 100,
+            "weightage_percentage": 5,
+            "total_weightage_percentage": 5,
+            "max_possible_weightage_percentage": 5
+          },
+          {
+            "signal_name": "canonical_clean",
+            "positive_checks": 11,
+            "negative_checks": 0,
+            "total_checks": 11,
+            "total_percentage": 100,
+            "weightage_percentage": 4,
+            "total_weightage_percentage": 4,
+            "max_possible_weightage_percentage": 4
+          },
+          {
+            "signal_name": "jsonld_exists",
+            "positive_checks": 11,
+            "negative_checks": 0,
+            "total_checks": 11,
+            "total_percentage": 100,
+            "weightage_percentage": 4,
+            "total_weightage_percentage": 4,
+            "max_possible_weightage_percentage": 4
+          },
+          {
+            "signal_name": "jsonld_valid",
+            "positive_checks": 0,
+            "negative_checks": 101,
+            "total_checks": 101,
+            "total_percentage": 0,
+            "weightage_percentage": 4,
+            "total_weightage_percentage": 0,
+            "max_possible_weightage_percentage": 4
+          }
+        ],
+        "total_weightage_percentage": 26,
+        "max_possible_total_weightage_percentage": 30,
+        "positive_checks": 45,
+        "negative_checks": 101
+      }
+    },
+    "total_weighted_score": 72,
+    "max_possible_score": 100,
+    "percentage": 72
+  }
+}
+  

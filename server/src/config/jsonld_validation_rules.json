@@ -1,0 +1,559 @@
+{
+  "jsonld_validation_rules": {
+    "AccountingService": {
+      "required": ["name", "address", "telephone"]
+    },
+    "AggregateRating": {
+      "required": ["ratingValue", "reviewCount"]
+    },
+    "AmusementPark": {
+      "required": ["name", "address"]
+    },
+    "AnimalShelter": {
+      "required": ["name", "address", "telephone"]
+    },
+    "ApartmentComplex": {
+      "required": ["name", "address"]
+    },
+    "Aquarium": {
+      "required": ["name", "address"]
+    },
+    "ArtGallery": {
+      "required": ["name", "address"]
+    },
+    "Article": {
+      "required": ["headline", "image", "datePublished", "author"]
+    },
+    "Attorney": {
+      "required": ["name", "address", "telephone"]
+    },
+    "AutoBodyShop": {
+      "required": ["name", "address", "telephone"]
+    },
+    "AutoDealer": {
+      "required": ["name", "address", "telephone"]
+    },
+    "AutoPartsStore": {
+      "required": ["name", "address", "telephone"]
+    },
+    "AutoRepair": {
+      "required": ["name", "address", "telephone"]
+    },
+    "AutoWash": {
+      "required": ["name", "address"]
+    },
+    "AutomotiveBusiness": {
+      "required": ["name", "address", "telephone"]
+    },
+    "Bakery": {
+      "required": ["name", "address"]
+    },
+    "BankOrCreditUnion": {
+      "required": ["name", "address", "telephone"]
+    },
+    "BarOrPub": {
+      "required": ["name", "address"]
+    },
+    "BeautySalon": {
+      "required": ["name", "address", "telephone"]
+    },
+    "BedAndBreakfast": {
+      "required": ["name", "address"]
+    },
+    "BikeStore": {
+      "required": ["name", "address"]
+    },
+    "Blog": {
+      "required": ["name"]
+    },
+    "BlogPosting": {
+      "required": ["headline", "image", "datePublished", "author"]
+    },
+    "Book": {
+      "required": ["name", "author"]
+    },
+    "BookStore": {
+      "required": ["name", "address"]
+    },
+    "BowlingAlley": {
+      "required": ["name", "address"]
+    },
+    "Brand": {
+      "required": ["name"]
+    },
+    "BreadcrumbList": {
+      "required": ["itemListElement"]
+    },
+    "Brewery": {
+      "required": ["name", "address"]
+    },
+    "BroadcastService": {
+      "required": ["name"]
+    },
+    "BuddhistTemple": {
+      "required": ["name", "address"]
+    },
+    "CafeOrCoffeeShop": {
+      "required": ["name", "address"]
+    },
+    "Campground": {
+      "required": ["name", "address"]
+    },
+    "Casino": {
+      "required": ["name", "address"]
+    },
+    "Cemetery": {
+      "required": ["name", "address"]
+    },
+    "ChildCare": {
+      "required": ["name", "address", "telephone"]
+    },
+    "Church": {
+      "required": ["name", "address"]
+    },
+    "CivicStructure": {
+      "required": ["name", "address"]
+    },
+    "ClothingStore": {
+      "required": ["name", "address"]
+    },
+    "CollegeOrUniversity": {
+      "required": ["name", "address"]
+    },
+    "ComedyClub": {
+      "required": ["name", "address"]
+    },
+    "ComputerStore": {
+      "required": ["name", "address"]
+    },
+    "ContactPoint": {
+      "required": ["contactType"]
+    },
+    "ConvenienceStore": {
+      "required": ["name", "address"]
+    },
+    "Corporation": {
+      "required": ["name"]
+    },
+    "Course": {
+      "required": ["name", "description"]
+    },
+    "DaySpa": {
+      "required": ["name", "address", "telephone"]
+    },
+    "Dentist": {
+      "required": ["name", "address", "telephone"]
+    },
+    "DiagnosticLab": {
+      "required": ["name", "address"]
+    },
+    "Drug": {
+      "required": ["name"]
+    },
+    "DryCleaningOrLaundry": {
+      "required": ["name", "address"]
+    },
+    "EducationalOrganization": {
+      "required": ["name", "address"]
+    },
+    "Electrician": {
+      "required": ["name", "address", "telephone"]
+    },
+    "ElectronicsStore": {
+      "required": ["name", "address"]
+    },
+    "ElementarySchool": {
+      "required": ["name", "address"]
+    },
+    "EmergencyService": {
+      "required": ["name", "address", "telephone"]
+    },
+    "EmploymentAgency": {
+      "required": ["name", "address"]
+    },
+    "EntertainmentBusiness": {
+      "required": ["name", "address"]
+    },
+    "Event": {
+      "required": ["name", "startDate", "location"]
+    },
+    "EventVenue": {
+      "required": ["name", "address"]
+    },
+    "ExerciseGym": {
+      "required": ["name", "address"]
+    },
+    "FAQPage": {
+      "required": ["mainEntity"]
+    },
+    "FastFoodRestaurant": {
+      "required": ["name", "address"]
+    },
+    "FinancialService": {
+      "required": ["name", "address"]
+    },
+    "FireStation": {
+      "required": ["name", "address", "telephone"]
+    },
+    "Florist": {
+      "required": ["name", "address"]
+    },
+    "FoodEstablishment": {
+      "required": ["name", "address"]
+    },
+    "FurnitureStore": {
+      "required": ["name", "address"]
+    },
+    "GardenStore": {
+      "required": ["name", "address"]
+    },
+    "GasStation": {
+      "required": ["name", "address"]
+    },
+    "GeneralContractor": {
+      "required": ["name", "address", "telephone"]
+    },
+    "GolfCourse": {
+      "required": ["name", "address"]
+    },
+    "GovernmentOrganization": {
+      "required": ["name"]
+    },
+    "HVACBusiness": {
+      "required": ["name", "address", "telephone"]
+    },
+    "HairSalon": {
+      "required": ["name", "address", "telephone"]
+    },
+    "HardwareStore": {
+      "required": ["name", "address"]
+    },
+    "HealthAndBeautyBusiness": {
+      "required": ["name", "address"]
+    },
+    "HighSchool": {
+      "required": ["name", "address"]
+    },
+    "HinduTemple": {
+      "required": ["name", "address"]
+    },
+    "HomeAndConstructionBusiness": {
+      "required": ["name", "address", "telephone"]
+    },
+    "Hospital": {
+      "required": ["name", "address", "telephone"]
+    },
+    "Hostel": {
+      "required": ["name", "address"]
+    },
+    "Hotel": {
+      "required": ["name", "address"]
+    },
+    "HousePainter": {
+      "required": ["name", "address", "telephone"]
+    },
+    "HowTo": {
+      "required": ["name", "step"]
+    },
+    "IceCreamShop": {
+      "required": ["name", "address"]
+    },
+    "ImageObject": {
+      "required": ["url"]
+    },
+    "InsuranceAgency": {
+      "required": ["name", "address"]
+    },
+    "ItemList": {
+      "required": ["itemListElement"]
+    },
+    "JewelryStore": {
+      "required": ["name", "address"]
+    },
+    "JobPosting": {
+      "required": ["title", "description", "datePosted", "hiringOrganization", "jobLocation"]
+    },
+    "LegalService": {
+      "required": ["name", "address", "telephone"]
+    },
+    "Library": {
+      "required": ["name", "address"]
+    },
+    "LiquorStore": {
+      "required": ["name", "address"]
+    },
+    "LocalBusiness": {
+      "required": ["name", "address"]
+    },
+    "Locksmith": {
+      "required": ["name", "address", "telephone"]
+    },
+    "LodgingBusiness": {
+      "required": ["name", "address"]
+    },
+    "LodgingReservation": {
+      "required": ["reservationFor"]
+    },
+    "MedicalBusiness": {
+      "required": ["name", "address", "telephone"]
+    },
+    "MedicalClinic": {
+      "required": ["name", "address", "telephone"]
+    },
+    "MedicalOrganization": {
+      "required": ["name", "address"]
+    },
+    "MedicalProcedure": {
+      "required": ["name"]
+    },
+    "MedicalSpecialty": {
+      "required": []
+    },
+    "MedicalTest": {
+      "required": ["name"]
+    },
+    "MedicalTherapy": {
+      "required": ["name"]
+    },
+    "Menu": {
+      "required": ["hasMenuSection"]
+    },
+    "MenuItem": {
+      "required": ["name"]
+    },
+    "MiddleSchool": {
+      "required": ["name", "address"]
+    },
+    "Mosque": {
+      "required": ["name", "address"]
+    },
+    "Motel": {
+      "required": ["name", "address"]
+    },
+    "MotorcycleDealer": {
+      "required": ["name", "address"]
+    },
+    "MotorcycleRepair": {
+      "required": ["name", "address", "telephone"]
+    },
+    "Movie": {
+      "required": ["name"]
+    },
+    "MovieTheater": {
+      "required": ["name", "address"]
+    },
+    "MovingCompany": {
+      "required": ["name", "address", "telephone"]
+    },
+    "Museum": {
+      "required": ["name", "address"]
+    },
+    "MusicAlbum": {
+      "required": ["name"]
+    },
+    "MusicEvent": {
+      "required": ["name", "startDate", "location"]
+    },
+    "MusicVenue": {
+      "required": ["name", "address"]
+    },
+    "NGO": {
+      "required": ["name"]
+    },
+    "NailSalon": {
+      "required": ["name", "address", "telephone"]
+    },
+    "NewsArticle": {
+      "required": ["headline", "image", "datePublished", "author"]
+    },
+    "NewsMediaOrganization": {
+      "required": ["name"]
+    },
+    "NightClub": {
+      "required": ["name", "address"]
+    },
+    "Notary": {
+      "required": ["name", "address", "telephone"]
+    },
+    "Offer": {
+      "required": ["price", "priceCurrency", "availability"]
+    },
+    "OpeningHoursSpecification": {
+      "required": ["dayOfWeek"]
+    },
+    "Optician": {
+      "required": ["name", "address", "telephone"]
+    },
+    "Organization": {
+      "required": ["name"]
+    },
+    "ParkingFacility": {
+      "required": ["name", "address"]
+    },
+    "PawnShop": {
+      "required": ["name", "address"]
+    },
+    "PerformingGroup": {
+      "required": ["name"]
+    },
+    "Person": {
+      "required": ["name"]
+    },
+    "PetStore": {
+      "required": ["name", "address"]
+    },
+    "Pharmacy": {
+      "required": ["name", "address", "telephone"]
+    },
+    "PhysicalTherapy": {
+      "required": ["name", "address", "telephone"]
+    },
+    "Physician": {
+      "required": ["name", "address", "telephone"]
+    },
+    "Place": {
+      "required": ["name"]
+    },
+    "Plumber": {
+      "required": ["name", "address", "telephone"]
+    },
+    "PoliceStation": {
+      "required": ["name", "address", "telephone"]
+    },
+    "Preschool": {
+      "required": ["name", "address"]
+    },
+    "Product": {
+      "required": ["name", "image", "offers"]
+    },
+    "ProfessionalService": {
+      "required": ["name", "address"]
+    },
+    "PublicSwimmingPool": {
+      "required": ["name", "address"]
+    },
+    "RVPark": {
+      "required": ["name", "address"]
+    },
+    "RadioStation": {
+      "required": ["name"]
+    },
+    "RealEstateAgent": {
+      "required": ["name", "address", "telephone"]
+    },
+    "Recipe": {
+      "required": ["name", "image", "recipeIngredient", "recipeInstructions"]
+    },
+    "RecyclingCenter": {
+      "required": ["name", "address"]
+    },
+    "Residence": {
+      "required": ["name", "address"]
+    },
+    "Resort": {
+      "required": ["name", "address"]
+    },
+    "Restaurant": {
+      "required": ["name", "address"]
+    },
+    "Review": {
+      "required": ["itemReviewed", "reviewRating", "author"]
+    },
+    "RoofingContractor": {
+      "required": ["name", "address", "telephone"]
+    },
+    "ScholarlyArticle": {
+      "required": ["headline", "image", "datePublished", "author"]
+    },
+    "School": {
+      "required": ["name", "address"]
+    },
+    "SearchAction": {
+      "required": ["target"]
+    },
+    "SelfStorage": {
+      "required": ["name", "address"]
+    },
+    "Service": {
+      "required": ["name"]
+    },
+    "ShoppingCenter": {
+      "required": ["name", "address"]
+    },
+    "SkiResort": {
+      "required": ["name", "address"]
+    },
+    "SoftwareApplication": {
+      "required": ["name", "operatingSystem", "applicationCategory"]
+    },
+    "SportingGoodsStore": {
+      "required": ["name", "address"]
+    },
+    "SportsActivityLocation": {
+      "required": ["name", "address"]
+    },
+    "SportsOrganization": {
+      "required": ["name"]
+    },
+    "SportsTeam": {
+      "required": ["name"]
+    },
+    "StadiumOrArena": {
+      "required": ["name", "address"]
+    },
+    "Store": {
+      "required": ["name", "address"]
+    },
+    "Synagogue": {
+      "required": ["name", "address"]
+    },
+    "TattooParlor": {
+      "required": ["name", "address", "telephone"]
+    },
+    "TaxiService": {
+      "required": ["name"]
+    },
+    "TelevisionStation": {
+      "required": ["name"]
+    },
+    "TennisComplex": {
+      "required": ["name", "address"]
+    },
+    "TouristAttraction": {
+      "required": ["name", "address"]
+    },
+    "TouristTrip": {
+      "required": ["name"]
+    },
+    "ToyStore": {
+      "required": ["name", "address"]
+    },
+    "TravelAgency": {
+      "required": ["name", "address"]
+    },
+    "Vehicle": {
+      "required": ["name"]
+    },
+    "VeterinaryCare": {
+      "required": ["name", "address", "telephone"]
+    },
+    "VideoGame": {
+      "required": ["name"]
+    },
+    "VideoObject": {
+      "required": ["name", "description", "thumbnailUrl", "uploadDate"]
+    },
+    "WebPage": {
+      "required": ["name"]
+    },
+    "WebSite": {
+      "required": ["name", "url"]
+    },
+    "Winery": {
+      "required": ["name", "address"]
+    },
+    "Zoo": {
+      "required": ["name", "address"]
+    }
+  }
+}
