@@ -95,45 +95,95 @@ Internally define:
 - Business model
 
 ════════════════════════════════════════════════════
-STEP 2 — COMPETITOR GENERATION (CANDIDATES)
+STEP 2 — COMPETITOR DISCOVERY + SCORING (MERGED)
 ════════════════════════════════════════════════════
-Generate an initial list of 8–12 possible competitors using search results.
+
+Continuously discover AND evaluate competitors until you have enough strong candidates.
+
+Start with 10–15 candidates from:
+- "{entity} competitors {geo}"
+- "{entity} alternatives"
+- Category-level competitors
+- Substitute solutions
+
+For EACH candidate:
+
+1. Assign a score:
+
++3 → SAME PRIMARY USE CASE (MANDATORY anchor)
++2 → SAME CATEGORY
++1 → SIMILAR TARGET AUDIENCE
++1 → SIMILAR PRICE TIER
++1 → SIMILAR BUSINESS MODEL
++1 → REALISTIC SUBSTITUTE in {geo}
+
+Max score = 9
+
+2. Apply controlled exclusion:
+
+REJECT ONLY if:
+- Primary use case is COMPLETELY different ❗
+- Not a realistic substitute under any scenario
+
+Otherwise:
+→ KEEP and score
 
 ════════════════════════════════════════════════════
-STEP 3 — STRICT ELIMINATION FILTER (CRITICAL)
+STEP 3 — SELECTION + RELAXATION LOOP (CRITICAL FIX)
 ════════════════════════════════════════════════════
-For EACH candidate, validate ALL conditions below.
-A TRUE DIRECT COMPETITOR must satisfy **ALL**:
 
-1. SAME CATEGORY
-2. SAME PRIMARY USE CASE (customers use both for the exact same purpose)
-3. SIMILAR PRICE TIER (max ±1 tier difference)
-4. SAME TARGET AUDIENCE
-5. SAME BUSINESS MODEL
-6. REAL SUBSTITUTABILITY → "Would a real customer in {geo} realistically choose this instead of {entity}?"
+Sort candidates by score (highest → lowest)
 
-════════════════════════════════════════════════════
-🚫 HARD EXCLUSION RULES (ZERO TOLERANCE)
-════════════════════════════════════════════════════
-Immediately reject if:
-- Different primary use case
-- Different category
-- Different target audience
-- Marketplace/aggregator (unless the entity itself is one)
-- Large price tier gap
-- Loosely related or "somewhat similar" only
+Select top candidates.
 
-════════════════════════════════════════════════════
-STEP 4 — FINAL COMPETITOR LIST
-════════════════════════════════════════════════════
-Return only 4-6 high-confidence direct competitors.
-Quality > Quantity. If fewer than 3 truly qualify, return fewer.
+IF total selected < 3:
+
+→ CONTINUE SEARCHING and RELAX constraints in this EXACT order:
+
+1. Allow different business model  
+2. Expand price tolerance to ±2 tiers  
+3. Allow adjacent category (BUT SAME USE CASE)  
+4. Allow broader audience overlap  
+
+After each relaxation:
+→ Add new candidates
+→ Score them
+→ Re-rank
+
+🔁 REPEAT until you have at least 3 candidates
 
 ════════════════════════════════════════════════════
-STEP 5 — OUTPUT
+STRICT RULES (NON-NEGOTIABLE)
 ════════════════════════════════════════════════════
+- Primary use case MUST remain similar
+- Substitutes ARE valid competitors
+- Do NOT stop early with <3 candidates
+- Do NOT rely only on “perfect matches”
+
+Think:
+"Would a real customer realistically choose this instead?"
+
+════════════════════════════════════════════════════
+FINAL VALIDATION (MANDATORY)
+════════════════════════════════════════════════════
+
+- If competitors < 3 → KEEP EXPANDING (DO NOT STOP)
+- If competitors > 5 → keep top 5 by score
+- Final list MUST contain 3–5 competitors
+
+If this condition is not met → your response is INVALID
+
+════════════════════════════════════════════════════
+STEP 4 — OUTPUT
+════════════════════════════════════════════════════
+
 Return ONLY valid JSON matching the schema below.
-No explanations. No markdown. No extra text.
+
+CRITICAL:
+- "top_competitors" MUST contain 3-5 items
+- No explanations
+- No markdown
+- No extra text
 
 Schema:
 {json.dumps(schema, indent=2)}
@@ -216,7 +266,7 @@ async def safe_invoke(entity: str, geo: str, retries: int = 4):
 # Main Execution
 # -----------------------------
 if __name__ == "__main__":
-    entity = "Banana Club"
+    entity = "myntra"
     geo = "India"
 
     result = asyncio.run(safe_invoke(entity, geo))
