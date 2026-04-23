@@ -29,6 +29,7 @@ export const Home = () => {
       try {
         // Import site types directly from the file
         const siteTypesList = `ecommerce
+retail_and_apparel
 marketplace
 saas
 subscription_service
@@ -75,7 +76,7 @@ furniture_store
 electronics_store
 clothing_store
 jewelry_store
-cosmetics_store
+cosmetics,_beauty,_personal_care
 book_store
 sporting_goods_store
 music_store

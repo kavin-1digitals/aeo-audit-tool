@@ -1,5 +1,26 @@
 {
   "jsonld_categories": {
+    "retail_and_apparel": [
+      "Organization",
+      "Brand",
+      "WebSite",
+
+      "Product",
+      "Offer",
+
+      "AggregateRating",
+      "Review",
+
+      "BreadcrumbList",
+      "ItemList",
+      "SearchAction",
+
+      "FAQPage",
+
+      "LocalBusiness",
+      "Store",
+      "ContactPoint"
+    ],
     "ecommerce": [
       "Organization",
       "Brand",
@@ -654,7 +675,7 @@
       "FAQPage",
       "ImageObject"
     ],
-    "cosmetics_store": [
+    "cosmetics,_beauty,_personal_care": [
       "Store",
       "LocalBusiness",
       "Organization",
@@ -662,6 +683,7 @@
       "Product",
       "Offer",
       "Place",
+      "Service",
       "ContactPoint",
       "OpeningHoursSpecification",
       "Review",

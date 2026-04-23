@@ -355,11 +355,52 @@
         "info": ["contact", "locations"]
       }
     },
-    "cosmetics_store": {
+    "cosmetics,_beauty,_personal_care": {
       "patterns": {
-        "products": ["products", "makeup", "skincare", "beauty"],
-        "categories": ["category", "brands"],
-        "info": ["about", "contact", "locations", "hours"]
+        "products": [
+          "product",
+          "products",
+          "shop",
+          "buy",
+          "makeup",
+          "skincare",
+          "cosmetic",
+          "item"
+        ],
+        "categories": [
+          "category",
+          "categories",
+          "collection",
+          "collections",
+          "brands",
+          "range"
+        ],
+        "services": [
+          "service",
+          "services",
+          "treatment",
+          "treatments",
+          "facial",
+          "hair",
+          "skin",
+          "spa"
+        ],
+        "content": [
+          "blog",
+          "article",
+          "guide",
+          "tips",
+          "how-to",
+          "routine"
+        ],
+        "info": [
+          "about",
+          "contact",
+          "locations",
+          "hours",
+          "faq",
+          "support"
+        ]
       }
     },
     "courier_service": {
@@ -1279,6 +1320,53 @@
         "destinations": ["destinations", "packages", "tours"],
         "services": ["services", "travel"],
         "info": ["about", "contact"]
+      }
+    },
+    "retail_and_apparel": {
+      "patterns": {
+        "products": [
+          "product",
+          "products",
+          "shop",
+          "buy",
+          "clothing",
+          "apparel",
+          "wear",
+          "outfit",
+          "item"
+        ],
+        "categories": [
+          "category",
+          "categories",
+          "collection",
+          "collections",
+          "men",
+          "women",
+          "kids",
+          "new-arrivals",
+          "trending"
+        ],
+        "offers": [
+          "sale",
+          "discount",
+          "offer",
+          "deals",
+          "clearance"
+        ],
+        "brands": [
+          "brand",
+          "brands",
+          "designer"
+        ],
+        "info": [
+          "about",
+          "contact",
+          "location",
+          "store",
+          "hours",
+          "faq",
+          "support"
+        ]
       }
     },
     "veterinary": {
