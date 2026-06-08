@@ -322,19 +322,7 @@ def build_plan(
 ):
     config = load_config()
 
-    if max_possible:
-        raw_improvement = (delta / max_possible) * 100
-        # Use original baseline for improvement percentage calculation
-        baseline_score = original_baseline_score if original_baseline_score is not None else current_score
-        allowed_improvement = max(0.0, 100.0 - baseline_score)
-        improvement_pct = min(raw_improvement, allowed_improvement)
-        
-        # Special case: For Complete Fix, show cumulative improvement from baseline
-        if category == "Complete Fix" and original_baseline_score is not None:
-            # Calculate total improvement from original baseline to final target
-            improvement_pct = max(0.0, target_score - original_baseline_score)
-    else:
-        improvement_pct = 0
+    improvement_pct = max(0.0, target_score - current_score)
 
     return RemediationPlan(
         category=category,
