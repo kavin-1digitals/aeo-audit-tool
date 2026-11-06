@@ -32,6 +32,18 @@ const CompetitorComparison = ({ llmMetrics, audit_metadata }) => {
   const brandData = sovData.find(d => d.isBrand);
   const brandRank = sovData.findIndex(d => d.isBrand) + 1;
 
+  // Data for Cluster Coverage / Brand Citations cards
+  const mainBrandData = data.find(item => item.entity === brand) || { cluster_coverage: 0, citations: 0 };
+  const otherBrands = data.filter(item => item.entity !== brand);
+  const topCompetitor = otherBrands.length > 0
+    ? otherBrands.reduce((top, comp) => ((comp.citations || 0) > (top.citations || 0) ? comp : top))
+    : { entity: 'N/A', citations: 0 };
+  const avgCitations = otherBrands.length > 0
+    ? otherBrands.reduce((sum, comp) => sum + (comp.citations || 0), 0) / otherBrands.length
+    : 0;
+  const maxCitations = Math.max(...otherBrands.map(c => c.citations || 1), 1);
+  const coverage = mainBrandData.cluster_coverage ?? 0;
+
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       const d = sovData.find(x => x.name === label);
@@ -88,6 +100,60 @@ const CompetitorComparison = ({ llmMetrics, audit_metadata }) => {
             </Bar>
           </BarChart>
         </ResponsiveContainer>
+      </div>
+
+      {/* Prompt's Cluster Coverage & Brand Citations */}
+      <div className="flex flex-col lg:flex-row gap-6 mb-6">
+        <div className="lg:w-1/2 bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
+          <div className="p-4 border-b border-gray-200">
+            <h4 className="text-lg font-semibold">Prompt's Cluster Coverage</h4>
+            <p className="text-sm text-gray-600 mt-1">Brand's content cluster coverage distribution</p>
+          </div>
+          <div className="p-6">
+            <div className="flex justify-center">
+              <div className="relative w-32 h-32">
+                <div className="absolute inset-0 rounded-full bg-gray-200"></div>
+                <div
+                  className="absolute inset-0 rounded-full"
+                  style={{
+                    background: `conic-gradient(rgb(168 85 247) ${coverage * 3.6}deg, rgb(156 163 175) ${coverage * 3.6}deg)`
+                  }}
+                />
+                <div className="absolute inset-3 rounded-full bg-white flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="text-lg font-bold">{coverage.toFixed(1)}%</div>
+                    <div className="text-xs text-gray-600">Coverage</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="lg:w-1/2 bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
+          <div className="p-4 border-b border-gray-200">
+            <h4 className="text-lg font-semibold">Brand Citations</h4>
+            <p className="text-sm text-gray-600 mt-1">Brand citation count comparison</p>
+          </div>
+          <div className="p-6 space-y-4">
+            {[
+              { label: topCompetitor.entity, value: topCompetitor.citations || 0, color: 'bg-yellow-500', truncate: true },
+              { label: brand, value: mainBrandData.citations || 0, color: 'bg-purple-500', truncate: true },
+              { label: 'Average', value: avgCitations, color: 'bg-gray-400', truncate: false }
+            ].map((row, i) => (
+              <div key={i} className="flex items-center">
+                <div className={`w-20 text-xs ${row.truncate ? 'truncate' : ''}`}>{row.label}</div>
+                <div className="flex-1 mx-2 bg-gray-200 rounded-full h-3">
+                  <div
+                    className={`${row.color} h-3 rounded-full`}
+                    style={{ width: `${Math.min((row.value / maxCitations) * 100, 100)}%` }}
+                  />
+                </div>
+                <div className="text-xs w-10 text-right">{Math.round(row.value)}</div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Detailed comparison table */}

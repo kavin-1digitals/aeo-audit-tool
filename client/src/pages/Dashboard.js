@@ -333,9 +333,9 @@ const Dashboard = ({ auditData, onViewDetails, onNewAudit }) => {
         />
       </div>
 
-      {/* Brand vs Competitors Chart */}
+      {/* Brand vs Competitors Chart (hidden for now - remove "hidden" class to bring it back) */}
       {llmSignals && (
-        <div id="professional-charts">
+        <div id="professional-charts" className="hidden">
           <ProfessionalCharts 
             llmMetrics={llmMetrics}
             audit_metadata={audit_metadata}
