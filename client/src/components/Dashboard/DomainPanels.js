@@ -1,4 +1,5 @@
 import React from 'react';
+import { signalLabel } from '../../utils/signalLabels';
 import {
   ChartBarIcon,
   DocumentTextIcon,
@@ -185,7 +186,7 @@ const DomainPanels = ({ categories, calculateCategoryMetrics, onViewDetails, pro
                               <div className="text-sm font-bold text-black">{problem.issue_found}</div>
                             </td>
                             <td className="py-3 px-4">
-                              <div className="text-sm text-gray-600">{problem.signal_names.join(', ')}</div>
+                              <div className="text-sm text-gray-600">{problem.signal_names.map(signalLabel).join(', ')}</div>
                             </td>
                             <td className="py-3 px-4">
                               <div className="text-sm text-red-600">{problem.cause_of_issue}</div>

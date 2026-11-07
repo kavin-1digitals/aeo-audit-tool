@@ -9,6 +9,7 @@ from .domain_signals import DomainSignals, find_domain_signals
 from .site_signals import SiteSignals, find_site_signals
 from .llm_signals import LlmSignals, find_llm_signals
 from pydantic import BaseModel
+from src.services.progress import NULL_REPORTER
 
 logger = logging.getLogger(__name__)
 
@@ -20,12 +21,26 @@ class Signals(BaseModel):
     llm_signals: Optional[LlmSignals] = None
 
 
+async def _tracked(progress, stage: str, coro):
+    """Report stage start/finish/failure around a signal task without altering its result or errors."""
+    progress.stage_start(stage)
+    try:
+        result = await coro
+    except Exception as exc:
+        progress.stage_failed(stage, f"{type(exc).__name__}: {exc}")
+        raise
+    progress.stage_done(stage)
+    return result
+
+
 async def find_signals(
     full_domain: str,
     brand: Optional[str] = None,
     geo: Optional[str] = "United States",
-    site_types: Optional[List[str]] = None
+    site_types: Optional[List[str]] = None,
+    progress=None,
 ) -> Signals:
+    progress = progress or NULL_REPORTER
 
     logger.info(f"Starting signals analysis for domain: {full_domain}")
     logger.info("Starting all signal collection tasks in parallel...")
@@ -33,15 +48,15 @@ async def find_signals(
     # -----------------------------
     # Create tasks
     # -----------------------------
-    domain_task = asyncio.create_task(find_domain_signals(full_domain, site_types))
-    site_task = asyncio.create_task(find_site_signals(full_domain, None, site_types))
+    domain_task = asyncio.create_task(_tracked(progress, "domain_signals", find_domain_signals(full_domain, site_types)))
+    site_task = asyncio.create_task(find_site_signals(full_domain, None, site_types, progress=progress))
 
     tasks = [domain_task, site_task]
 
     # Optional LLM task
     if brand:
         logger.info("Starting LLM signals (brand visibility analysis)")
-        llm_task = asyncio.create_task(find_llm_signals(brand, geo))
+        llm_task = asyncio.create_task(find_llm_signals(brand, geo, progress=progress))
         tasks.append(llm_task)
     else:
         llm_task = None

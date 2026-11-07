@@ -1,4 +1,5 @@
 import React from 'react';
+import { signalLabel } from '../../utils/signalLabels';
 
 const TopIssues = ({ categories, pathScorecard }) => {
   // Get real failed issues from different signal paths using the original path_scorecard
@@ -43,10 +44,7 @@ const TopIssues = ({ categories, pathScorecard }) => {
               
               // Convert signal_name to UI-friendly format (remove underscores, capitalize)
               if (signal.signal_name) {
-                const friendlyName = signal.signal_name
-                  .replace(/_/g, ' ')
-                  .replace(/\b\w/g, l => l.toUpperCase());
-                specificTitle = friendlyName;
+                specificTitle = signalLabel(signal.signal_name);
               }
               
               // Add query/prompt info for LLM signals to make them unique

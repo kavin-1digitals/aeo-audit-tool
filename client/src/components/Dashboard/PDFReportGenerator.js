@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { signalLabel } from '../../utils/signalLabels';
 import {
   DocumentArrowDownIcon,
   DocumentTextIcon,
@@ -90,24 +91,8 @@ const SectionMask = ({ children, sectionTitle, isUngated }) => {
  * These use API-derived data directly to ensure accuracy and alignment.
  */
 
-const formatSignalName = (signalName) => {
-  const nameMap = {
-    'llm_txt_exists': 'LLM.txt File',
-    'robots_txt_exists': 'Robots.txt File',
-    'sitemap_exists': 'Sitemap File',
-    'sitemap_type_valid': 'Sitemap Type',
-    'category_url_count': 'Category URLs',
-    'product_url_count': 'Product URLs',
-    'brand_citation': 'Brand Citations',
-    'cluster_coverage': 'Cluster Coverage',
-    'competitive_gap': 'Competitive Gaps',
-    'jsonld_exists': 'JSON-LD Schema',
-    'jsonld_valid': 'Schema Validation',
-    'canonical_exists': 'Canonical URL',
-    'site_scrapable': 'Site Accessibility'
-  };
-  return nameMap[signalName] || signalName.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-};
+// Signals are named in one place (utils/signalLabels); categories of the older report layout keep their own names.
+const formatSignalName = (signalName) => signalLabel(signalName);
 
 const PrintableScorecards = ({ auditData, llmMetrics, llmSignals, audit_metadata }) => {
   const pathScorecard = auditData?.path_scorecard || {};

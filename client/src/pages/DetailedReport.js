@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { signalLabel } from '../utils/signalLabels';
 import { 
   CheckCircleIcon,
   XCircleIcon,
@@ -18,12 +19,7 @@ const DetailedReport = ({ auditData, onBack, selectedCategory = 'all' }) => {
   const { audit_metadata, path_scorecard } = auditData;
 
   // Convert signal name to UI-friendly format
-  const getFriendlySignalName = (signalName) => {
-    if (!signalName) return '';
-    return signalName
-      .replace(/_/g, ' ')
-      .replace(/\b\w/g, l => l.toUpperCase());
-  };
+  const getFriendlySignalName = (signalName) => (signalName ? signalLabel(signalName) : '');
 
   // Get available categories
   const getAvailableCategories = () => {

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { signalLabel } from '../../utils/signalLabels';
 import { 
   ChevronLeftIcon, 
   ChevronRightIcon,
@@ -227,7 +228,7 @@ const QuickRemediationsSection = ({ quickRemediations }) => {
                 className={`flex items-center space-x-2 p-3 rounded-lg border ${classes.border} ${classes.bg}`}
               >
                 <div className={`w-2 h-2 rounded-full ${classes.progressFill}`} />
-                <span className="text-sm font-medium text-gray-700">{signalName}</span>
+                <span className="text-sm font-medium text-gray-700">{signalLabel(signalName)}</span>
               </div>
             ))}
           </div>

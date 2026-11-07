@@ -3,6 +3,7 @@ from .citation_prompts_evaluator_chain import safe_invoke as async_evaluate_cita
 from .entity_analysis_chain import EntityAnalysis
 from .citation_prompts_evaluator_chain import PromptAnswerClusters
 from pydantic import BaseModel
+from src.services.progress import NULL_REPORTER
 from typing import Optional, List
 import logging
 
@@ -84,30 +85,37 @@ def has_valid_prompts(citation_prompts_result):
 # Main Function
 # -----------------------------
 
-async def find_llm_signals(entity: str, geo: str) -> LlmSignals:
+async def find_llm_signals(entity: str, geo: str, progress=None) -> LlmSignals:
+    progress = progress or NULL_REPORTER
 
     logger.info(f"Starting LLM signals analysis for entity: {entity}")
 
+    progress.stage_start("ai_prompts")
     entity_analysis, citation_prompts_result = await async_generate_citation_prompts(
         entity, geo
     )
 
     if not has_valid_competitors(entity_analysis) or not has_valid_prompts(citation_prompts_result):
+        progress.stage_failed("ai_prompts", "Entity analysis / prompt generation unavailable")
         return LlmSignals(
             status=False,
             issue_found="LLM Signal is not available",
             cause_of_issue="Internal Error: Try again later"
         )
 
+    progress.stage_done("ai_prompts")
     competitors = entity_analysis.profile.top_competitors.values
 
+    progress.stage_start("ai_answers")
     citation_prompt_answers_raw = await async_evaluate_citation_prompts(
         citation_prompts_result.root,
         entity,
-        competitors
+        competitors,
+        progress=progress,
     )
 
     if citation_prompt_answers_raw is None:
+        progress.stage_failed("ai_answers", "AI answers unavailable")
         return LlmSignals(
             status=False,
             issue_found="LLM Signal is not available",
@@ -115,6 +123,8 @@ async def find_llm_signals(entity: str, geo: str) -> LlmSignals:
         )
 
     citation_prompt_answers = normalize_prompt_clusters(citation_prompt_answers_raw)
+    progress.stage_done("ai_answers")
+    progress.stage_start("market_analysis")
 
     logger.info("Evaluation complete")
 
@@ -277,6 +287,7 @@ async def find_llm_signals(entity: str, geo: str) -> LlmSignals:
             )
         )
 
+    progress.stage_done("market_analysis")
     return LlmSignals(
         signals=LlmSignal(
             entity_analysis=entity_analysis,

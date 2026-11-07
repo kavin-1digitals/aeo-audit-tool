@@ -1,44 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Legend
 } from 'recharts';
-import { ClockIcon, TrashIcon, ArrowTrendingUpIcon } from '@heroicons/react/24/outline';
+import { ClockIcon, ArrowTrendingUpIcon } from '@heroicons/react/24/outline';
 
-const STORAGE_KEY = 'aeo_audit_history';
+import { findBrandByName, getVisibilityTrend, listBrandRuns } from '../../services/api';
+
+// History now comes from the server's run store (keyed by brand name), not from localStorage.
 const MAX_HISTORY = 20;
-
-export function saveAuditToHistory(auditData) {
-  try {
-    const meta = auditData.audit_metadata || {};
-    const entry = {
-      id: Date.now(),
-      timestamp: meta.timestamp || new Date().toISOString(),
-      domain: meta.domain || '',
-      brand: meta.brand || '',
-      location: meta.location || '',
-      score: parseFloat((meta.percentage || meta.score_percentage || 0).toFixed(1)),
-      total_checks: meta.total_checks || 0
-    };
-    const existing = loadHistory();
-    const updated = [entry, ...existing].slice(0, MAX_HISTORY);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-    return updated;
-  } catch {
-    return [];
-  }
-}
-
-export function loadHistory() {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-  } catch {
-    return [];
-  }
-}
-
-function clearHistory() {
-  localStorage.removeItem(STORAGE_KEY);
-}
 
 const formatDate = (iso) => {
   try {
@@ -69,6 +38,7 @@ const CustomTooltip = ({ active, payload, label }) => {
         <p className="font-semibold text-gray-900">{d.brand || d.domain}</p>
         <p className="text-gray-500 text-xs">{formatDate(d.timestamp)}</p>
         <p className="mt-1 font-bold text-blue-700">{d.score}% AEO Score</p>
+        {d.sov != null && <p className="font-bold text-purple-700">{d.sov}% AI share of voice</p>}
       </div>
     );
   }
@@ -79,17 +49,42 @@ const AuditHistory = ({ currentAuditData }) => {
   const [history, setHistory] = useState([]);
   const [showAll, setShowAll] = useState(false);
 
-  useEffect(() => {
-    setHistory(loadHistory());
-  }, []);
+  const brandName = currentAuditData?.audit_metadata?.brand;
+  const currentRunId = currentAuditData?.audit_metadata?.run_id;
 
-  // Save current audit on mount
   useEffect(() => {
-    if (currentAuditData?.audit_metadata?.domain) {
-      const updated = saveAuditToHistory(currentAuditData);
-      setHistory(updated);
-    }
-  }, [currentAuditData?.audit_metadata?.domain]);
+    let cancelled = false;
+    if (!brandName) return undefined;
+    (async () => {
+      try {
+        const [brand] = await findBrandByName(brandName);
+        if (!brand) return;
+        const [runs, trend] = await Promise.all([
+          listBrandRuns(brand.brand_id),
+          getVisibilityTrend(brand.brand_id).catch(() => []), // AI-visibility trend is optional
+        ]);
+        if (cancelled) return;
+        const sovByRun = Object.fromEntries(trend.map(t => [t.run_id, t.sov]));
+        setHistory(
+          runs
+            .filter(r => r.has_report && r.percentage != null)
+            .slice(0, MAX_HISTORY)
+            .map(r => ({
+              id: r.run_id,
+              timestamp: r.finished_at || r.requested_at,
+              domain: r.domain || r.requested_url || '',
+              brand: brandName,
+              location: r.geo || '',
+              score: parseFloat(Number(r.percentage).toFixed(1)),
+              sov: sovByRun[r.run_id] ?? null,
+            }))
+        );
+      } catch (e) {
+        console.warn('Could not load audit history:', e.message);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [brandName, currentRunId]);
 
   if (history.length === 0) return null;
 
@@ -119,13 +114,6 @@ const AuditHistory = ({ currentAuditData }) => {
               <span>{trend >= 0 ? '+' : ''}{trend.toFixed(1)}% vs last</span>
             </div>
           )}
-          <button
-            onClick={() => { clearHistory(); setHistory([]); }}
-            className="p-1.5 text-gray-400 hover:text-red-500 transition-colors rounded"
-            title="Clear history"
-          >
-            <TrashIcon className="h-4 w-4" />
-          </button>
         </div>
       </div>
 
@@ -141,9 +129,23 @@ const AuditHistory = ({ currentAuditData }) => {
               <Tooltip content={<CustomTooltip />} />
               <ReferenceLine y={80} stroke="#10B981" strokeDasharray="4 4" label={{ value: 'Good', fontSize: 10, fill: '#10B981' }} />
               <ReferenceLine y={60} stroke="#F59E0B" strokeDasharray="4 4" label={{ value: 'Fair', fontSize: 10, fill: '#F59E0B' }} />
+              <Legend wrapperStyle={{ fontSize: 11 }} />
+              {trendData.some(d => d.sov != null) && (
+                <Line
+                  type="monotone"
+                  dataKey="sov"
+                  name="AI share of voice"
+                  stroke="#8B5CF6"
+                  strokeWidth={2}
+                  strokeDasharray="5 3"
+                  dot={{ r: 3, fill: '#8B5CF6', strokeWidth: 0 }}
+                  connectNulls
+                />
+              )}
               <Line
                 type="monotone"
                 dataKey="score"
+                name="AEO score"
                 stroke="#3B82F6"
                 strokeWidth={2.5}
                 dot={{ r: 4, fill: '#3B82F6', strokeWidth: 0 }}

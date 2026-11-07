@@ -3,7 +3,7 @@ import axios from 'axios';
 // Create axios instance with base URL
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL || '/aeo-audit-tool/api',
-  timeout: 600000, // Increased timeout to 10 minutes for LLM processing
+  timeout: 30000, // Audits run in the background and are polled, so every request is short
   headers: {
     'Content-Type': 'application/json',
   },
@@ -39,60 +39,58 @@ api.interceptors.response.use(
     }
     
     console.error('API Error:', message);
-    return Promise.reject(new Error(message));
+    const apiError = new Error(message);
+    apiError.status = error.response?.status; // lets callers tell transient (network/5xx) from final (4xx) failures
+    return Promise.reject(apiError);
   }
 );
 
-// Audit API methods
-export const auditApi = {
-  // Start a new audit
-  startAudit: async (domain, includeRawSignals = false) => {
-    const response = await api.post('audit', {
-      domain,
-      include_raw_signals: includeRawSignals,
-    });
-    return response;
-  },
+// --- Audit runs (asynchronous: start -> poll status -> fetch report) ---------------------------
 
-  // Get audit results
-  getAuditResults: async (taskId) => {
-    const response = await api.get(`audit/${taskId}`);
-    return response;
-  },
-
-  // Get all recent runs
-  getRecentRuns: async () => {
-    const response = await api.get('audit');
-    return response;
-  },
-
-  // Clear all runs
-  clearAllRuns: async () => {
-    const response = await api.delete('audit');
-    return response;
-  },
-
-  // Delete specific run
-  deleteRun: async (taskId) => {
-    const response = await api.delete(`audit/${taskId}`);
-    return response;
-  },
+// Start an audit; returns immediately with { run_id, status, reused, reused_active }.
+export const startAuditRun = async ({ domain, brand, geo, siteTypes = [], mode = 'new' }) => {
+  return api.post('/audit', {
+    domain,
+    brand,
+    geo,
+    site_types: siteTypes.map(type => type.toLowerCase()), // Pass array of site types to backend
+    mode,
+  });
 };
 
-// New API method for getting comprehensive audit results
-export const getAuditResults = async (domain = 'https://www.aloyoga.com', brand = 'Alo Yoga', geo = 'United States', siteTypes = ['ecommerce']) => {
-  console.log('Calling API with domain:', domain, 'brand:', brand, 'geo:', geo, 'siteTypes:', siteTypes);
-  const response = await api.post('/audit', {
-    domain: domain,
-    brand: brand,
-    geo: geo,
-    site_types: siteTypes.map(type => type.toLowerCase()) // Pass array of site types to backend
-  });
-  
-  console.log('Raw backend response:', response);
-  console.log('Response keys:', Object.keys(response));
-  console.log('Signals keys:', response.signals ? Object.keys(response.signals) : 'No signals');
-  
+// Real progress for a run (stage lanes, counters, elapsed time, warnings, events).
+export const getRunStatus = (runId, sinceSeq = 0) => api.get(`/runs/${runId}/status`, { params: { since_seq: sinceSeq } });
+
+// Finished report in the backend's AuditResponse shape.
+export const getRunReport = (runId) => api.get(`/runs/${runId}`);
+
+// Prompts Lab: every prompt with its web / AI-model answer and who was mentioned (no AI calls on the server).
+export const getRunPrompts = (runId) => api.get(`/runs/${runId}/prompts`);
+
+export const cancelRun = (runId) => api.post(`/runs/${runId}/cancel`);
+
+export const deleteRun = (runId) => api.delete(`/runs/${runId}`);
+
+// --- Competitor tab (server-side source of truth) ---------------------------------------------
+export const getCompetitors = (runId) => api.get(`/runs/${runId}/competitors`);
+export const addCompetitor = (runId, { name, domain, refresh = false }) =>
+  api.post(`/runs/${runId}/competitors`, { name, domain, refresh });
+export const carryOverCompetitors = (runId, fromRunId = null) =>
+  api.post(`/runs/${runId}/competitors/carry-over`, { from_run_id: fromRunId });
+export const removeCompetitor = (runId, comparisonId) => api.delete(`/runs/${runId}/competitors/${comparisonId}`);
+
+// Stored audits are keyed by brand name, used exactly as typed (only trimmed).
+// Resolves to [] or [{ brand_id, name, run_count, latest_run }].
+export const findBrandByName = (name) => api.get('/brands', { params: { name: name.trim() } });
+
+// Run history of a brand (newest first): domain, geo, site_types, scores, warnings, has_report.
+export const listBrandRuns = (brandId) => api.get(`/brands/${brandId}/runs`);
+
+// The brand's own AI visibility (SOV, citations, coverage) at each stored run, oldest first.
+export const getVisibilityTrend = (brandId) => api.get(`/brands/${brandId}/visibility-trend`);
+
+// Convert the backend report into the shape the dashboard components expect.
+export const transformAuditReport = (response, { domain, brand, geo } = {}) => {
   // Check if scorecard is nested deeper in the signals
   const scorecard = response.signals?.scorecard || response.signals?.aeo_scorecard || response.scorecard;
   console.log('Extracted scorecard:', scorecard);
@@ -101,6 +99,7 @@ export const getAuditResults = async (domain = 'https://www.aloyoga.com', brand 
   // The backend returns a different structure - we need to extract the scorecard from signals
   const transformedData = {
     audit_metadata: {
+      run_id: response.task_id || null,
       domain: response.domain || domain,
       brand: response.brand || brand,
       location: response.geo || geo,
@@ -129,25 +128,21 @@ export const getAuditResults = async (domain = 'https://www.aloyoga.com', brand 
   return transformedData;
 };
 
-// Clear audit cache
-export const clearAuditCache = async () => {
-  try {
-    const response = await api.post('/cache/clear');
-    return response.data;
-  } catch (error) {
-    console.error('Error clearing cache:', error);
-    throw error;
-  }
-};
-
-// Get cache statistics
-export const getCacheStats = async () => {
-  try {
-    const response = await api.get('/cache/stats');
-    return response.data;
-  } catch (error) {
-    console.error('Error getting cache stats:', error);
-    throw error;
+// Convenience for callers outside AuditContext (e.g. the /report route): start (or reuse the brand's
+// latest stored run), poll until finished and return the transformed report.
+export const getAuditResults = async (
+  domain = 'https://www.aloyoga.com', brand = 'Alo Yoga', geo = 'United States', siteTypes = ['ecommerce'],
+) => {
+  const started = await startAuditRun({ domain, brand, geo, siteTypes, mode: 'reuse_latest' });
+  for (;;) {
+    const status = await getRunStatus(started.run_id);
+    if (status.status === 'completed' || status.status === 'completed_with_warnings') {
+      return transformAuditReport(await getRunReport(started.run_id), { domain, brand, geo });
+    }
+    if (status.status === 'failed' || status.status === 'cancelled') {
+      throw new Error(status.error?.message || `Audit ${status.status}`);
+    }
+    await new Promise((resolve) => setTimeout(resolve, 5000));
   }
 };
 

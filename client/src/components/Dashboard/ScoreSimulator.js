@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { signalLabel } from '../../utils/signalLabels';
 import {
   BeakerIcon, ArrowTrendingUpIcon, ArrowPathIcon,
   CheckCircleIcon, XCircleIcon, LightBulbIcon,
@@ -73,7 +74,7 @@ export default function ScoreSimulator({ auditData }) {
       })
       .map(s => ({
         name: s.signal_name,
-        label: s.signal_name.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+        label: signalLabel(s.signal_name),
         weight: SIGNAL_WEIGHTS[s.signal_name] || 1,
         category: CATEGORY_MAP[s.signal_name] || 'site_signals',
         count: scores.filter(x => x.signal_name === s.signal_name && x.value < 0).length,

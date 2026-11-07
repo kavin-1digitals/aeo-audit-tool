@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { signalLabel } from '../../utils/signalLabels';
 import {
   ChartBarIcon, TrophyIcon, ArrowTrendingUpIcon, ArrowTrendingDownIcon,
   MinusIcon, BuildingOfficeIcon,
@@ -259,7 +260,7 @@ export default function IndustryBenchmarks({ auditData }) {
         <div className="flex flex-wrap gap-2">
           {industry.topSignals.map(sig => (
             <span key={sig} className="text-xs bg-amber-100 text-amber-800 font-semibold px-2.5 py-1 rounded-full border border-amber-200">
-              {sig.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
+              {signalLabel(sig)}
             </span>
           ))}
         </div>

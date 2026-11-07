@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useAudit } from '../contexts/AuditContext';
+import { findBrandByName, listBrandRuns } from '../services/api';
+import { StoredAuditModal } from '../components/StoredAuditModal';
 import { ExclamationTriangleIcon, SparklesIcon, ChartBarIcon, XMarkIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import AeoReportPage from './AeoReportPage';
 
 export const Home = () => {
-  const { error, isLoading, clearError, startAudit } = useAudit();
+  const { error, isLoading, clearError, startAudit, loadStoredRun, resetAudit, currentResult } = useAudit();
   const [domain, setDomain] = useState('https://www.aloyoga.com');
   const [brand, setBrand] = useState('Alo Yoga');
   const [geo, setGeo] = useState('United States');
@@ -14,6 +16,15 @@ export const Home = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
   const [auditData, setAuditData] = useState(null);
+  const [storedRuns, setStoredRuns] = useState(null); // stored audits of the entered brand (null = no prompt)
+  const [checkingStored, setCheckingStored] = useState(false);
+
+  // An audit that finished after a page refresh (resumed run) arrives through the context.
+  useEffect(() => {
+    if (currentResult && !auditData) {
+      setAuditData(currentResult);
+    }
+  }, [currentResult, auditData]);
 
   // Format snake_case to Title Case
   const formatDisplayText = (snakeCase) => {
@@ -285,28 +296,57 @@ software_application`;
     };
   }, [showDropdown]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    if (!domain.trim() || !brand.trim()) {
-      return;
-    }
-
+  const runNewAudit = async () => {
     try {
       clearError();
       console.log(`Starting AEO audit for ${domain.trim()} with brand ${brand.trim()} and site types ${siteTypes.join(', ')}...`);
-      
-      const data = await startAudit(domain.trim(), brand.trim(), geo.trim(), siteTypes);
-      console.log('Raw API response:', data);
-      
+
+      const data = await startAudit(domain.trim(), brand.trim(), geo.trim(), siteTypes, 'new');
       setAuditData(data);
-      console.log('Audit data set in state:', data);
     } catch (err) {
       console.error('Audit failed:', err.message);
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!domain.trim() || !brand.trim() || checkingStored) {
+      return;
+    }
+
+    // Stored audits are keyed by brand name (used as typed). If any exist, let the user choose.
+    setCheckingStored(true);
+    try {
+      const found = await findBrandByName(brand);
+      if (found.length > 0 && found[0].latest_run) {
+        const runs = (await listBrandRuns(found[0].brand_id)).filter(r => r.has_report);
+        if (runs.length > 0) {
+          setStoredRuns(runs);
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn('Stored-audit lookup failed; starting a new audit:', err.message);
+    } finally {
+      setCheckingStored(false);
+    }
+    await runNewAudit();
+  };
+
+  const handleViewStored = async (run) => {
+    setStoredRuns(null);
+    try {
+      clearError();
+      const data = await loadStoredRun(run.run_id, { domain: run.requested_url, brand: brand.trim(), geo: run.geo });
+      setAuditData(data);
+    } catch (err) {
+      console.error('Loading stored audit failed:', err.message);
+    }
+  };
+
   const handleNewAudit = () => {
+    resetAudit();
     setAuditData(null);
     setDomain('https://www.aloyoga.com');
     setBrand('Alo Yoga');
@@ -330,6 +370,15 @@ software_application`;
   // Show the audit form
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      {storedRuns && (
+        <StoredAuditModal
+          brand={brand.trim()}
+          runs={storedRuns}
+          onView={handleViewStored}
+          onNewRun={() => { setStoredRuns(null); runNewAudit(); }}
+          onClose={() => setStoredRuns(null)}
+        />
+      )}
       {/* Header */}
       <div className="bg-white shadow-sm border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -538,7 +587,7 @@ software_application`;
 
                 <button
                   type="submit"
-                  disabled={!domain.trim() || !brand.trim() || siteTypes.length === 0 || isLoading}
+                  disabled={!domain.trim() || !brand.trim() || siteTypes.length === 0 || isLoading || checkingStored}
                   className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-4 px-6 rounded-xl hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg"
                 >
                   {isLoading ? (

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { signalLabel } from '../../utils/signalLabels';
 import {
   ArrowDownTrayIcon, CodeBracketIcon, TableCellsIcon,
   DocumentTextIcon, CheckCircleIcon, ClipboardDocumentIcon,
@@ -108,7 +109,7 @@ export default function ExportCentre({ auditData }) {
       `---------------`,
       ...scores
         .filter(s => s.value < 0 && s.remediation_plan)
-        .map(s => `- ${s.signal_name.replace(/_/g, ' ')}: ${s.remediation_plan?.slice(0, 120)}...`),
+        .map(s => `- ${signalLabel(s.signal_name)}: ${s.remediation_plan?.slice(0, 120)}...`),
     ];
     downloadBlob(lines.join('\n'), `aeo-summary-${domain}-${dateStr}.txt`, 'text/plain');
   };

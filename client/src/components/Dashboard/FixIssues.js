@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { signalLabel } from '../../utils/signalLabels';
 import {
   CheckCircleIcon,
   XCircleIcon,
@@ -45,8 +46,7 @@ const getSeverity = (weight) => {
   return               { label: 'Low',      color: 'text-gray-600',   bg: 'bg-gray-100',   border: 'border-gray-200',   dot: 'bg-gray-400' };
 };
 
-const formatSignalName = (name) =>
-  name.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+const formatSignalName = signalLabel;
 
 const getCategoryFromPath = (path = []) => {
   const first = path[0] || '';

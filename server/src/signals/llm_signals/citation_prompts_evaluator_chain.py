@@ -6,6 +6,7 @@ from src.config import OPENAI_API_KEY
 from src.signals.llm_signals.citation_prompts_chain import CitationPromptCluster
 
 import asyncio
+import os
 
 
 client = OpenAI(api_key=OPENAI_API_KEY)
@@ -225,84 +226,130 @@ def safe_json_load(text):
 
 
 # -----------------------------
+# Pairing helpers (web answer <-> LLM answer, matched by prompt text)
+# -----------------------------
+
+def _prompt_key(text: str) -> str:
+    """Whitespace/case/edge-punctuation tolerant key so a lightly re-worded echo still matches."""
+    return " ".join((text or "").casefold().split()).strip(" .?!:;\"'`")
+
+
+def pair_answers(requested: List[str], web_res: list, llm_res: list) -> List[Optional[tuple]]:
+    """Return, for each requested prompt (in order), ``(web_answer, llm_answer)`` or ``None``.
+
+    Matching is by prompt text, so a dropped/reordered item can never attach to the wrong prompt.
+    Safety net: if the text of an item was altered by the model but BOTH responses still have exactly
+    one item per requested prompt, the same index is used (identical to the old behaviour in the
+    happy path). Prompts that cannot be paired in both modes are returned as ``None`` (dropped).
+    """
+    def index(res):
+        return {_prompt_key(r.get("prompt", "")): r.get("answer", "") for r in res if isinstance(r, dict)}
+
+    web_idx, llm_idx = index(web_res), index(llm_res)
+    same_shape = len(web_res) == len(llm_res) == len(requested)
+
+    paired: List[Optional[tuple]] = []
+    for i, prompt in enumerate(requested):
+        key = _prompt_key(prompt)
+        web_ans, llm_ans = web_idx.get(key), llm_idx.get(key)
+        if (web_ans is None or llm_ans is None) and same_shape:
+            try:
+                web_ans = web_ans if web_ans is not None else web_res[i]["answer"]
+                llm_ans = llm_ans if llm_ans is not None else llm_res[i]["answer"]
+            except (KeyError, TypeError):
+                web_ans = llm_ans = None
+        paired.append((web_ans, llm_ans) if web_ans is not None and llm_ans is not None else None)
+    return paired
+
+
+# -----------------------------
 # Safe Invoke
 # -----------------------------
+
+AI_ANSWER_CONCURRENCY = int(os.getenv("AI_ANSWER_CONCURRENCY", "3"))
+
+
+async def _answer_cluster(
+    cluster: CitationPromptCluster,
+    entity: str,
+    competitors: List[str],
+    retries: int,
+) -> List[PromptAnswerDual]:
+    """Answer one cluster's prompts (web + no-web in parallel), retrying only this cluster."""
+    flat = flatten_prompts_with_clusters([cluster])
+    formatted = format_prompts(flat)
+    loop = asyncio.get_running_loop()
+    last_error: Optional[Exception] = None
+
+    for attempt in range(retries):
+        try:
+            web_raw, llm_raw = await asyncio.gather(
+                loop.run_in_executor(None, call_openai, build_batch_web_prompt(formatted), True),
+                loop.run_in_executor(None, call_openai, build_batch_no_web_prompt(formatted), False),
+            )
+            pairs = pair_answers(list(cluster.prompts), safe_json_load(web_raw), safe_json_load(llm_raw))
+            results = [
+                PromptAnswerDual(
+                    prompt=prompt,
+                    web_answer=pair[0],
+                    llm_answer=pair[1],
+                    web_entity_mentioned=is_mentioned(pair[0], entity),
+                    llm_entity_mentioned=is_mentioned(pair[1], entity),
+                    competitor_citations_web=[
+                        CompetitorCitation(competitor_entity=c, is_competitor_mentioned=is_mentioned(pair[0], c))
+                        for c in competitors
+                    ],
+                    competitor_citations_llm=[
+                        CompetitorCitation(competitor_entity=c, is_competitor_mentioned=is_mentioned(pair[1], c))
+                        for c in competitors
+                    ],
+                )
+                for prompt, pair in zip(cluster.prompts, pairs) if pair is not None
+            ]
+            if not results:
+                raise ValueError(f"No prompt of cluster '{cluster.cluster}' could be paired")
+            return results
+        except Exception as exc:  # retried below; final failure propagates to the caller
+            last_error = exc
+            if attempt < retries - 1:
+                await asyncio.sleep(attempt + 1)
+
+    raise last_error  # type: ignore[misc]
+
 
 async def safe_invoke(
     clusters: List[CitationPromptCluster],
     entity: str,
     competitors: List[str],
-    retries: int = 4
+    retries: int = 4,
+    progress=None,
 ) -> Optional[PromptAnswerClusters]:
+    """Evaluate all prompts per cluster with bounded concurrency.
 
-    flat = flatten_prompts_with_clusters(clusters)
-    formatted = format_prompts(flat)
+    Result schema/ordering are unchanged. All-or-nothing: if any cluster still fails after its
+    retries the function returns ``None`` exactly like before, so the existing
+    "LLM signals unavailable" handling is untouched and no partial data can skew SOV/coverage.
+    """
+    total = sum(len(c.prompts) for c in clusters)
+    done = 0
+    if progress:
+        progress.stage_progress("ai_answers", 0, total)
 
-    loop = asyncio.get_event_loop()
+    sem = asyncio.Semaphore(max(1, AI_ANSWER_CONCURRENCY))
 
-    for attempt in range(retries):
-        try:
-            web_task = loop.run_in_executor(
-                None,
-                call_openai,
-                build_batch_web_prompt(formatted),
-                True
-            )
+    async def run(cluster: CitationPromptCluster):
+        nonlocal done
+        async with sem:
+            result = await _answer_cluster(cluster, entity, competitors, retries)
+        done += len(cluster.prompts)
+        if progress:
+            progress.stage_progress("ai_answers", done, total)
+        return result
 
-            llm_task = loop.run_in_executor(
-                None,
-                call_openai,
-                build_batch_no_web_prompt(formatted),
-                False
-            )
+    outcomes = await asyncio.gather(*[run(c) for c in clusters], return_exceptions=True)
+    if any(isinstance(o, Exception) for o in outcomes):
+        return None
 
-            web_raw, llm_raw = await asyncio.gather(web_task, llm_task)
-
-            web_res = safe_json_load(web_raw)
-            llm_res = safe_json_load(llm_raw)
-
-            merged = []
-
-            for w, l in zip(web_res, llm_res):
-
-                web_ans = w["answer"]
-                llm_ans = l["answer"]
-
-                merged.append({
-                    "cluster": w["cluster"],
-                    "data": PromptAnswerDual(
-                        prompt=w["prompt"],
-                        web_answer=web_ans,
-                        llm_answer=llm_ans,
-                        web_entity_mentioned=is_mentioned(web_ans, entity),
-                        llm_entity_mentioned=is_mentioned(llm_ans, entity),
-                        competitor_citations_web=[
-                            CompetitorCitation(
-                                competitor_entity=c,
-                                is_competitor_mentioned=is_mentioned(web_ans, c)
-                            ) for c in competitors
-                        ],
-                        competitor_citations_llm=[
-                            CompetitorCitation(
-                                competitor_entity=c,
-                                is_competitor_mentioned=is_mentioned(llm_ans, c)
-                            ) for c in competitors
-                        ]
-                    )
-                })
-
-            # group
-            cluster_map = {}
-            for item in merged:
-                cluster_map.setdefault(item["cluster"], []).append(item["data"])
-
-            return PromptAnswerClusters(
-                root=[
-                    PromptAnswerCluster(cluster=k, prompts=v)
-                    for k, v in cluster_map.items()
-                ]
-            )
-
-        except Exception as e:
-            if attempt == retries - 1:
-                return None
+    return PromptAnswerClusters(
+        root=[PromptAnswerCluster(cluster=c.cluster, prompts=o) for c, o in zip(clusters, outcomes)]
+    )

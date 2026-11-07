@@ -1,0 +1,137 @@
+{
+  "_comment": "Display names for the audit's signals. Identifiers (keys) are stable - they appear in config weights, stored audits and the API - only these labels are shown to users. A backend test keeps this file in sync with config.json.",
+  "signals": {
+    "llms_txt_exists": {
+      "label": "llms.txt file present",
+      "check": "A /llms.txt file exists at the domain root. It gives AI systems a guide to the site's most important content.",
+      "scope": "once per site",
+      "category": "domain_signals"
+    },
+    "llms_txt_valid": {
+      "label": "llms.txt readable as text",
+      "check": "The llms.txt file is served as plain text or Markdown, not as an HTML page.",
+      "scope": "once per site",
+      "category": "domain_signals"
+    },
+    "llms_txt_enriched": {
+      "label": "llms.txt well structured",
+      "check": "The llms.txt file uses Markdown structure (headings, lists, bold text) so AI systems can parse it.",
+      "scope": "once per site",
+      "category": "domain_signals"
+    },
+    "robots_txt_exists": {
+      "label": "robots.txt file present",
+      "check": "A /robots.txt file exists and can be read.",
+      "scope": "once per site",
+      "category": "domain_signals"
+    },
+    "sitemap_exists": {
+      "label": "Sitemap available",
+      "check": "A sitemap is declared in robots.txt, and a sitemap file can be fetched from the site.",
+      "scope": "twice: declared in robots.txt, and file reachable",
+      "category": "domain_signals"
+    },
+    "sitemap_type_valid": {
+      "label": "Sitemap structure valid",
+      "check": "The sitemap is a recognised XML type (URL set or sitemap index), not an unknown or invalid one.",
+      "scope": "once per site",
+      "category": "domain_signals"
+    },
+    "sitemap_freshness": {
+      "label": "Sitemap updated within 7 days",
+      "check": "The sitemap's last-modified dates are no older than one week.",
+      "scope": "once per site",
+      "category": "domain_signals"
+    },
+    "ai_crawler_access": {
+      "label": "AI crawlers allowed",
+      "check": "robots.txt lets AI crawlers (for example GPTBot) fetch the site's pages.",
+      "scope": "per AI crawler",
+      "category": "domain_signals"
+    },
+    "search_crawler_access": {
+      "label": "Search crawlers allowed",
+      "check": "robots.txt lets search-engine crawlers (for example Googlebot) fetch the site's pages.",
+      "scope": "per search crawler",
+      "category": "domain_signals"
+    },
+    "site_scrapable": {
+      "label": "Pages can be crawled",
+      "check": "The site's pages could be fetched and read, and were not blocked by bot protection or hidden behind scripts.",
+      "scope": "once per site",
+      "category": "site_signals"
+    },
+    "canonical_exists": {
+      "label": "Canonical tag present",
+      "check": "The page names its preferred URL with a canonical tag.",
+      "scope": "per page",
+      "category": "site_signals"
+    },
+    "canonical_matches": {
+      "label": "Canonical points to the page itself",
+      "check": "The canonical URL is the same as the page's own final URL.",
+      "scope": "per page",
+      "category": "site_signals"
+    },
+    "canonical_clean": {
+      "label": "Canonical URL has no query parameters",
+      "check": "The canonical URL has no query string (such as ?utm_source=…), which would otherwise create duplicate versions of the page.",
+      "scope": "per page",
+      "category": "site_signals"
+    },
+    "jsonld_exists": {
+      "label": "Expected structured data present",
+      "check": "The JSON-LD schema types expected for this site type (for example Organization or Product) are present on the site.",
+      "scope": "per expected schema type",
+      "category": "site_signals"
+    },
+    "jsonld_valid": {
+      "label": "Structured data valid",
+      "check": "The JSON-LD found on the site passes validation for its schema type.",
+      "scope": "per schema found",
+      "category": "site_signals"
+    },
+    "og_tags_exists": {
+      "label": "Open Graph tags present",
+      "check": "The first page analysed carries Open Graph tags, which are used when links are shared or summarised.",
+      "scope": "once (first page analysed)",
+      "category": "site_signals"
+    },
+    "og_tags_complete": {
+      "label": "Open Graph tags complete",
+      "check": "The first page analysed has Open Graph title, description, image, type and URL.",
+      "scope": "once (first page analysed)",
+      "category": "site_signals"
+    },
+    "twitter_card_exists": {
+      "label": "Twitter/X card tag present",
+      "check": "The first page analysed declares a twitter:card tag for link previews on X / Twitter.",
+      "scope": "once (first page analysed)",
+      "category": "site_signals"
+    },
+    "page_indexable": {
+      "label": "Page allowed in search (no noindex)",
+      "check": "The page is not marked noindex, so search and AI crawlers may include it.",
+      "scope": "per page",
+      "category": "site_signals"
+    },
+    "cluster_presence": {
+      "label": "Cited in the topic",
+      "check": "The brand is cited in at least one question of the topic.",
+      "scope": "per topic",
+      "category": "llm_signals"
+    },
+    "cluster_dominance": {
+      "label": "Not outnumbered in the topic",
+      "check": "No compared brand is named in more answers than this brand in the topic. A topic where nobody is named counts as held.",
+      "scope": "per topic",
+      "category": "llm_signals"
+    },
+    "prompt_citation": {
+      "label": "Cited for the question",
+      "check": "The brand is cited for the question: it appears in at least one of the question's two answers.",
+      "scope": "per question",
+      "category": "llm_signals"
+    }
+  }
+}

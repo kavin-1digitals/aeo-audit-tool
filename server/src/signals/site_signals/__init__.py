@@ -5,6 +5,7 @@ from .canonical_signals import find_canonical_signal, CanonicalSignal
 from .jsonld_signals import find_jsonld_signal, JsonLdType
 from .meta_signals import find_meta_signal, MetaSignal
 from src.config import JSONLD_VALIDATION_RULES, JSONLD_CATEGORIES
+from src.services.progress import NULL_REPORTER
 import asyncio
 import os
 import json
@@ -54,13 +55,20 @@ class SiteSignals(BaseModel):
     cause_of_issue: Optional[str] = None
 
 
-async def find_site_signals(full_domain: str, crawl_result: Optional[str], site_types: Optional[List[str]] = None) -> SiteSignals:
+async def find_site_signals(full_domain: str, crawl_result: Optional[str], site_types: Optional[List[str]] = None, progress=None) -> SiteSignals:
+    progress = progress or NULL_REPORTER
 
     # ---------------------------
     # Step 1: Ensure crawl exists
     # ---------------------------
     if not crawl_result:
-        crawl_result = await crawl_site(full_domain)
+        progress.stage_start("site_crawl")
+        try:
+            crawl_result = await crawl_site(full_domain)
+        except Exception as exc:
+            progress.stage_failed("site_crawl", f"{type(exc).__name__}: {exc}")
+            raise
+        progress.stage_done("site_crawl")
 
     # ---------------------------
     # Step 2: Validate crawl result
@@ -118,8 +126,10 @@ async def find_site_signals(full_domain: str, crawl_result: Optional[str], site_
     # ---------------------------
     site_signals = []
     all_jsonld_signals = []
+    progress.stage_start("site_processing", total=len(valid_pages))
 
-    for page in valid_pages:
+    for page_no, page in enumerate(valid_pages, start=1):
+        progress.stage_progress("site_processing", page_no - 1)
 
         # 🚀 Optimization: stop if all schemas found
         if not remaining_types:
@@ -187,6 +197,7 @@ async def find_site_signals(full_domain: str, crawl_result: Optional[str], site_
     # ---------------------------
     # Step 6: Final scrapable decision
     # ---------------------------
+    progress.stage_done("site_processing")
     is_scrapable = len(site_signals) > 0
 
     return SiteSignals(
