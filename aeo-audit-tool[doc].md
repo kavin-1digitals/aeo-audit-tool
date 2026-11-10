@@ -65,7 +65,7 @@ The final score is a percentage out of 100%. It is divided in two levels, and ea
 
 **Level 1: the groups.** The score is split 30% / 30% / 40% between the three groups, as above.
 
-**Level 2: the signals.** Inside a group, the group's share is split again between its signals. That share is the signal's **weight**. In the diagram, "AI crawlers allowed" has a weight of 4%. The weights of all 22 signals add up to 100%. Section R2 lists every one.
+**Level 2: the signals.** Inside a group, the group's share is split again between its signals. That share is the signal's **weight**. In the diagram, "AI crawlers allowed" has a weight of 4%. The weights of all 22 signals add up to 100%. Sections 1 to 3 list every one.
 
 **Points belong to checks.** A signal is tested by one or more checks. Each check earns **1 point if it passes and 0 if it does not**.
 
@@ -117,18 +117,17 @@ The site's rules for automated visitors. It decides whether AI crawlers are allo
 | A group passes when | At least one of its paths is allowed. |
 | One check | One crawler for one page group. |
 | Number of checks | AI crawlers: 4 × 4 = **16**. Search crawlers: 2 × 4 = **8**. |
-| Weight earned | The signal's weight × the share of checks that pass. |
 | No robots.txt at all | Nothing is restricted, so every check passes. |
 
 ### llms.txt · weight 10%
 
 A newer file: a short guide written for AI systems about what the site contains. If the site blocks the request, all three signals are left out of the score.
 
-| Signal                    | Weight | What is checked                                            | Passes when                                                                                                   | Fails when                                                                                                      |
-| ------------------------- | ------ | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| llms.txt file present     | 4%     | A file named `/llms.txt` exists at the root of the site.   | The file is found.                                                                                            | No file.                                                                                                        |
-| llms.txt readable as text | 3%     | The file is text, not a web page.                          | It is plain text or Markdown.                                                                                 | The file is missing, or it is a web page: it contains `<html` or `<!doctype html`, or is served as `text/html`. |
-| llms.txt well structured  | 3%     | The text has the structure that helps AI systems parse it. | It contains at least **4 of 5 markers**: heading `#`, sub-heading `##`, list item `-` , bold `*`*, colon `:`. | Fewer than 4 markers.                                                                                           |
+| Signal | Weight | What is checked | Passes when | Fails when |
+|---|---|---|---|---|
+| llms.txt file present | 4% | A file named `/llms.txt` exists at the root of the site. | The file is found. | No file. |
+| llms.txt readable as text | 3% | The file is text, not a web page. | It is plain text or Markdown. | The file is missing, or it is a web page: it contains `<html` or `<!doctype html`, or is served as `text/html`. |
+| llms.txt well structured | 3% | The text has the structure that helps AI systems parse it. | It contains at least **4 of 5 markers**: heading `#`, sub-heading `##`, list item `-`, bold `**`, colon `:`. | Fewer than 4 markers. |
 
 ### Sitemap · weight 9%
 
@@ -140,13 +139,7 @@ The list of pages worth reading. It also shows that the content is maintained.
 | Sitemap structure valid | 3% | The top element of the file. | It is a URL list (`urlset`) or an index of sitemaps (`sitemapindex`). | **Fails:** any other type. **Left out:** no sitemap found. |
 | Sitemap updated within 7 days | 3% | The newest "last modified" date, taken from the first 20 entries. For an index, from the first of its first 5 sitemaps that has dates. | The date is 7 days old or less. | **Fails:** older, or the sitemap has no dates. **Left out:** no sitemap found. |
 
-**How the sitemap is found**
-
-| Case | What the tool tries |
-|---|---|
-| robots.txt names a sitemap | Only that address. |
-| robots.txt names none | `/sitemap.xml`, then `/sitemap_index.xml`, then `/siteindex.xml`. |
-| A file counts when | It is valid XML. |
+**How the sitemap is found.** If robots.txt names a sitemap, only that address is tried. If it names none, the tool tries `/sitemap.xml`, then `/sitemap_index.xml`, then `/siteindex.xml`. A file counts only if it is valid XML.
 
 ### How Maple Yoga scored
 
@@ -190,8 +183,8 @@ The tool opens a sample of the website's pages and reads the tags and data that 
   |
   |-- Canonical tag .......................... 10%   which address is the "real" one for a page
   |     |-- Canonical tag present ............ 4%
-  |     |-- Canonical points to the page itself  3%
-  |     '-- Canonical URL has no query parameters 3%
+  |     |-- Canonical points to the page itself . 3%
+  |     '-- Canonical URL has no query parameters  3%
   |
   |-- Structured data (JSON-LD) .............. 6%    facts such as products and prices, in machine form
   |     |-- Expected structured data present . 3%
@@ -241,7 +234,7 @@ Facts such as products, prices and ratings, written in a form machines read reli
 
 | Signal | Weight | What is checked | Passes when | Fails when |
 |---|---|---|---|---|
-| Expected structured data present | 3% | One check per type expected for the site type. | The type is found (see R5, item 1). | The type is not found. |
+| Expected structured data present | 3% | One check per type expected for the site type. | The type is found. | The type is not found. |
 | Structured data valid | 3% | One check per expected type, for each page it was looked for. | At least one object of the type has all of its required fields filled in. | No object has them, or the type is absent. |
 
 **Expected types and required fields** (examples for an online shop)
@@ -327,7 +320,7 @@ If any step of the collection fails (each topic is tried up to 4 times), the who
 | 2. Write the questions | A second model writes **6 to 7 topics with 3 questions each**, 18 to 21 questions. They are phrased the way a customer compares brands, for example "best yoga pants for beginners". |
 | 3. Collect two answers per question | GPT-4o answers every question twice: the **web answer** uses web search, the **model answer** uses only the model's own knowledge. Each answer is asked to list 4 to 7 brands. |
 | 4. Look for the names | The brand and each competitor are searched for in every answer, ignoring capitals and punctuation, as whole words. |
-| 5. Count citations | A question is a citation for a brand when the brand appears in at least one of its two answers. |
+| 5. Count citations | Each question is counted as a citation, or not, for the brand and for each competitor (see the box below). |
 
 > **Citation**
 > A brand is **cited** in a question when its name appears in at least one of the question's two answers, the web answer or the model answer. Appearing in both still counts once.
@@ -353,11 +346,11 @@ Whether the brand shows up in a topic at all, and whether it holds its own again
 | Cited in the topic *Cluster Presence*            | 12%    | One check per topic.                                                                             | The brand has at least one citation in the topic.              | No citation in the topic.                       |
 | Not outnumbered in the topic *Cluster Dominance* | 12%    | One check per topic. The brand's citations in the topic against each AI-identified competitor's. | No competitor has more citations than the brand. A tie passes. | A competitor has more citations than the brand. |
 
-A topic where nobody is cited passes "Not outnumbered in the topic" (see R5, item 6).
+A topic where nobody is cited passes "Not outnumbered in the topic", because no competitor has more citations than the brand (0 against 0).
 
 ### Figures reported next to the score
 
-Two more figures come from the same citations. They are shown in reports and in the competitor comparison, but they are **not** part of the 100% score.
+These figures come from the same citations. Citations are counted per brand, and the other two are derived from them. They are shown in reports and in the competitor comparison, but they are **not** part of the 100% score.
 
 | Figure | How it is calculated | Maple Yoga |
 |---|---|---|
@@ -417,7 +410,7 @@ Maple Yoga's three results combine like this:
 | Does AI say the name? | 17.1% | 40% | 42.9% |
 | **Whole audit** | **58.9%** | **100%** | **58.9%** |
 
-*Figures are rounded, so the three rows add up to 58.8% on the page and 58.87% exactly.*
+*The figures are rounded. The three rounded rows add up to 58.8%, while the exact total is 58.87%, shown as 58.9%.*
 
 ### What if something cannot be checked?
 
@@ -575,11 +568,13 @@ The brand's own audit keeps the name **share of voice**, calculated against its 
 
 Maple Yoga has 9 citations and is cited in 4 of 7 topics in every row. Only the total it is divided by changes. "Not outnumbered in the topic" follows the same rule: in a comparison it is judged against the compared brands only.
 
+---
+
 ## Reference
 
 Use this part to look things up. You do not need it to understand the tool.
 
-## R1. Inputs and allowed values
+### R1. Inputs and allowed values
 
 | Input | Rule |
 |---|---|
@@ -588,85 +583,30 @@ Use this part to look things up. You do not need it to understand the tool.
 | **Region** | Optional free text, for example `United States` or `India`. Default `Not Specified`. |
 | **Site type(s)** | One or more of 200 types, for example `ecommerce`, `saas`, `brand`, `marketplace`, `restaurant`, `hospital`. With several, their lists are combined. At least one should be chosen. It decides which page groups are tested for crawler access and which structured data is expected. |
 
-## R2. Every signal in full
+### R2. Details of the methods
 
-A check earns its 1 point only with the value `+1`. Every other value earns 0 points: `-1` is a fail, and `-0.5` is a weaker fail (a canonical address with a query string, or a sitemap without dates). A negative value is recorded but never subtracts from the score.
+- **Check values.** A check earns its 1 point only with the value `+1`. Every other value earns 0: `-1` is a fail, and `-0.5` is a weaker fail (a canonical address with a query string, or a sitemap without dates). A negative value is recorded but never subtracts from the score.
+- **When signals are left out.**
 
-**Can AI get in? (Domain Signals, weight 30%)**
-
-| Signal (weight) | Checks | Left out when |
-|---|---|---|
-| llms.txt file present (4%) | 1. Fails on HTTP 404. | The request fails or answers anything but 200 or 404, for example 403. All three llms.txt signals are then left out. |
-| llms.txt readable as text (3%) | 1. Fails if the file is missing or is HTML (contains `<html` or `<!doctype html`, or content type `text/html`). | As above. |
-| llms.txt well structured (3%) | 1. Fails with fewer than 4 of the 5 markers. | As above. |
-| robots.txt file present (3%) | 1. Fails on HTTP 404. | The request fails or answers anything but 200 or 404. The four robots-based signals are then left out. |
-| Sitemap available (3%) | 2: declared in robots.txt; file found. | The "declared" check is skipped when robots.txt is left out. |
-| Sitemap structure valid (3%) | 1. Fails if the XML root is not a URL set or a sitemap index. | No sitemap found. |
-| Sitemap updated within 7 days (3%) | 1. Fails if the newest date is older; `-0.5` if there are no dates. | No sitemap found. |
-| AI crawlers allowed (4%) | 1 per AI crawler and page group. | robots.txt left out. |
-| Search crawlers allowed (4%) | 1 per search crawler and page group. | robots.txt left out. |
-
-**Can AI understand it? (Site Signals, weight 30%)**
-
-| Signal (weight) | Checks | Left out when |
-|---|---|---|
-| Pages can be crawled (6%) | 1. Fails if no page could be fetched. | Never. |
-| Canonical tag present (4%) | 1 per page. | Site not scrapable. |
-| Canonical points to the page itself (3%) | 1 per page. Both addresses are reduced to `scheme://host/path` without a trailing slash and compared. | Site not scrapable. |
-| Canonical URL has no query parameters (3%) | 1 per page. Fails (`-0.5`) if the address contains `?`. | Site not scrapable. |
-| Expected structured data present (3%) | 1 per expected type. | Site not scrapable. |
-| Structured data valid (3%) | 1 per expected type, per page it was looked for. A type that is absent counts as not valid. | Site not scrapable. |
-| Open Graph tags present (3%) | 1, on the first page. Passes if any of `og:title`, `og:description`, `og:image` exists. | Site not scrapable. |
-| Open Graph tags complete (2%) | 1, on the first page. Needs all of title, description, image, type, URL. | Site not scrapable. |
-| Twitter/X card tag present (1%) | 1, on the first page. | Site not scrapable. |
-| Page allowed in search (2%) | 1 per page. Fails if the robots meta tag contains `noindex`. | Site not scrapable. |
-
-**Does AI say the name? (LLM Brand Analysis, weight 40%)**
-
-| Signal (weight) | Checks | Left out when |
-|---|---|---|
-| Cited for the question (16%), Prompt Citation | 1 per question (18 to 21). | The group is unavailable. |
-| Cited in the topic (12%), Cluster Presence | 1 per topic (6 to 7). | The group is unavailable. |
-| Not outnumbered in the topic (12%), Cluster Dominance | 1 per topic. | The group is unavailable. |
-
-## R3. Details of the methods
-
-- **Finding the sitemap.** If robots.txt declares one, only the first declared address is fetched. Otherwise `/sitemap.xml`, `/sitemap_index.xml` and `/siteindex.xml` are tried in that order. A file counts only if it is valid XML. For freshness the newest of the first 20 dates is used. For an index, it is the first of its first 5 child sitemaps that has dates.
-- **robots.txt missing (HTTP 404).** There are no restrictions, so every crawler check passes. "robots.txt file present" and the "declared" check fail.
-- **Matching names in answers.** Lower-case the text and the name. Turn `&` into " and ", `+` into " plus ", `@` into " at " and `#` into " number ". Delete all other punctuation and collapse spaces. The name matches as a whole word: plain, with an added `s`, or with a trailing `s` removed.
-- **Failed topic.** Each topic is tried up to 4 times. If one still fails, the whole LLM group is unavailable. Partial data is never scored.
-- **Pass share, used for the summary.** All checks passed ÷ all checks run, every check counted equally. The summary gives a highlight at 90%, 80% or 70% and above. Below 70% it gives an improvement note in three bands: 50 to 69%, 30 to 49%, under 30%.
-- **Remediation plan.** The rules for difficulty, stages and estimated gain are in the section "Remediation Plan".
-- **Website checked share, in comparisons.** Of the 60% website weight, 80% or more checked is fully assessed, 40% to under 80% partly assessed, under 40% not rated.
-
-## R4. Fixed values
-
-| Item | Value |
+| Cause | Signals left out |
 |---|---|
-| Signals / groups | 22 / 3 |
-| Group weights | 30% / 30% / 40% (total 100%) |
-| Request wait | 10 s (robots.txt, llms.txt), 5 s (sitemap) |
-| AI crawlers | GPTBot, Google-Extended, ClaudeBot, PerplexityBot |
-| Search crawlers | Googlebot, Bingbot |
-| llms.txt markers needed | 4 of 5 |
-| Sitemap freshness limit | 7 days |
-| Pages sampled | Homepage + up to 50 (normal), homepage + up to 5 (script-driven) |
-| AI-identified competitors | 3 to 5 |
-| Topics × questions | 6 to 7 × 3 = 18 to 21 |
-| Brands requested per answer | 4 to 7 |
-| Answers per question | 2 |
-| Added competitors per audit | 5 |
-| Competitor result reuse | 7 days; 1 hour when under 40% of the website weight was checked |
+| The llms.txt request fails, or answers anything but 200 or 404 (for example 403) | The three llms.txt signals. |
+| The robots.txt request fails, or answers anything but 200 or 404 | The three robots.txt signals, and the "declared in robots.txt" check of "Sitemap available". |
+| No sitemap found | "Sitemap structure valid" and "Sitemap updated within 7 days". |
+| Site not scrapable | Every Site signal except "Pages can be crawled". |
+| Any step of the AI collection fails | The three LLM Brand Analysis signals. |
 
-## R5. Terms
+- **Matching names in answers.** Lower-case the text and the name. Turn `&` into " and ", `+` into " plus ", `@` into " at " and `#` into " number ". Delete all other punctuation and collapse spaces. The name matches as a whole word: plain, with an added `s`, or with a trailing `s` removed.
+- **Pass share, used for the summary.** All checks passed ÷ all checks run, every check counted equally. The summary gives a highlight at 90%, 80% or 70% and above. Below 70% it gives an improvement note in three bands: 50 to 69%, 30 to 49%, under 30%.
+- **Request wait.** The requests for robots.txt and llms.txt wait up to 10 seconds.
+
+### R3. Terms
 
 | Term | Meaning |
 |---|---|
 | **Signal** | One named area that is tested. There are 22. |
 | **Plain name / technical name** | A signal's name in this document, and its name in the score card data. For the three LLM Brand Analysis signals the technical names are Cluster Presence, Cluster Dominance and Prompt Citation. |
 | **Check** | One test of a signal: one page, one crawler, one question. |
-| **Point** | What a check earns: 1 if it passes, 0 if it does not. |
-| **Pass** | A check that succeeded, and so earned its point. |
 | **Weight** | The share of the final score that a signal or group is worth, as a percentage. All weights add up to 100%. |
 | **Pass rate** | The points earned by a signal's checks ÷ the number of checks run. |
 | **Weight earned** | A signal's weight × its pass rate. |
@@ -680,6 +620,5 @@ A check earns its 1 point only with the value `+1`. Every other value earns 0 po
 | **Topic coverage** | Topics with a citation ÷ all topics. |
 | **AI-identified competitor** | One of the 3 to 5 competitors the tool finds for the brand. |
 | **Added competitor** | A competitor the user chose for the comparison. |
-| **Remediation plan** | The failing signals, ordered by difficulty and split into up to three stages (Quick Fix, Secondary Fix, Complete Fix), each with an estimated score. |
 | **Compared brands** | The brand and the competitors added to the comparison. |
 | **Website checked share** | In a comparison: the weight checked in Domain Signals and Site Signals ÷ their combined weight of 60%. |
