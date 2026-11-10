@@ -488,7 +488,7 @@ After scoring, the tool turns every failed check into a **remediation plan**. Th
 
 - **Weight recovered by a signal** = its weight × (failed checks ÷ checks run). This is the share of the final score the signal would add if all its checks passed.
 - **Weight recovered by a stage** = the sum for its signals.
-- **Estimated score gain** = weight recovered by the stage ÷ 72 × 100, never more than what is left up to 100%. The estimates run one after the other: Secondary Fix starts where Quick Fix ends, and Complete Fix where Secondary Fix ends.
+- **Estimated score gain** = weight recovered by the stage ÷ weight checked × 100, never more than what is left up to 100%. The weight checked is 100% when every signal could be checked, and less when some could not be (the same total the score itself is divided by). The estimates run one after the other: Secondary Fix starts where Quick Fix ends, and Complete Fix where Secondary Fix ends.
 - **Impact** of a stage: High above 15, Medium above 7, otherwise Low (by the estimated gain).
 - **Difficulty** of a stage: the same bands as for a signal, applied to the failed checks in the whole stage.
 
@@ -516,14 +516,13 @@ With 13 failing signals, the first third is 4 (Quick Fix), half of the remaining
 
 | Stage | Signals | Failed checks | Difficulty | Weight recovered | Estimated score | Impact |
 |---|---|---|---|---|---|---|
-| Quick Fix | 4 | 4 | Medium | 13.0% | 58.9% to 76.9% (+18.1) | High |
-| Secondary Fix | 4 | 7 | Hard | 2.3% | 76.9% to 80.1% (+3.2) | Low |
-| Complete Fix | 5 | 25 | Hard | 25.9% | 80.1% to 100% (+19.9) | High |
+| Quick Fix | 4 | 4 | Medium | 13.0% | 58.9% to 71.9% (+13.0) | Medium |
+| Secondary Fix | 4 | 7 | Hard | 2.3% | 71.9% to 74.2% (+2.3) | Low |
+| Complete Fix | 5 | 25 | Hard | 25.9% | 74.2% to 100% (+25.8) | High |
 
-Two things in this table need a careful reading:
+Maple Yoga's weight was checked in full (100%), so each gain equals the weight recovered. The three gains add up to the 41.1 points missing from 58.9%, so the plan ends at exactly 100%. The weights recovered in the table are rounded to one decimal, which is why they appear to add up to 41.2.
 
-- **The estimates run high.** Fixing the Quick Fix signals really adds the 13.0% of weight recovered, so Maple Yoga would reach 71.9%, but the plan says 76.9%. The divisor is a fixed 72, not the 100 the weights add up to (see R5, item 8). After the last stage both end at 100%.
-- **A stage's difficulty counts failed checks, not signals.** Secondary Fix holds four Easy signals but 7 failed checks, so it is labelled Hard (see R5, item 11).
+A stage's difficulty counts failed checks, not signals. Secondary Fix holds four Easy signals but 7 failed checks, so it is labelled Hard.
 
 ---
 

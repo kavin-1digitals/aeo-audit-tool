@@ -114,11 +114,9 @@ def calculate_target_score(current_score: float, delta: float, max_possible: flo
     if max_possible == 0:
         return current_score
 
-    # Calculate actual maximum based on total configured weight (26+20+26=72)
-    actual_max_score = 72.0
-    
-    # Calculate improvement as percentage of actual max
-    improvement_percentage = (delta / actual_max_score) * 100
+    # The score is weight earned / weight checked, so a gain in weight is
+    # converted to score points using the weight checked (max_possible).
+    improvement_percentage = (delta / max_possible) * 100
     
     # Cap improvement to reach 100% of actual max
     allowed_improvement = max(0.0, 100.0 - current_score)
